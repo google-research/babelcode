@@ -1,0 +1,23 @@
+[tool.yapfignore]
+ignore_patterns = [
+  "scratch/**/*.py",
+  "debug_code/**/*.py"
+]
+
+[tool.yapf]
+based_on_style = "google"
+spaces_before_comment = 2
+indent_width=2
+split_before_logical_operator = true
+column_limit = 80
+
+[tool.isort]
+single_line_exclusions = ["typing"]
+force_single_line = true
+skip = [".gitignore", ".dockerignore"]
+extend_skip_glob = [".vscode/*","scratch/*","debug_code/*"]
+line_length = 120
+
+[tool.pytest.ini_options]
+log_cli = false
+log_cli_level = "INFO"

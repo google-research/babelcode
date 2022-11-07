@@ -1,0 +1,12 @@
+pytest==7.1.2
+jinja2==3.1.2
+numpy==1.23.1
+pandas==1.4.3
+pyyaml==6.0
+tqdm==4.63.0
+gin-config==0.5.0
+coverage==6.4.4
+psutil==5.9.2
+astpretty==3.0.0
+absl-py==1.2.0
+tensorflow==2.10.0
