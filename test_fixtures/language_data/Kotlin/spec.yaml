@@ -1,0 +1,71 @@
+primitives:
+  string:
+    type_name: 'String'
+    input: 'Test String'
+    output: '"Test String"'
+    null_output: '""'
+  integer: 
+    type_name: 'Int'
+    input: 1
+    output: '1'
+  boolean:
+    type_name: 'Boolean'
+    input: True
+    output: 'true'
+  float:
+    type_name: 'Float'
+    input: 10.1
+    output: '10.1f'
+  double:
+    type_name: 'Double'
+    input: 10.1
+    output: '10.1'
+  character:
+    type_name: 'Char'
+    input: "c"
+    output: "'c'"
+    null_output: "''"
+  long:
+    type_name: 'Long'
+    input: 1
+    output: '1'
+
+data_structures_schema:
+  TYPE_NAME_1[]: 
+    expected: 'ArrayList<TYPE_NAME_1>'
+    elements:
+      - expected: 'TYPE_NAME_1'
+  list<list<TYPE_NAME_1>>: 
+    expected: 'ArrayList<ArrayList<TYPE_NAME_1>>'
+    elements:
+      - expected: 'ArrayList<TYPE_NAME_1>'
+        elements: 
+          - expected: 'TYPE_NAME_1'
+  map<TYPE_NAME_1;TYPE_NAME_1>: 
+    expected: 'Map<TYPE_NAME_1, TYPE_NAME_1>'
+    elements:
+      - expected: 'TYPE_NAME_1'
+    key_type: 
+      expected: 'TYPE_NAME_1'
+  set<TYPE_NAME_1>:
+    expected: 'MutableSet<TYPE_NAME_1>'
+    elements:
+      - expected: 'TYPE_NAME_1'
+
+prompt_translation:
+  argument_name: 'arg_name'
+  signature_argument: 'arg_name: TYPE_NAME'
+  return_type: "TYPE_NAME"
+  docstring: "/**\n * Test Docstring.\n * \\/\\*\\*\\/\\/\\/\\*\\/--\"\"\"\n */"
+  signature_with_docstring: "DOCSTRING\nfun test(SIGNATURE): RETURNS {"
+
+escaped_string:
+  input: "$"
+  expected: "\\$"
+
+data_structures_literals:
+  nested_list: 'arrayListOf(arrayListOf(TYPE_VAL_1, TYPE_VAL_1), arrayListOf(TYPE_VAL_1))'
+  nested_map: 'mapOf(KEY_VAL_1 to arrayListOf(TYPE_VAL_1, TYPE_VAL_1))'
+  set: 'hashSetOf(TYPE_VAL_1)'
+
+entry_point: 'test'

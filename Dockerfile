@@ -65,6 +65,23 @@ RUN apt-get install -y mono-complete
 # Install PHP
 RUN apt-get install -y php-cli
 
+# Install Scala
+RUN wget https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-linux.gz 
+RUN gzip -d cs-x86_64-pc-linux.gz && mv cs-x86_64-pc-linux cs && chmod +x cs && ./cs setup -y
+RUN mv ~/.local/share/coursier /coursier
+RUN chown -R 1000:root "/coursier" && chmod -R 775 "/coursier"
+ENV PATH="$PATH:/coursier/bin"
+
+# Install R
+RUN apt-get install r-base -y
+
+# Install dart
+RUN wget https://storage.googleapis.com/dart-archive/channels/stable/release/latest/linux_packages/dart_2.18.4-1_amd64.deb
+RUN dpkg -i dart_2.18.4-1_amd64.deb
+RUN apt-get install -f
+RUN mv "/usr/lib/dart" "/dart"
+RUN chown -R 1000:root "/dart" && chmod -R 775 "/dart"
+ENV PATH="$PATH:/dart/bin"
 
 # Installing python requirements.
 COPY requirements.txt .

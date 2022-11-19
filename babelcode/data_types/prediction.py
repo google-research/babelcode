@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Prediction data type."""
+
+"""Prediction data type for storing information about a prediction."""
 import dataclasses
 import pathlib
 from typing import Dict, Optional, Union

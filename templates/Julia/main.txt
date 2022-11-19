@@ -1,0 +1,46 @@
+{{ header }}
+{% if text is not none -%}
+# Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "# " ~ line ~ "\n"}}
+{%- endfor -%}
+# 
+{%- endif %}
+# SOLUTION CODE
+# ============================================
+PLACEHOLDER_CODE_BODY
+
+# TESTING CODE 
+# ============================================
+function validate_solution(actual, expected)
+    {% filter indent(width=4) -%}
+    {{ evaluation_function }}
+    {%- endfilter %}
+end
+
+function driver({{signature}}, expected)
+    try
+
+        {% if debug -%}
+        @printf("\n==================\nDEBUGGING PRINTS:\n")
+        @printf("RESULT=%s\n",PLACEHOLDER_FN_NAME({{ params|join(', ')}}))
+        @printf("EXPECTED=%s\n",expected)
+        @printf("==================\n")
+        {%- endif -%}
+        if validate_solution(PLACEHOLDER_FN_NAME({{ params|join(', ')}}), expected)
+            return "PASSED";
+        end
+        return "FAILED";
+    catch exception_obj
+        return string(Base.typename(typeof(exception_obj)).wrapper);
+    end
+end
+
+function main()
+    {% for test_case in test_cases  %}
+    result = driver({{test_case.inputs|join(", ")}}, {{test_case.outputs}});
+    @printf("TEST-{{test_case.idx}}...%s\n",result);
+    {% endfor %}
+end
+
+main()

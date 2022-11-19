@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Init for data types."""
+
+"""Initialization for the data types module."""
 from babelcode.data_types.command import Command
 from babelcode.data_types.prediction import Prediction
 from babelcode.data_types.question import IOPairError

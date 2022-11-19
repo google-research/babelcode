@@ -1,0 +1,43 @@
+{{ header }}
+
+{% if text is not none -%}
+// Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "// " ~ line ~ "\n"}}
+{%- endfor -%}
+//
+{%- endif %}
+// SOLUTION CODE 
+// ============================================
+PLACEHOLDER_CODE_BODY
+
+// TESTING CODE 
+// ============================================
+function validateSolution($actual, $expected){
+    {% filter indent(width=4) -%}
+    {{ evaluation_function }}
+    {%- endfilter %}
+}
+
+function driver({{signature}}, $expected){
+    try{
+      if (validateSolution(PLACEHOLDER_FN_NAME({{ params|join(', ')}}), $expected)){
+        return "PASSED";
+      }
+      return "FAILED";
+    }
+    catch (Exception $exception_obj) {
+      return get_class($exception_obj);
+    }
+}
+
+function main(){
+    {%- for test_case in test_cases  %}
+    printf("TEST-{{test_case.idx}}...%s\n",driver(
+      {{test_case.inputs|join(", ")}}, 
+      {{test_case.outputs}}));
+    {% endfor %}
+}
+
+main();
+?>

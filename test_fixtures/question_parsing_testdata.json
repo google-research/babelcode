@@ -1,0 +1,291 @@
+{
+  "tuple_signature": {
+    "input": {
+      "qid": "tuple_sig",
+      "test_list": [
+        "assert sum_product([]) == (0, 1)"
+      ],
+      "entry_fn_name": "sum_product",
+      "solution": "def sum_product(numbers: List[int]) -> Tuple[int, int]:\n    sum_value = 0\n    prod_value = 1\n\n    for n in numbers:\n        sum_value += n\n        prod_value *= n\n    return sum_value, prod_value\n"
+    },
+    "expected_error": null,
+    "expected": {
+      "schema": {
+        "params": [
+          {
+            "name": "numbers",
+            "type": "list<integer>"
+          }
+        ],
+        "return": {
+          "type": "tuple<integer|integer>"
+        }
+      },
+      "entry_fn_name": "sum_product",
+      "test_list": [
+        {
+          "idx": 0,
+          "inputs": {
+            "numbers": []
+          },
+          "outputs": [
+            0,
+            1
+          ]
+        }
+      ],
+      "use_type_annotation":true
+    }
+  },
+  "requires_import_from": {
+    "input": {
+      "test_list": [
+        "from random import randint, choice",
+        "import copy",
+        "import string",
+        "letters = string.ascii_lowercase",
+        "for _ in range(100):\n    str = ''.join(choice(letters) for i in range(randint(10, 20)))\n    encoded_str = encode_shift(str)\n    assert decode_shift(copy.deepcopy(encoded_str)) == str"
+      ],
+      "solution": "def encode_shift(s: str):\n    return \"\".join([chr(((ord(ch) - 5 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])\n",
+      "entry_fn_name": "encode_shift",
+      "qid": "for_loop_import"
+    },
+    "expected_error": "Imports are not supported",
+    "expected": null
+  },
+  "requires_import": {
+    "input": {
+      "test_list": [
+        "import math",
+        "import random",
+        "rng = random.Random(42)",
+        "import copy",
+        "for _ in range(100):\n    ncoeff = 2 * rng.randint(1, 4)\n    coeffs = []\n    for _ in range(ncoeff):\n        coeff = rng.randint(-10, 10)\n        if coeff == 0:\n            coeff = 1\n        coeffs.append(coeff)\n    solution = find_zero(copy.deepcopy(coeffs))\n    assert math.fabs(poly(coeffs, solution)) < 0.0001"
+      ],
+      "solution": "def poly(xs: list, x: float):\n    begin, end = -1., 1.\n    while poly(xs, begin) * poly(xs, end) > 0:\n        begin *= 2.0\n        end *= 2.0\n    while end - begin > 1e-10:\n        center = (begin + end) / 2.0\n        if poly(xs, center) * poly(xs, begin) > 0:\n            begin = center\n        else:\n            end = center\n    return begin\n",
+      "entry_fn_name": "poly",
+      "qid": "for_loop_import_abs"
+    },
+    "expected_error": "Imports are not supported",
+    "expected": null
+  },
+  "list_multiple_types": {
+    "input": {
+      "solution": "def count_integer(list1):\n    ctr = 0\n    for i in list1:\n        if isinstance(i, int):\n            ctr = ctr + 1\n    return ctr",
+      "test_list": [
+        "assert count_integer([1,2,'abc',1.2]) == 2",
+        "assert count_integer([1,2,3]) == 3",
+        "assert count_integer([1,1.2,4,5.1]) == 2"
+      ],
+      "entry_fn_name": "count_integer",
+      "qid": "count_integer"
+    },
+    "expected_error": "Expecting one type, got",
+    "expected": null
+  },
+  "test_cases_switches_types": {
+    "input": {
+      "solution": "def replace_list(list1,list2):\n list1[-1:] = list2\n replace_list=list1\n return replace_list\n",
+      "test_list": [
+        "assert replace_list([1, 3, 5, 7, 9, 10],[2, 4, 6, 8])==[1, 3, 5, 7, 9, 2, 4, 6, 8]",
+        "assert replace_list([1,2,3,4,5],[5,6,7,8])==[1,2,3,4,5,6,7,8]",
+        "assert replace_list([\"red\",\"blue\",\"green\"],[\"yellow\"])==[\"red\",\"blue\",\"yellow\"]"
+      ],
+      "entry_fn_name": "replace_list",
+      "qid": "replace_list"
+    },
+    "expected_error": "Inconsistent Types found"
+  },
+  "null_expected_type": {
+    "input": {
+      "solution": "def empty_list(length):\n empty_list = [{} for _ in range(length)]\n return empty_list",
+      "test_list": [
+        "assert empty_list(5)==[[]]"
+      ],
+      "entry_fn_name": "empty_list",
+      "qid": "empty_list"
+    },
+    "expected_error": "No Non-Null types found",
+    "expected": null
+  },
+  "list": {
+    "input": {
+      "solution": "def comb_sort(nums):\n    shrink_fact = 1.3\n    gaps = len(nums)\n    swapped = True\n    i = 0\n    while gaps > 1 or swapped:\n        gaps = int(float(gaps) / shrink_fact)\n        swapped = False\n        i = 0\n        while gaps + i < len(nums):\n            if nums[i] > nums[i+gaps]:\n                nums[i], nums[i+gaps] = nums[i+gaps], nums[i]\n                swapped = True\n            i += 1\n    return nums",
+      "test_list": [
+        "assert comb_sort([5, 15, 37, 25, 79]) == [5, 15, 25, 37, 79]"
+      ],
+      "entry_fn_name": "comb_sort",
+      "qid": "comb_sort"
+    },
+    "expected_error": null,
+    "expected": {
+      "schema": {
+        "return": {
+          "type": "list<integer>"
+        },
+        "params": [
+          {
+            "name": "nums",
+            "type": "list<integer>"
+          }
+        ]
+      },
+      "test_list": [
+        {
+          "idx": 0,
+          "inputs": {
+            "nums": [
+              5,
+              15,
+              37,
+              25,
+              79
+            ]
+          },
+          "outputs": [
+            5,
+            15,
+            25,
+            37,
+            79
+          ]
+        }
+      ],
+      "entry_fn_name": "comb_sort",
+      "use_type_annotation":false
+    }
+  },
+  "map": {
+    "input": {
+      "solution": "def return_sum(dict):\n  sum = 0\n  for i in dict.values():\n    sum = sum + i\n  return sum",
+      "test_list": [
+        "assert return_sum({'a': 100, 'b':200, 'c':300}) == 600",
+        "assert return_sum({'a': 25, 'b':18, 'c':45}) == 88",
+        "assert return_sum({'a': 36, 'b':39, 'c':49}) == 124"
+      ],
+      "entry_fn_name": "return_sum",
+      "qid": "return_sum"
+    },
+    "expected_error": null,
+    "expected": {
+      "schema": {
+        "return": {
+          "type": "integer"
+        },
+        "params": [
+          {
+            "name": "dict",
+            "type": "map<string;integer>"
+          }
+        ]
+      },
+      "test_list": [
+        {
+          "idx": 0,
+          "inputs": {
+            "dict": {
+              "a": 100,
+              "b": 200,
+              "c": 300
+            }
+          },
+          "outputs": 600
+        },
+        {
+          "idx": 1,
+          "inputs": {
+            "dict": {
+              "a": 25,
+              "b": 18,
+              "c": 45
+            }
+          },
+          "outputs": 88
+        },
+        {
+          "idx": 2,
+          "inputs": {
+            "dict": {
+              "a": 36,
+              "b": 39,
+              "c": 49
+            }
+          },
+          "outputs": 124
+        }
+      ],
+      "entry_fn_name": "return_sum",
+      "use_type_annotation":false
+    }
+  },
+  "nested_null_lists": {
+    "input": {
+      "solution": "def nested_null_lists(a):\n\tpass\n",
+      "test_list": [
+        "assert nested_null_lists([[],[1],[2,3]])",
+        "assert nested_null_lists([])==False",
+        "assert not nested_null_lists([[1],[2],[3]])"
+      ],
+      "entry_fn_name": "nested_null_lists",
+      "qid": "nested_null_lists"
+    },
+    "expected_error": null,
+    "expected": {
+      "schema": {
+        "return": {
+          "type": "boolean"
+        },
+        "params": [
+          {
+            "name": "a",
+            "type": "list<list<integer>>"
+          }
+        ]
+      },
+      "test_list": [
+        {
+          "idx": 0,
+          "inputs": {
+            "a": [
+              [],
+              [
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ]
+          },
+          "outputs": true
+        },
+        {
+          "idx": 1,
+          "inputs": {
+            "a": []
+          },
+          "outputs": false
+        },
+        {
+          "idx": 2,
+          "inputs": {
+            "a": [
+              [
+                1
+              ],
+              [
+                2
+              ],
+              [
+                3
+              ]
+            ]
+          },
+          "outputs": false
+        }
+      ],
+      "entry_fn_name": "nested_null_lists",
+      "use_type_annotation":false
+    }
+  }
+}

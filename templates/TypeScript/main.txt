@@ -1,0 +1,52 @@
+{{ header }}
+{% if text is not none -%}
+// Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "// " ~ line ~ "\n"}}
+{%- endfor -%}
+//
+{%- endif %}
+// SOLUTION CODE
+// ============================================
+PLACEHOLDER_CODE_BODY
+
+// TESTING CODE 
+// ============================================
+function convertToString(value: any): string{
+    return JSON.stringify(value, function (key, val) {
+        if (val instanceof Set) {
+            return Array.from(val);
+        } return val;});
+}
+
+function validateSolution(actual: {{return_type}}, expected: {{return_type}}): boolean {
+    {{ evaluation_function|indent }}
+}
+
+function driver({{signature}}, expected:{{return_type}}): string {
+    try{
+        {% if debug -%}
+        console.log("\n==================\nDEBUGGING PRINTS:");
+        console.log(`RESULT=${PLACEHOLDER_FN_NAME({{ params|join(', ')}})}`);
+        console.log(`EXPECTED=${expected}`);
+        console.log(`==================`);
+        {%- endif -%}
+        if (validateSolution(PLACEHOLDER_FN_NAME({{ params|join(', ')}}),expected)){
+            return "PASSED";
+        }
+        return "FAILED";
+    } catch (error) {
+      return error.name;
+    }
+    
+}
+    
+function main(){
+  let result = '';
+{%- for test_case in test_cases  %}
+  result = driver({{test_case.inputs|join(", ")}}, {{test_case.outputs}});
+  console.log(`TEST-{{test_case.idx}}...${result}`);
+{% endfor %}
+};
+
+main();

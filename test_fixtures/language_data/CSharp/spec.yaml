@@ -1,0 +1,72 @@
+primitives:
+  string:
+    type_name: 'string'
+    input: 'Test String'
+    output: '"Test String"'
+    null_output: '""'
+  integer: 
+    type_name: 'int'
+    input: 1
+    output: '1'
+  boolean:
+    type_name: 'bool'
+    input: True
+    output: 'true'
+  float:
+    type_name: 'float'
+    input: 10.1
+    output: '10.1f'
+  double:
+    type_name: 'decimal'
+    input: 10.1
+    output: '10.1m'
+  character:
+    type_name: 'char'
+    input: "c"
+    output: "'c'"
+    null_output: "''"
+  long:
+    type_name: 'long'
+    input: 1
+    output: '1'
+data_structures_schema:
+  TYPE_NAME_1[]: 
+    expected: 'List<TYPE_NAME_1>'
+    elements:
+      - expected: 'TYPE_NAME_1'
+  list<list<TYPE_NAME_1>>: 
+    expected: 'List<List<TYPE_NAME_1>>'
+    elements:
+      - expected: 'List<TYPE_NAME_1>'
+        elements: 
+          - expected: 'TYPE_NAME_1'
+  map<TYPE_NAME_1;TYPE_NAME_1>: 
+    expected: 'Dictionary<TYPE_NAME_1, TYPE_NAME_1>'
+    elements:
+      - expected: 'TYPE_NAME_1'
+    key_type: 
+      expected: 'TYPE_NAME_1'
+  set<TYPE_NAME_1>:
+    expected: HashSet<TYPE_NAME_1>
+    elements:
+      - expected: 'TYPE_NAME_1'
+
+prompt_translation:
+  argument_name: 'arg_name'
+  signature_argument: 'TYPE_NAME arg_name'
+  return_type: "TYPE_NAME"
+  docstring: "    /**\n     * Test Docstring.\n     * \\/\\*\\*\\/\\/\\/\\*\\/--\"\"\"\n     */"
+  signature_with_docstring: "class Solution {\nDOCSTRING\n    public RETURNS Test(SIGNATURE) {"
+
+
+escaped_string:
+  input: "$"
+  expected: "$"
+
+entry_point: Test
+entry_cls: Solution
+
+data_structures_literals:
+  nested_list: 'new List<TYPE_NAME_1>{new TYPE_NAME_1{TYPE_VAL_1, TYPE_VAL_1}, new TYPE_NAME_1{TYPE_VAL_1}}'
+  nested_map: 'new Dictionary<KEY_TYPE_1, TYPE_NAME_1>{{KEY_VAL_1, new TYPE_NAME_1{TYPE_VAL_1, TYPE_VAL_1}}}'
+  set: 'new HashSet<TYPE_NAME_1>{TYPE_VAL_1}'

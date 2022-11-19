@@ -1,0 +1,35 @@
+{{ header }}
+
+{% if text is not none -%}
+# Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "# " ~ line ~ "\n"}}
+{%- endfor -%}
+# 
+{%- endif %}
+# SOLUTION CODE
+# ============================================
+PLACEHOLDER_CODE_BODY
+
+# TESTING CODE 
+# ============================================
+def validate_solution(actual, expected):
+    {{ evaluation_function|indent }}
+
+def driver({{signature}}, expected):
+    try:
+        if validate_solution(PLACEHOLDER_FN_NAME(
+            {{ params|join(', ')}}),
+            expected
+        ):
+            return "PASSED"
+        return "FAILED"
+    except Exception as exception_obj:
+        return type(exception_obj).__name__
+    
+if __name__ == "__main__":
+{%- for test_case in test_cases  %}
+    result = driver({{test_case.inputs|join(", ")}}, {{test_case.outputs}})
+    print(f"TEST-{{test_case.idx}}...{result}")
+{% endfor %}
+    sys.exit(0)

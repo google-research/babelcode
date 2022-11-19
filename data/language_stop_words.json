@@ -1,0 +1,12 @@
+{
+  "PHP": ["\nfunction", "\n?>", "\n//", "\n#"],
+  "C++": ["\n}"],
+  "CSharp": ["\n    }\n"],
+  "Go": ["\nfunc", "struct", "\n// "],
+  "Java": ["\n    }\n"],
+  "Julia": ["\nfunction", "\nmacro", "\n\n"],
+  "Javascript": ["\nfunction ", "\n/*", "\n//"],
+  "Lua": ["\nlocal", "\nfunction", "\n--", "\n\n"],
+  "Python": ["\ndef", "\n#", "\nif", "\nclass"],
+  "Rust": ["\n}"]
+}

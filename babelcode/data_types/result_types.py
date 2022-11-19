@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Result Data Types."""
+
+"""Result Data Types for evaluating predictions."""
 import collections
 import dataclasses
 import enum
@@ -23,9 +24,8 @@ from babelcode.data_types.prediction import Prediction
 
 
 class PredictionOutcome(enum.Enum):
-  """Enum for holding potential outcomes for a prediction."""
+  """Enum for holding potential outcomes from evaluating a prediction."""
   PASSED = 'Passed'
-  NO_STDOUT = 'No STDOut'
   TIMED_OUT = 'Timed Out'
   HAD_ERROR = 'Had Error'
   HAD_RUNTIME_ERROR = 'Had Runtime Error'
@@ -37,7 +37,22 @@ class PredictionOutcome(enum.Enum):
 
 @dataclasses.dataclass()
 class ExecutionResult:
-  """execution_result of executing a file."""
+  """The raw result of executing a prediction through the command line.
+
+  Attributes:
+    prediction: The prediction executed.
+    commands: The commands used to execute the prediciton.
+    stdout: The standard output of the last command ran.
+    stderr: The standard error of the last command ran.
+    return_code: The return code of the last command ran.
+    net_runtime: The overall runtime.
+    last_ran_command_idx: The index of the last command ran.
+    command_runtimes: The array of runtimes for each command.
+    command_memory: The array of memory used for each command.
+    had_error: If there was an error.
+    timed_out: If the prediction timed out.
+    all_commands_ran: Did all commands run.
+  """
   prediction: Prediction
   commands: List[Command]
   stdout: str
@@ -67,7 +82,25 @@ GET_TC_REGEX = re.compile(r'^TEST-(.+)\.\.\.(.+)$', flags=re.MULTILINE)
 
 @dataclasses.dataclass
 class PredictionResult:
-  """Parsed result of a prediction."""
+  """The parsed result for a given prediction.
+
+  Attributes:
+    qid: The question the prediction is for.
+    id: The id of the prediction.
+    lang: The language of the prediction.
+    code: The code of the prediction.
+    outcome: The outcome of the evaluation.
+    test_case_results: The results for each test case.
+    num_tc_passed: The number of test cases passed.
+    num_tc: The number of total test cases.
+    all_commands_ran: Did all commands run.
+    final_command_runtime: The runtime of the last command.
+    final_command_memory: The memory of the last command.
+    net_runtime: The overall runtime.
+    command_runtimes: The array of runtimes for each command.
+    command_memory: The array of memory used for each command.
+    stderr: The standard error from executing the prediction.
+  """
   qid: str
   id: str
   lang: str
@@ -103,12 +136,10 @@ class PredictionResult:
       outcome = PredictionOutcome.HAD_ERROR
     elif execution_result.had_error:
       outcome = PredictionOutcome.HAD_ERROR
-    elif execution_result.stderr:
-      outcome = PredictionOutcome.HAD_ERROR
     elif execution_result.timed_out:
       outcome = PredictionOutcome.TIMED_OUT
     elif not execution_result.stdout:
-      outcome = PredictionOutcome.NO_STDOUT
+      outcome = PredictionOutcome.HAD_ERROR
     test_cases_results = {}
     failed_a_test_case = False
     missing_test_case = False

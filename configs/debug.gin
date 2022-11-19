@@ -1,0 +1,35 @@
+# Debugging config
+general:
+  seed=15
+  debug_num_preds=2500
+  debug=True
+
+
+metrics:
+  num_preds_per_question=1
+  k_vals=[1,10,100]
+  subsampling_rounds=5
+  subsampling_iter_per_round=10
+  shuffle=True
+  include_outcome_pct=True
+  tracked_pred_attrs=['final_command_memory','final_command_runtime','net_runtime']
+format_output_metrics:
+  question_key_format='{language}/question/{question_id}'
+  language_key_format='{language}/{field}'
+
+execution:
+  num_workers=1
+  update_freq=250
+  max_task_per_child=5
+  garbage_collection_freq=250
+
+
+tensorboard_metrics:
+  overall_metrics = ['estimate_pass@1',
+     'estimate_pass@10',
+     'estimate_pass@100',
+     'Had Error_pct',
+     'Failed Tests_pct',
+     'Timed Out_pct',
+     'Had Runtime Error_pct']
+  question_metrics = ['Passed', 'Failed Tests']

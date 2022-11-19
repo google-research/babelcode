@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Question data type."""
+
+"""Question data type and associated erorrs and helper functions."""
 
 import dataclasses
 import json
@@ -19,7 +20,6 @@ import pathlib
 from typing import Any, Dict, List, Optional, Tuple
 
 from absl import logging
-from importlib_metadata import metadata
 
 from babelcode import utils
 
@@ -138,17 +138,18 @@ class Question:
           f'"schema" must be a dict or list. Not {type(raw_schema).__name__} ')
     test_list = input_dict['test_list']
 
-    return cls(qid=qid,
-               title=title,
-               schema=raw_schema,
-               test_list=test_list,
-               allow_arbitrary_order=allow_arbitrary_order,
-               entry_fn_name=input_dict['entry_fn_name'],
-               entry_cls_name=input_dict.get('entry_cls_name', 'Solution'),
-               text=input_dict.get('text', None),
-               use_type_annotation=input_dict.get('use_type_annotation', False),
-               metadata=input_dict.get('metadata', {}),
-               challenge_test_list=input_dict.get('challenge_test_list', []))
+    return cls(
+        qid=qid,
+        title=title,
+        schema=raw_schema,
+        test_list=test_list,
+        allow_arbitrary_order=allow_arbitrary_order,
+        entry_fn_name=input_dict['entry_fn_name'],
+        entry_cls_name=input_dict.get('entry_cls_name', 'Solution'),
+        text=input_dict.get('text', None),
+        use_type_annotation=input_dict.get('use_type_annotation', False),
+        metadata=input_dict.get('metadata', {}),
+        challenge_test_list=input_dict.get('challenge_test_list', []))
 
   def __str__(self) -> str:
     """Convert question to a minimal string."""
@@ -193,9 +194,10 @@ def read_input_questions(
     except json.JSONDecodeError as e:
       logging.exception('Line %s is not valid JSON for reason "%s"',
                         line_number, e)
-      raise json.JSONDecodeError(f'Invalid JSON line: {line_number}, error={e}',
-                                 doc=line,
-                                 pos=line_number)
+      raise json.JSONDecodeError(
+          f'Invalid JSON line: {line_number}, error={e}',
+          doc=line,
+          pos=line_number)
 
     try:
       found_questions.append(Question.from_dict(line, False))

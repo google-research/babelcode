@@ -1,0 +1,68 @@
+primitives:
+  string:
+    type_name: 'character'
+    input: 'Test String'
+    output: '"Test String"'
+    null_output: '""'
+  integer: 
+    type_name: 'integer'
+    input: 1
+    output: '1L'
+  boolean:
+    type_name: 'logical'
+    input: True
+    output: 'TRUE'
+  float:
+    type_name: 'numeric'
+    input: 10.1
+    output: '10.1'
+  double:
+    type_name: 'numeric'
+    input: 10.1
+    output: '10.1'
+  character:
+    type_name: 'character'
+    input: "c"
+    output: "'c'"
+    null_output: "''"
+  long:
+    type_name: 'integer'
+    input: 1
+    output: '1L'
+data_structures_schema:
+  TYPE_NAME_1[]: 
+    expected: 'list[TYPE_NAME_1]'
+    elements:
+      - expected: 'TYPE_NAME_1'
+  list<list<TYPE_NAME_1>>: 
+    expected: 'list[list[TYPE_NAME_1]]'
+    elements:
+      - expected: 'list[TYPE_NAME_1]'
+        elements: 
+          - expected: 'TYPE_NAME_1'
+  set<TYPE_NAME_1>:
+    expected: 'list[TYPE_NAME_1]'
+    elements:
+      - expected: 'TYPE_NAME_1'
+  map<TYPE_NAME_1;TYPE_NAME_1>: 
+    expected: 'list[TYPE_NAME_1, TYPE_NAME_1]'
+    elements:
+      - expected: 'TYPE_NAME_1'
+    key_type: 
+      expected: 'TYPE_NAME_1'
+prompt_translation:
+  argument_name: 'arg_name'
+  signature_argument: 'arg_name'
+  return_type: ""
+  docstring: "# Test Docstring.\n# /**///*/--\"\"\""
+  signature_with_docstring: "DOCSTRING\ntest <- function(SIGNATURE) {"
+
+escaped_string:
+  input: "$"
+  expected: "$"
+
+data_structures_literals:
+  nested_list: 'list(list(TYPE_VAL_1, TYPE_VAL_1), list(TYPE_VAL_1))'
+  nested_map: 'list(KEY_VAL_1 = list(TYPE_VAL_1, TYPE_VAL_1))'
+  set: 'list(TYPE_VAL_1)'
+entry_point: 'test'

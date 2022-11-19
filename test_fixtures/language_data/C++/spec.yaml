@@ -1,0 +1,68 @@
+primitives:
+  string:
+    type_name: 'string'
+    input: 'Test String'
+    output: '"Test String"'
+    null_output: '""'
+  integer: 
+    type_name: 'int'
+    input: 1
+    output: '1'
+  boolean:
+    type_name: 'bool'
+    input: True
+    output: 'true'
+  float:
+    type_name: 'float'
+    input: 10.1
+    output: '10.1'
+  double:
+    type_name: 'double'
+    input: 10.1
+    output: '10.1'
+  character:
+    type_name: 'char'
+    input: "c"
+    output: "'c'"
+    null_output: "''"
+  long:
+    type_name: 'long long'
+    input: 1
+    output: '1'
+data_structures_schema:
+  TYPE_NAME_1[]: 
+    expected: 'vector<TYPE_NAME_1>'
+    elements:
+      - expected: 'TYPE_NAME_1'
+  list<list<TYPE_NAME_1>>: 
+    expected: 'vector<vector<TYPE_NAME_1>>'
+    elements:
+      - expected: 'vector<TYPE_NAME_1>'
+        elements: 
+          - expected: 'TYPE_NAME_1'
+  map<TYPE_NAME_1;TYPE_NAME_1>: 
+    expected: 'map<TYPE_NAME_1,TYPE_NAME_1>'
+    elements:
+      - expected: 'TYPE_NAME_1'
+    key_type: 
+      expected: 'TYPE_NAME_1'
+  set<TYPE_NAME_1>:
+    expected: 'set<TYPE_NAME_1>'
+    elements:
+      - expected: 'TYPE_NAME_1'
+
+prompt_translation:
+  argument_name: 'arg_name'
+  signature_argument: 'TYPE_NAME arg_name'
+  return_type: "TYPE_NAME"
+  docstring: "/**\n * Test Docstring.\n * \\/\\*\\*\\/\\/\\/\\*\\/--\"\"\"\n */"
+  signature_with_docstring: "DOCSTRING\nRETURNS test(SIGNATURE) {"
+
+escaped_string:
+  input: "$"
+  expected: "$"
+data_structures_literals:
+  nested_list: '{{TYPE_VAL_1, TYPE_VAL_1}, {TYPE_VAL_1}}'
+  nested_map: '{{KEY_VAL_1, {TYPE_VAL_1, TYPE_VAL_1}}}'
+  set: '{TYPE_VAL_1}'
+entry_point: 'test'

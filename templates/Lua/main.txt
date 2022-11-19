@@ -1,0 +1,76 @@
+{{header}}
+{% if text is not none -%}
+-- Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "-- " ~ line ~ "\n"}}
+{%- endfor -%}
+--
+{%- endif %}
+-- SOLUTION CODE
+-- ============================================
+PLACEHOLDER_CODE_BODY
+
+-- TESTING CODE 
+-- ============================================
+function isCorrect(actual, expected)
+    if type(expected) ~= type(actual) then
+        return false
+    end
+    
+    if type(expected) == 'table' then
+        for k,v_expected in pairs(expected) do
+            
+            if actual[k] == nil then
+                return false
+            end
+            local v_actual = actual[k]
+            if not isCorrect(v_actual, v_expected) then
+                return false
+            end
+            actual[k]=nil
+        end
+    
+        if next(actual) then 
+            return false
+        end
+        return true
+    else
+        return actual == expected
+    end
+end
+
+function validateSolution(actual, expected)
+    {% filter indent(width=4) -%}
+    {{ evaluation_function }}
+    {%- endfilter %}
+end
+
+function driver({{signature}}, expected)
+    local exec_result;
+    local status, error_msg = pcall(function () 
+        exec_result=PLACEHOLDER_FN_NAME({{ params|join(', ')}}) 
+    end)
+    if status then
+        {% if debug -%}
+        print("\n==================\nDEBUGGING PRINTS:")
+        print(string.format("RESULT=%s",exec_result))
+        print(string.format("EXPECTED=%s",expected))
+        print("==================")
+        {%- endif -%}
+        if validateSolution(exec_result,expected) then
+            return "PASSED"
+        end
+        return "FAILED"
+    else
+        return string.format("ERROR=%s",string.gsub(error_msg,".*:[%d]+: ",""))
+    end
+end
+    
+function main()
+{%- for test_case in test_cases  %}
+    result = driver({{test_case.inputs|join(", ")}}, {{test_case.outputs}})
+    print(string.format("TEST-{{test_case.idx}}...%s",result))
+{% endfor %}
+end
+
+main()

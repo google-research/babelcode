@@ -1,0 +1,48 @@
+{{ header }}
+// TESTING CODE 
+// ============================================
+class QuestionEvaluator {
+    public static String validateSolution({{signature}}, {{return_type}} expected){
+        try{
+            Driver driver = new Driver();
+            if (driver.run({{ params|join(', ')}},expected)){
+                return "PASSED";
+            }
+            return "FAILED";
+            
+        } catch (Exception exception_obj){
+            return exception_obj.getClass().getSimpleName();
+        }
+
+    }
+    public static void main(String[] args) {
+        String result;
+    {%- for test_case in test_cases  %}
+        result = validateSolution({{test_case.inputs|join(", ")}}, {{test_case.outputs}});
+        System.out.println(String.format("%s%s","TEST-{{test_case.idx}}...",result));    
+    {% endfor %}
+    }
+}
+
+class Driver{
+    public boolean run({{signature}}, {{return_type}} expected){
+
+        PLACEHOLDER_CLS_NAME sol = new PLACEHOLDER_CLS_NAME();
+        return validateSolution(sol.PLACEHOLDER_FN_NAME({{ params|join(', ')}}),expected);
+    }
+    
+    public boolean validateSolution({{return_type}} actual, {{return_type}} expected){
+        {{evaluation_function|indent(width=12)}}
+    }
+}
+
+{% if text is not none -%}
+// Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "// " ~ line ~ "\n"}}
+{%- endfor -%}
+//
+{%- endif %}
+// SOLUTION CODE
+// ============================================
+PLACEHOLDER_CODE_BODY

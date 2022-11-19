@@ -11,7 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Command data type."""
+
+"""Command data type.
+
+In the future, this will have gin support so that users can control timeouts
+per language.
+"""
 import dataclasses
 from typing import List
 
