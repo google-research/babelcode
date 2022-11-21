@@ -9,4 +9,4 @@ coverage==6.4.4
 psutil==5.9.2
 astpretty==3.0.0
 absl-py==1.2.0
-tensorflow==2.10.0
+tensorflow==2.10.1
