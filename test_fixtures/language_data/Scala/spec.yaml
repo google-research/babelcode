@@ -1,0 +1,71 @@
+primitives:
+  string:
+    type_name: 'String'
+    input: 'Test String'
+    output: '"Test String"'
+    null_output: '""'
+  integer: 
+    type_name: 'Int'
+    input: 1
+    output: '1'
+  boolean:
+    type_name: 'Boolean'
+    input: True
+    output: 'true'
+  float:
+    type_name: 'Float'
+    input: 10.1
+    output: '10.1F'
+  double:
+    type_name: 'Double'
+    input: 10.1
+    output: '10.1'
+  character:
+    type_name: 'Char'
+    input: "c"
+    output: "'c'"
+    null_output: "''"
+  long:
+    type_name: 'Long'
+    input: 1
+    output: '1L'
+data_structures_schema:
+  TYPE_NAME_1[]: 
+    expected: 'List[TYPE_NAME_1]'
+    elements:
+      - expected: 'TYPE_NAME_1'
+  list<list<TYPE_NAME_1>>: 
+    expected: 'List[List[TYPE_NAME_1]]'
+    elements:
+      - expected: 'List[TYPE_NAME_1]'
+        elements: 
+          - expected: 'TYPE_NAME_1'
+  map<TYPE_NAME_1;TYPE_NAME_1>: 
+    expected: 'HashMap[TYPE_NAME_1, TYPE_NAME_1]'
+    elements:
+      - expected: 'TYPE_NAME_1'
+    key_type: 
+      expected: 'TYPE_NAME_1'
+  set<TYPE_NAME_1>:
+    expected: 'HashSet[TYPE_NAME_1]'
+    elements:
+      - expected: 'TYPE_NAME_1'
+
+prompt_translation:
+  argument_name: 'arg_name'
+  signature_argument: 'arg_name: TYPE_NAME'
+  return_type: ": TYPE_NAME"
+  docstring: "/**\n * Test Docstring.\n * \\/\\*\\*\\/\\/\\/\\*\\/--\"\"\"\n */"
+  signature_with_docstring: "DOCSTRING\ndef test(SIGNATURE)RETURNS = {"
+
+
+
+escaped_string:
+  input: "$"
+  expected: "$"
+
+data_structures_literals:
+  nested_list: 'List(List(TYPE_VAL_1, TYPE_VAL_1), List(TYPE_VAL_1))'
+  nested_map: 'HashMap(KEY_VAL_1 -> List(TYPE_VAL_1, TYPE_VAL_1))'
+  set: 'HashSet(TYPE_VAL_1)'
+entry_point: 'test'

@@ -1,0 +1,41 @@
+{{ header }}
+
+{% if text is not none -%}
+// Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "// " ~ line ~ "\n"}}
+{%- endfor -%}
+//
+{%- endif %}
+// SOLUTION CODE
+// ============================================
+PLACEHOLDER_CODE_BODY
+
+
+// TESTING CODE 
+// ============================================
+def validateSolution(actual: {{return_type}} , expected: {{return_type}}): Boolean = {
+    {{evaluation_function|indent(width=4)}}
+}
+
+def driver({{signature}}, expected: {{return_type}}): String = {
+    try {
+        if (validateSolution(PLACEHOLDER_FN_NAME({{ params|join(', ')}}),expected)) {
+            "PASSED"
+        } else{
+            "FAILED"
+        }
+    }catch{
+        case e: Exception => {e.getClass.getName}
+    }
+
+}
+object QuestionEvaluator extends App {
+{%- for test_case in test_cases  -%}{{"\n"}}
+    println(s"TEST-{{test_case.idx}}...${driver(
+      {{test_case.inputs|join(", ")}}, 
+      {{test_case.outputs}}    
+    )}")   
+{% endfor %}
+}
+

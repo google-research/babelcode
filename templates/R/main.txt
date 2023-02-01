@@ -1,0 +1,37 @@
+{{ header }}
+
+{% if text is not none -%}
+# Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "# " ~ line ~ "\n"}}
+{%- endfor -%}
+# 
+{%- endif %}
+# SOLUTION CODE
+# ============================================
+PLACEHOLDER_CODE_BODY
+
+# TESTING CODE 
+# ============================================
+validate_solution <- function(actual, expected) {
+    {{ evaluation_function|indent }}
+}
+
+driver <- function({{signature}}, expected){
+    if (validate_solution(PLACEHOLDER_FN_NAME({{ params|join(', ')}}), expected)){
+        "PASSED"
+    } else{
+        "FAILED"
+    }
+}
+
+main <- function() {
+{%- for test_case in test_cases  %}
+    cat(sprintf("TEST-{{test_case.idx}}...%s\n",driver(
+        {{test_case.inputs|join(", ")}}, 
+        {{test_case.outputs}}
+    )))
+{% endfor %}
+}
+
+main()

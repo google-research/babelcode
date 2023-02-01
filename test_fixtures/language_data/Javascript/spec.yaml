@@ -1,0 +1,72 @@
+primitives:
+  string:
+    type_name: 'String'
+    input: 'Test String'
+    output: '"Test String"'
+    null_output: '""'
+  integer: 
+    type_name: 'Number'
+    input: 1
+    output: '1'
+  boolean:
+    type_name: 'Boolean'
+    input: True
+    output: 'true'
+  float:
+    type_name: 'Number'
+    input: 10.1
+    output: '10.1'
+  double:
+    type_name: 'Number'
+    input: 10.1
+    output: '10.1'
+  character:
+    type_name: 'String'
+    input: "c"
+    output: "'c'"
+    null_output: "''"
+  long:
+    type_name: 'Number'
+    input: 1
+    output: '1'
+    
+data_structures_schema:
+  TYPE_NAME_1[]: 
+    expected: 'Array'
+    elements:
+      - expected: 'TYPE_NAME_1'
+  list<list<TYPE_NAME_1>>: 
+    expected: 'Array'
+    elements:
+      - expected: 'Array'
+        elements: 
+          - expected: 'TYPE_NAME_1'
+  map<TYPE_NAME_1;TYPE_NAME_1>: 
+    expected: 'Map'
+    elements:
+      - expected: 'TYPE_NAME_1'
+    key_type: 
+      expected: 'TYPE_NAME_1'
+  set<TYPE_NAME_1>:
+    expected: 'Set'
+    elements:
+      - expected: 'TYPE_NAME_1'
+
+prompt_translation:
+  argument_name: 'arg_name'
+  signature_argument: 'arg_name'
+  return_type: ": TYPE_NAME"
+  docstring: "/**\n * Test Docstring.\n * \\/\\*\\*\\/\\/\\/\\*\\/--\"\"\"\n */"
+  signature_with_docstring: "DOCSTRING\nfunction test(SIGNATURE) {"
+
+escaped_string:
+  input: "$"
+  expected: "$"
+
+
+data_structures_literals:
+  nested_list: '[[TYPE_VAL_1, TYPE_VAL_1], [TYPE_VAL_1]]'
+  nested_map: '{KEY_VAL_1: [TYPE_VAL_1, TYPE_VAL_1]}'
+  set: 'new Set([TYPE_VAL_1])'
+
+entry_point: 'test'

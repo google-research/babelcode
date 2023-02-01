@@ -1,0 +1,5 @@
+{%- if evaluation_method == 'float' -%}
+    return Math.abs(actual - expected) < {{precision}};
+{%- else -%}
+    return convertToString(actual)===convertToString(expected);
+{%- endif -%}

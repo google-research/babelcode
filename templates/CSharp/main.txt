@@ -1,0 +1,53 @@
+{{ header }}
+{% if text is not none -%}
+// Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "// " ~ line ~ "\n"}}
+{%- endfor -%}
+//
+{%- endif %}
+// SOLUTION CODE
+// ============================================
+PLACEHOLDER_CODE_BODY
+
+// TESTING CODE 
+// ============================================
+namespace EvaluatePrediction {
+    class TestRunner {
+        public bool ValidateSolution({{return_type}} actual, {{return_type}} expected){
+            {{evaluation_function|indent(width=12)}}
+        }
+
+        public string driver({{signature}}, {{return_type}} expected){
+            try{
+              PLACEHOLDER_CLS_NAME solution_cls = new PLACEHOLDER_CLS_NAME();
+              {{return_type}} pred_result = solution_cls.PLACEHOLDER_FN_NAME({{ params|join(', ')}}); 
+              if (ValidateSolution(
+                    pred_result,
+                    expected)){
+                return "PASSED";
+              }
+              return "FAILED";
+            } 
+            catch (Exception exception_obj)
+            {
+              return exception_obj.GetType().FullName;
+            }
+        }
+        static void Main(string[] args) {
+            TestRunner runner = new TestRunner();
+            String result;
+            {% for test_case in test_cases  -%}
+            result = runner.driver(
+                {{test_case.inputs|join(", ")}}, 
+                {{test_case.outputs}}
+            );
+            Console.WriteLine(string.Format(
+                "TEST-{{test_case.idx}}...{0}",
+                result)
+            );    
+            {%- endfor %}
+        }
+    }
+}
+

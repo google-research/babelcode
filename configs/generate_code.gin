@@ -1,0 +1,2 @@
+# Gin file for code generation config.1e
+include 'configs/generation/base.gin'

@@ -1,0 +1,8 @@
+scratch/*
+eval_outputs/*
+*.log
+debug_code/*
+data/*/raw_datasets/*
+data/*/convert_failures/*
+data/*/dataset_fixes/*
+predictions/*

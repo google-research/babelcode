@@ -1,0 +1,6 @@
+include 'configs/evaluation/base.gin'
+
+execution:
+  num_workers=62
+
+  

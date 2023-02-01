@@ -1,0 +1,6 @@
+{"qid": "0", "id": "0", "language": "Python", "code": "def prediction(d):\n\treturn d[0]", "entry_point": "prediction"}
+{"qid": "0", "id": "0", "language": "C++", "code": "map<string,string> prediction(vector<map<string,string>> d){return d[0];}", "entry_point": "prediction"}
+{"qid": "0", "id": "0", "language": "Julia", "code": "function prediction(d)\n\treturn d[1]\nend", "entry_point": "prediction"}
+{"qid": "0", "id": "0", "language": "Java", "code": "class Solution{\n\tpublic Map<String,String> prediction(ArrayList<Map<String,String>> d){\n\t\treturn d.get(0);\n\t}\n}", "entry_point": "prediction","class_name":"Solution"}
+{"qid": "0", "id": "0", "language": "Go", "code": "func prediction(d []map[string]string) map[string]string{\n\treturn d[0]}", "entry_point": "prediction"}
+{"qid": "0", "id": "0", "language": "Javascript", "code": "function prediction(d){\n\treturn d[0]\n}", "entry_point": "prediction"}

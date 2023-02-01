@@ -1,0 +1,5 @@
+{%- if evaluation_method == 'float' -%}
+    return abs($actual - $expected) < {{precision}};
+{%- else -%}
+    return serialize($actual) == serialize($expected);
+{%- endif -%}

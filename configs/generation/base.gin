@@ -1,0 +1,6 @@
+from babelcode import code_generator
+
+prompt_generation:
+  force_type_annotations = False
+  obfuscation_fn = @code_generator.pass_through_obfuscate
+  

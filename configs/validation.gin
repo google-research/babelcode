@@ -1,0 +1,16 @@
+# Config for validating golden predictions with a dataset
+include 'configs/evaluation/base.gin'
+
+metrics:
+  num_preds_per_question=1
+  k_vals=[1]
+  subsampling_rounds=1
+  subsampling_iter_per_round=10
+
+format_output_metrics:
+  question_key_format='{language}/question/{question_id}'
+  language_key_format='{language}/{field}'
+
+execution:
+  num_workers=32
+  update_freq=25

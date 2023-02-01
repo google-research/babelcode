@@ -1,0 +1,19 @@
+# Config for Debugging.
+include 'configs/evaluation/base.gin'
+
+general:
+  debug_num_preds=2500
+  debug=True
+
+
+metrics:
+  num_preds_per_question=1
+  k_vals=[1]
+  subsampling_rounds=1
+  subsampling_iter_per_round=15
+  
+execution:
+  num_workers=1
+  update_freq=100
+  max_task_per_child=5
+  garbage_collection_freq=250

@@ -1,0 +1,56 @@
+{{ header }}
+{% if text is not none -%}
+// Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "// " ~ line ~ "\n"}}
+{%- endfor -%}
+//
+{%- endif %}
+// SOLUTION CODE
+// ============================================
+PLACEHOLDER_CODE_BODY
+
+// TESTING CODE 
+// ============================================
+bool validateSolution({{ return_type }} actual, {{ return_type }} expected){
+    {% filter indent(width=4) -%}
+    {{ evaluation_function }}
+    {%- endfilter %}
+}
+
+string driver({{signature}}, {{return_type}} expected){
+    try
+    {
+        if (validateSolution(PLACEHOLDER_FN_NAME({{ params|join(', ')}}), expected)){
+            return "PASSED";
+        }
+        return "FAILED";
+    }
+    catch (const std::overflow_error& exception_obj)
+    {
+        return typeid(exception_obj).name();
+    }
+    catch (const std::runtime_error& exception_obj)
+    {
+        return typeid(exception_obj).name();
+    }
+    catch (const std::exception& exception_obj)
+    {
+        return typeid(exception_obj).name();
+    }
+    catch (...)
+    {
+        return "UNK_ERROR";
+    }
+}
+
+int main() {
+    string result = "";
+{% for test_case in test_cases  %}
+    result = driver({{test_case.inputs|join(", ")}}, {{test_case.outputs}}); 
+    cout << "TEST-" << {{test_case.idx}} << "..."
+         <<  result
+         << "\n";
+{% endfor %}
+    return 0;
+}

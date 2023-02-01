@@ -1,0 +1,210 @@
+{
+  "7": {
+    "qid": "7",
+    "title": "MBPP/7",
+    "entry_cls_name": "Solution",
+    "text": "Write a function to find all words which are at least 4 characters long in a string by using regex.",
+    "schema": {
+      "params": [
+        {
+          "name": "text",
+          "type": "string"
+        }
+      ],
+      "return": {
+        "type": "list<string>"
+      }
+    },
+    "test_list": [
+      {
+        "idx": 0,
+        "outputs": [
+          "Please",
+          "move",
+          "back",
+          "stream"
+        ],
+        "inputs": {
+          "text": "Please move back to stream"
+        }
+      },
+      {
+        "idx": 1,
+        "outputs": [
+          "Jing",
+          "Tech"
+        ],
+        "inputs": {
+          "text": "Jing Eco and Tech"
+        }
+      },
+      {
+        "idx": 2,
+        "outputs": [
+          "Jhingai",
+          "wulu",
+          "road",
+          "Zone"
+        ],
+        "inputs": {
+          "text": "Jhingai wulu road Zone 3"
+        }
+      }
+    ],
+    "entry_fn_name": "find_char_long"
+  },
+  "8": {
+    "qid": "8",
+    "title": "MBPP/8",
+    "entry_cls_name": "Solution",
+    "text": "Write a function to find squares of individual elements in a list using lambda function.",
+    "schema": {
+      "params": [
+        {
+          "name": "nums",
+          "type": "list<integer>"
+        }
+      ],
+      "return": {
+        "type": "list<integer>"
+      }
+    },
+    "test_list": [
+      {
+        "idx": 0,
+        "outputs": [
+          1,
+          4,
+          9,
+          16,
+          25,
+          36,
+          49,
+          64,
+          81,
+          100
+        ],
+        "inputs": {
+          "nums": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        }
+      },
+      {
+        "idx": 1,
+        "outputs": [
+          100,
+          400,
+          900
+        ],
+        "inputs": {
+          "nums": [
+            10,
+            20,
+            30
+          ]
+        }
+      },
+      {
+        "idx": 2,
+        "outputs": [
+          144,
+          225
+        ],
+        "inputs": {
+          "nums": [
+            12,
+            15
+          ]
+        }
+      }
+    ],
+    "entry_fn_name": "square_nums"
+  },
+  "9": {
+    "qid": "8",
+    "title": "MBPP/8",
+    "entry_cls_name": "Solution",
+    "text": "Write a function to find squares of individual elements in a list using lambda function.",
+    "schema": {
+      "params": [
+        {
+          "name": "nums",
+          "type": "list<integer>"
+        }
+      ],
+      "return": {
+        "type": "list<integer>"
+      }
+    },
+    "test_list": [
+      {
+        "idx": 0,
+        "outputs": [
+          1,
+          4,
+          9,
+          16,
+          25,
+          36,
+          49,
+          64,
+          81,
+          100
+        ],
+        "inputs": {
+          "nums": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        }
+      },
+      {
+        "idx": 1,
+        "outputs": [
+          100,
+          400,
+          900
+        ],
+        "inputs": {
+          "nums": [
+            10,
+            20,
+            30
+          ]
+        }
+      },
+      {
+        "idx": 2,
+        "outputs": [
+          144,
+          225
+        ],
+        "inputs": {
+          "nums": [
+            12,
+            15
+          ]
+        }
+      }
+    ],
+    "entry_fn_name": "square_nums"
+  }
+}

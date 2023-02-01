@@ -1,0 +1,35 @@
+# General config settings for evaluation
+general:
+  seed=15
+
+
+metrics:
+  num_preds_per_question=200
+  k_vals=[1,10,25,50,100]
+  subsampling_rounds=5
+  subsampling_iter_per_round=10
+  shuffle=True
+  include_outcome_pct=True
+  tracked_pred_attrs=['final_command_memory','final_command_runtime','net_runtime']
+
+format_output_metrics:
+  question_key_format='{language}/question/{question_id}'
+  language_key_format='{language}/{field}'
+
+execution:
+  num_workers=62
+  update_freq=500
+  max_task_per_child=10
+  garbage_collection_freq=5000
+
+
+tensorboard_metrics:
+  overall_metrics = ['estimate_pass@1',
+     'estimate_pass@10',
+     'estimate_pass@100',
+     'Had Error_pct',
+     'Failed Tests_pct',
+     'Timed Out_pct',
+     'Had Runtime Error_pct']
+  question_metrics = ['Passed', 'Failed Tests']
+  

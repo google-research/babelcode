@@ -1,0 +1,1 @@
+{"question_id": "0", "test_cases": [{"idx": 0, "inputs": {"d": [{"A":"B"},{"D":"E"}]}, "outputs":{"A":"B"}}], "schema": {"return": {"type": "map<string;string>"}, "params": [{"name": "d", "type": "list<map<string;string>>"}]}, "title": "Get Keys of Map"}

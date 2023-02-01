@@ -1,0 +1,72 @@
+{
+  "Python": {
+   "metrics": {
+    "questions_passed": 2.0,
+    "total_predictions": 20,
+    "predictions_per_question": 10,
+    "total_questions": 2,
+    "estimate_pass@1": 55.00000000000001,
+    "estimate_pass@10": 100.0
+   },
+   "questions": {
+    "0": {
+     "num_passed": 8,
+     "num_predictions": 10,
+     "median_net_runtime": 3115.0,
+     "mean_net_runtime": 3016.875,
+     "had_error": 0,
+     "mean_num_test_cases_passed": 1.7,
+     "median_num_test_cases_passed": 2.0,
+     "num_passed_test_case_0": 8,
+     "num_passed_test_case_1": 9
+    },
+    "1": {
+     "num_passed": 3,
+     "num_predictions": 10,
+     "median_net_runtime": 1972.0,
+     "mean_net_runtime": 2589.0,
+     "had_error": 0,
+     "mean_num_test_cases_passed": 2.1,
+     "median_num_test_cases_passed": 2.0,
+     "num_passed_test_case_0": 8,
+     "num_passed_test_case_1": 5,
+     "num_passed_test_case_2": 8
+    }
+   }
+  },
+  "C++": {
+   "metrics": {
+    "questions_passed": 2.0,
+    "total_predictions": 20,
+    "predictions_per_question": 10,
+    "total_questions": 2,
+    "estimate_pass@1": 40.0,
+    "estimate_pass@10": 100.0
+   },
+   "questions": {
+    "0": {
+     "num_passed": 5,
+     "num_predictions": 10,
+     "median_net_runtime": 6312.0,
+     "mean_net_runtime": 5939.0,
+     "had_error": 0,
+     "mean_num_test_cases_passed": 1.5,
+     "median_num_test_cases_passed": 1.5,
+     "num_passed_test_case_0": 7,
+     "num_passed_test_case_1": 8
+    },
+    "1": {
+     "num_passed": 3,
+     "num_predictions": 10,
+     "median_net_runtime": 5630.0,
+     "mean_net_runtime": 5821.666666666667,
+     "had_error": 0,
+     "mean_num_test_cases_passed": 2.1,
+     "median_num_test_cases_passed": 2.0,
+     "num_passed_test_case_0": 5,
+     "num_passed_test_case_1": 8,
+     "num_passed_test_case_2": 8
+    }
+   }
+  }
+ }

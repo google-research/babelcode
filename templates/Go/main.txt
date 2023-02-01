@@ -1,0 +1,41 @@
+{{ header }}
+{% if text is not none -%}
+// Question Prompt (NOT what is passed to the model)
+{% for line in text.split('\n') -%}
+{{ "// " ~ line ~ "\n"}}
+{%- endfor -%}
+//
+{%- endif %}
+// SOLUTION CODE
+// ===================================
+PLACEHOLDER_CODE_BODY
+
+// TESTING CODE
+// ===================================
+func validateSolution(actual {{ return_type }}, expected {{ return_type }}) bool {
+    {% filter indent(width=4) -%}
+    {{ evaluation_function }}
+    {%- endfilter %}
+}
+
+func driver({{signature}}, expected {{ return_type }}) string {
+    if validateSolution(PLACEHOLDER_FN_NAME({{ params|join(', ')}}),expected) {
+            return "PASSED"
+    }
+    return "FAILED"
+
+}
+
+func main() {
+
+    // Use imports to avoid undefined errors
+    var _ = reflect.DeepEqual
+    _ = math.Abs
+    _ = sort.Sort
+    result := ""
+    {%- for test_case in test_cases  %}
+    result = driver({{test_case.inputs|join(", \n\t")}}, {{test_case.outputs}})
+    fmt.Printf("TEST-{{test_case.idx}}...%s\n", result)
+    {% endfor %}
+        
+}

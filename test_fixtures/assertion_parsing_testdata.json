@@ -1,0 +1,299 @@
+{
+  "BASIC_ASSERTIONS": {
+    "single_argument": [
+      "assert f([1,2,3]) == {'a':'bc'}",
+      {
+        "0": {
+          "inputs": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "outputs": {
+            "a": "bc"
+          },
+          "schema": {
+            "params": [
+              [
+                "list<integer>",
+                1
+              ]
+            ],
+            "returns": [
+              "map<string;string>",
+              1
+            ]
+          }
+        }
+      }
+    ],
+    "not_true": [
+      "assert not f({'a':[1,2]})",
+      {
+        "0": {
+          "inputs": [
+            {
+              "a": [
+                1,
+                2
+              ]
+            }
+          ],
+          "outputs": false,
+          "schema": {
+            "params": [
+              [
+                "map<string;list<integer>>",
+                2
+              ]
+            ],
+            "returns": [
+              "boolean",
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "is_true": [
+      "assert f('bool')",
+      {
+        "0": {
+          "inputs": [
+            "bool"
+          ],
+          "outputs": true,
+          "schema": {
+            "params": [
+              [
+                "string",
+                0
+              ]
+            ],
+            "returns": [
+              "boolean",
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "list_values_keywords": [
+      "assert f(['int','str']) == 1",
+      {
+        "0": {
+          "inputs": [
+            [
+              "int",
+              "str"
+            ]
+          ],
+          "outputs": 1,
+          "schema": {
+            "params": [
+              [
+                "list<string>",
+                1
+              ]
+            ],
+            "returns": [
+              "integer",
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "tuple": [
+      "assert f(('a',1)) == 1",
+      {
+        "0": {
+          "inputs": [
+            [
+              "a",
+              1
+            ]
+          ],
+          "outputs": 1,
+          "schema": {
+            "params": [
+              [
+                "tuple<character|integer>",
+                1
+              ]
+            ],
+            "returns": [
+              "integer",
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "unary_op": [
+      "assert f(not 1) == -1",
+      {
+        "0": {
+          "inputs": [
+            false
+          ],
+          "outputs": -1,
+          "schema": {
+            "params": [
+              [
+                "boolean",
+                0
+              ]
+            ],
+            "returns": [
+              "integer",
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "mixed_double": [
+      "assert f([[1.0, 1.234567891], [1.0,1.0]]) == 1.0",
+      {
+        "0": {
+          "inputs": [
+            [
+              [
+                1.0,
+                1.234567891
+              ],
+              [
+                1.0,
+                1.0
+              ]
+            ]
+          ],
+          "outputs": 1.0,
+          "schema": {
+            "params": [
+              [
+                "list<list<double>>",
+                2
+              ]
+            ],
+            "returns": [
+              "float",
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "empty_list":["assert f([]) == 1.0",{
+      "0": {
+        "inputs": [
+          [
+          ]
+        ],
+        "outputs": 1.0,
+        "schema": {
+          "params": [
+            [
+              "list<null>",
+              1
+            ]
+          ],
+          "returns": [
+            "float",
+            0
+          ]
+        }
+      }
+    }]
+  },
+  "MULTIPLE_TEST_CASES": {
+    "simple": [
+      "assert f(1)\nassert f(2)==False\nassert not f(3)",
+      {
+        "0": {
+          "inputs":[1],
+          "outputs": true,
+          "schema":{
+            "params":[
+              ["integer",0]
+            ],
+            "returns":["boolean",0]
+          }
+        },
+        "1":{
+          "inputs":[2],
+          "outputs": false,
+          "schema":{
+            "params":[
+              ["integer",0]
+            ],
+            "returns":["boolean",0]
+          }
+        },
+        "2":{
+          "inputs":[3],
+          "outputs": false,
+          "schema":{
+            "params":[
+              ["integer",0]
+            ],
+            "returns":["boolean",0]
+          }
+        }
+      }
+    ],
+    "comment_between_asserts": [
+      "assert f(1)\n# This is a comment\nassert not f(3)",
+      {
+        "0": {
+          "inputs":[1],
+          "outputs": true,
+          "schema":{
+            "params":[
+              ["integer",0]
+            ],
+            "returns":["boolean",0]
+          }
+        },
+        "1":{
+          "inputs":[3],
+          "outputs": false,
+          "schema":{
+            "params":[
+              ["integer",0]
+            ],
+            "returns":["boolean",0]
+          }
+        }
+      }
+    ],"expression_between_asserts": [
+      "for i in range(10):\n\tassert f(i) == False\nassert f(1)\nx=f(2)\nassert not f(3)",
+      {
+        "0": {
+          "inputs":[1],
+          "outputs": true,
+          "schema":{
+            "params":[
+              ["integer",0]
+            ],
+            "returns":["boolean",0]
+          }
+        },
+        "1":{
+          "inputs":[3],
+          "outputs": false,
+          "schema":{
+            "params":[
+              ["integer",0]
+            ],
+            "returns":["boolean",0]
+          }
+        }
+      }
+    ]
+      
+  }
+}
