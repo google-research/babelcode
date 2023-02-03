@@ -1,23 +1,54 @@
-# Code Evaluation Framework
+# BabelCode
 
-Code Evaluation across many languages.
+![overview](/img/overview_fig.png)
 
-## How To Evaluate a Set of Predictions
+A framework for execution-based evaluation of any dataset in any language from the paper [Measuring The Impact Of Programming Language Distribution]().
+
+## How To Evaluate A Dataset
 
 1.  Install the requirements with `pip install -r requirements.txt`
-2.  Download the `questions.jsonl` file with all of the question data.
-3.  Then, in a bash terminal, run the command
+2.  Choose a dataset from [the supported raw datasets.](/data/raw_datasets/). For this example we will use [HumanEval](/data/raw_datasets/human_eval_questions.jsonl).
+3.  You must first convert the dataset to the BabelCode format. To create BC-HumanEval, run
+```bash
+python convert_dataset.py --dataset_name="human_eval" --input_path="data/raw_datasets/human_eval_questions.jsonl"
+```
+This will create the parsed dataset located in `data/parsed_datasets/human_eval.jsonl`. It will additionally create the files `data/golden_predictions/human_eval.jsonl` and `data/convert_failures/human_eval.txt`. The former is the gold solutions from the dataset that allows validation of BabelCode. The convert failures is the description of all failures that occured when trying to convert the dataset.
 
-`python generate_test_code.py ${PATH TO YOUR questions.jsonl} ${WHERE YOU WANT
-TO OUTPUT}`
+4.  To generate the testing code and prompt data for the dataset run 
 
-1.  To then evaluate a set of predictions on
+```bash
+python generate_test_code.py --gin_file="configs/generate_code.gin" \
+    --input="data/parsed_datasets/human_eval.jsonl" \
+    --output="data/problem_code/human_eval"
+```
 
-`python evaluate_predictions.py ${PATH TO THE PREDICTIONS FILE} ${PATH TO THE
-OUTPUT OF STEP 3}`
+This will create the `data/problem_code/human_eval` directory. In it will be the following files:
 
-NOTE: The predictions need to be a single jsonlines file where each entry must
-have a `language` key.
+* `testing_code.jsonl`: The jinja testing scripts and problem information for each problem in the dataset and each language supported by BabelCode.
+* `prompt_info.jsonl`: The translated signatures, both with and without docstrings, for each problem in the dataset and each language supported by BabelCode.  
+* `failures`: A directory of JSONL files where each file contains the failures for each langauge.
+
+4. Next build the docker image with
+
+```sh
+docker build -t babelcode:latest .
+```
+
+**Note:** A prebuilt docker image will be released soon.
+
+5.  To then evaluate a set of predictions on
+
+```bash
+docker run -v "$(pwd)/eval_outputs":"$(pwd)/eval_outputs":z -e ALLOW_EXECUTION=true babelcode:latest \
+    python evaluate_predictions.py --gin_file="configs/validate.gin" \
+    --experiment_name="tutorial" \
+    --predictions="data/golden_predictions/human_eval.jsonl" \
+    --test_code="data/problem_code/human_eval" \
+    --output_path="$(pwd)/eval_outputs"
+```
+
+The outputs will be written to `eval_outputs/tutorial`.
+
 
 ## Formatting Predictions
 
@@ -38,6 +69,7 @@ Optional Keys are:
     prediction class to call when evaluating.
 
 # Overview of How the Framework Works
+![sample](/img/sample_program.png)
 
 1.  For each language, generate a json lines file from question specifications
     where each line contains both the question information and the raw code
@@ -64,5 +96,7 @@ Optional Keys are:
 5.  Report the aggregated statistics from all the questions and save both the
     raw results (result for each test case, the stdout/stderr, commands used,
     etc.) and the metrics to a specified output directory.
+
+Additional documentation can be found in [the `docs` directory.](/docs/)
 
 _This is not an officially supported Google product._

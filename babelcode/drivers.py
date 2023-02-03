@@ -294,7 +294,7 @@ def setup_language_code_dirs(
     prediction = Prediction.from_dict(
         pred_dict, file_path=code_path, default_language=lang.name
     )
-    with code_path.open('w') as f:
+    with code_path.open('w', encoding='utf-8') as f:
       code = question['test_code'].replace(
           'PLACEHOLDER_CODE_BODY', prediction.code
       )

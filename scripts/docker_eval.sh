@@ -34,10 +34,10 @@ mkdir -p tmp
 cp "${PRED_PATH}" "tmp/${PRED_FILE}"
 
 
-docker build -t pl-execution-framework:latest .
+docker build -t babelcode:latest .
 
 docker run -v "$(pwd)/tmp":"$(pwd)/tmp":z -e ALLOW_EXECUTION=true \
-  pl-execution-framework:latest \
+  babelcode:latest \
   python evaluate_predictions.py \
   "${OTHER_ARGS[@]}" \
   --gin_file="${CONFIG_PATH}" --experiment_name="${OUTPUT_DIR_NAME}" \
