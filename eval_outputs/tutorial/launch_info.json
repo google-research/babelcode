@@ -1,0 +1,4 @@
+{
+ "prediction_path": "/evaluation/data/golden_predictions/human_eval.jsonl",
+ "test_code_path": "/evaluation/data/problem_code/human_eval"
+}

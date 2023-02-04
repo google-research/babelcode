@@ -1,0 +1,38 @@
+# Parameters for execution:
+# ==============================================================================
+execution.garbage_collection_freq = 5000
+execution.max_task_per_child = 10
+execution.num_workers = 4
+execution.update_freq = 500
+
+# Parameters for format_output_metrics:
+# ==============================================================================
+format_output_metrics.language_key_format = '{language}/{field}'
+format_output_metrics.question_key_format = '{language}/question/{question_id}'
+
+# Parameters for general:
+# ==============================================================================
+general.seed = 15
+
+# Parameters for metrics:
+# ==============================================================================
+metrics.include_outcome_pct = True
+metrics.k_vals = [1, 10, 25, 50, 100]
+metrics.num_preds_per_question = 200
+metrics.shuffle = True
+metrics.subsampling_iter_per_round = 10
+metrics.subsampling_rounds = 5
+metrics.tracked_pred_attrs = \
+    ['final_command_memory', 'final_command_runtime', 'net_runtime']
+
+# Parameters for tensorboard_metrics:
+# ==============================================================================
+tensorboard_metrics.overall_metrics = \
+    ['estimate_pass@1',
+     'estimate_pass@10',
+     'estimate_pass@100',
+     'Had Error_pct',
+     'Failed Tests_pct',
+     'Timed Out_pct',
+     'Had Runtime Error_pct']
+tensorboard_metrics.question_metrics = ['Passed', 'Failed Tests']

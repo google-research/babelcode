@@ -4,17 +4,26 @@
 
 A framework for execution-based evaluation of any dataset in any language from the paper [Measuring The Impact Of Programming Language Distribution]().
 
-## How To Evaluate A Dataset
 
-1.  Install the requirements with `pip install -r requirements.txt`
-2.  Choose a dataset from [the supported raw datasets.](/data/raw_datasets/). For this example we will use [HumanEval](/data/raw_datasets/human_eval_questions.jsonl).
-3.  You must first convert the dataset to the BabelCode format. To create BC-HumanEval, run
+## Usage
+
+### Prerequisites
+
+1. Docker (ideally installed in sudoless mode.)
+2. Python 3.9+
+3. Install the requirements with `pip install -r requirements.txt`
+
+### How To Evaluate A Dataset
+
+
+1.  Choose a dataset from [the supported raw datasets.](/data/raw_datasets/). For this example we will use [HumanEval](/data/raw_datasets/human_eval_questions.jsonl).
+2.  You must first convert the dataset to the BabelCode format. To create BC-HumanEval, run
 ```bash
 python convert_dataset.py --dataset_name="human_eval" --input_path="data/raw_datasets/human_eval_questions.jsonl"
 ```
 This will create the parsed dataset located in `data/parsed_datasets/human_eval.jsonl`. It will additionally create the files `data/golden_predictions/human_eval.jsonl` and `data/convert_failures/human_eval.txt`. The former is the gold solutions from the dataset that allows validation of BabelCode. The convert failures is the description of all failures that occured when trying to convert the dataset.
 
-4.  To generate the testing code and prompt data for the dataset run 
+3.  To generate the testing code and prompt data for the dataset run 
 
 ```bash
 python generate_test_code.py --gin_file="configs/generate_code.gin" \
@@ -28,26 +37,16 @@ This will create the `data/problem_code/human_eval` directory. In it will be the
 * `prompt_info.jsonl`: The translated signatures, both with and without docstrings, for each problem in the dataset and each language supported by BabelCode.  
 * `failures`: A directory of JSONL files where each file contains the failures for each langauge.
 
-4. Next build the docker image with
-
-```sh
-docker build -t babelcode:latest .
-```
-
-**Note:** A prebuilt docker image will be released soon.
-
-5.  To then evaluate a set of predictions on
-
+4. Finally run
 ```bash
-docker run -v "$(pwd)/eval_outputs":"$(pwd)/eval_outputs":z -e ALLOW_EXECUTION=true babelcode:latest \
-    python evaluate_predictions.py --gin_file="configs/validate.gin" \
-    --experiment_name="tutorial" \
-    --predictions="data/golden_predictions/human_eval.jsonl" \
-    --test_code="data/problem_code/human_eval" \
-    --output_path="$(pwd)/eval_outputs"
+bash scripts/docker_eval.sh configs/tutorial_eval.gin tutorial data/golden_predictions/human_eval.jsonl data/problem_code/human_eval
 ```
 
-The outputs will be written to `eval_outputs/tutorial`.
+The outputs will be written to `eval_outputs/tutorial`. It contains:
+
+* `metrics.json`: The overall results for each language
+* `pred_results.jsonl`: the results for each prediction
+* `{LANGUAGE}_execution_results.jsonl`: The raw execution result for each prediction in LANGUAGE
 
 
 ## Formatting Predictions

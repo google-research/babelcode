@@ -4,7 +4,7 @@
 FROM python:3.9-slim-buster
 RUN apt-get update -y
 RUN apt-get install -y build-essential git wget unzip zip
-RUN if ! id 1000; then useradd -m -u 1000 babelcode; fi
+RUN useradd -m -u 1000 babelcode
 
 # Installing Julia
 RUN wget https://julialang-s3.julialang.org/bin/linux/x64/1.7/julia-1.7.3-linux-x86_64.tar.gz \
@@ -66,8 +66,9 @@ RUN apt-get install -y mono-complete
 RUN apt-get install -y php-cli
 
 # Install Scala
-RUN wget https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-linux.gz 
-RUN gzip -d cs-x86_64-pc-linux.gz && mv cs-x86_64-pc-linux cs && chmod +x cs && ./cs setup -y
+RUN wget https://github.com/coursier/coursier/releases/download/v2.1.0-RC5/cs-x86_64-pc-linux-static.gz 
+RUN gzip -d cs-x86_64-pc-linux-static && mv cs-x86_64-pc-linux-static cs && chmod +x cs
+RUN ./cs setup -y
 RUN mv ~/.local/share/coursier /coursier
 RUN chown -R 1000:root "/coursier" && chmod -R 775 "/coursier"
 ENV PATH="$PATH:/coursier/bin"
@@ -92,6 +93,7 @@ RUN chown -R 1000:root "$NVM_DIR" && chmod -R 775 "$NVM_DIR"
 # Copy the framework to the working directory.
 RUN mkdir /evaluation
 RUN chown -R 1000:root /evaluation && chmod -R 775 /evaluation
+
 WORKDIR "/evaluation"
 COPY package.json .
 
@@ -101,6 +103,6 @@ RUN npm install --global --verbose typescript
 
 # Need to do this for go otherwise there are permission denied errors.
 ENV GOCACHE="/evaluation/.cache"
-
 # Copy the framework to the working directory.
 COPY . .
+# RUN chown -R babelcode:babelcode /evaluation && chmod -R 775 /evaluation
