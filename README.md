@@ -98,4 +98,15 @@ Optional Keys are:
 
 Additional documentation can be found in [the `docs` directory.](/docs/)
 
+## Citation
+```
+@article{orlanski2023measuring,
+  title={Measuring The Impact Of Programming Language Distribution},
+  author={Orlanski, Gabriel and Xiao, Kefan and Garcia, Xavier and Hui, Jeffrey and Howland, Joshua and Malmaud, Jonathan and Austin, Jacob and Singh, Rishah and Catasta, Michele},
+  journal={arXiv preprint arXiv:2302.01973},
+  year={2023}
+}
+```
+
+
 _This is not an officially supported Google product._
