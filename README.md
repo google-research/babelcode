@@ -107,6 +107,52 @@ Additional documentation can be found in [the `docs` directory.](/docs/)
   year={2023}
 }
 ```
+If you use the supported datasets, you must also cite the original work the datasets were created from:
 
+### HumanEval
+```
+@article{chen2021codex,
+  title={Evaluating Large Language Models Trained on Code},
+  author={Mark Chen and Jerry Tworek and Heewoo Jun and Qiming Yuan and Henrique Ponde de Oliveira Pinto and Jared Kaplan and Harri Edwards and Yuri Burda and Nicholas Joseph and Greg Brockman and Alex Ray and Raul Puri and Gretchen Krueger and Michael Petrov and Heidy Khlaaf and Girish Sastry and Pamela Mishkin and Brooke Chan and Scott Gray and Nick Ryder and Mikhail Pavlov and Alethea Power and Lukasz Kaiser and Mohammad Bavarian and Clemens Winter and Philippe Tillet and Felipe Petroski Such and Dave Cummings and Matthias Plappert and Fotios Chantzis and Elizabeth Barnes and Ariel Herbert-Voss and William Hebgen Guss and Alex Nichol and Alex Paino and Nikolas Tezak and Jie Tang and Igor Babuschkin and Suchir Balaji and Shantanu Jain and William Saunders and Christopher Hesse and Andrew N. Carr and Jan Leike and Josh Achiam and Vedant Misra and Evan Morikawa and Alec Radford and Matthew Knight and Miles Brundage and Mira Murati and Katie Mayer and Peter Welinder and Bob McGrew and Dario Amodei and Sam McCandlish and Ilya Sutskever and Wojciech Zaremba},
+  year={2021},
+  eprint={2107.03374},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG}
+}
+```
+
+### Mostly Basic Programming Problems (MBPP)
+```
+@article{Austin2021ProgramSW,
+  title={Program Synthesis with Large Language Models},
+  author={Jacob Austin and Augustus Odena and Maxwell Nye and Maarten Bosma and Henryk Michalewski and David Dohan and Ellen Jiang and Carrie J. Cai and Michael Terry and Quoc V. Le and Charles Sutton},
+  journal={ArXiv},
+  year={2021},
+  volume={abs/2108.07732}
+}
+```
+
+### Python Programming Puzzles (P3)
+```
+@inproceedings{
+    schuster2021programming,
+    title={Programming Puzzles},
+    author={Tal Schuster and Ashwin Kalyan and Alex Polozov and Adam Tauman Kalai},
+    booktitle={Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track},
+    year={2021},
+    url={https://arxiv.org/abs/2106.05784}
+}
+```
+
+### Transcoder
+```
+@article{roziere2020unsupervised,
+  title={Unsupervised translation of programming languages},
+  author={Roziere, Baptiste and Lachaux, Marie-Anne and Chanussot, Lowik and Lample, Guillaume},
+  journal={Advances in Neural Information Processing Systems},
+  volume={33},
+  year={2020}
+}
+```
 
 _This is not an officially supported Google product._
