@@ -95,7 +95,7 @@ def safe_execute(
       cwd=cwd,
       stdout=subprocess.PIPE,
       stderr=subprocess.PIPE,
-      preexec_fn=set_limits,
+      # preexec_fn=set_limits,
   )
   pid = execution_process.pid
   process = psutil.Process(pid)

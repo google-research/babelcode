@@ -31,6 +31,16 @@ import gin
 import tensorflow as tf
 
 
+QUESTION_DATA_KEYS = {
+  "test_code",
+  "entry_fn_name",
+  "entry_cls_name",
+  "qid",
+  "language",
+  "test_list",
+  "test_case_ids",
+} 
+
 @gin.configurable(
     'general',
     denylist=[
@@ -46,7 +56,7 @@ def execute_predictions_from_file(
     experiment_name: str,
     prediction_path: pathlib.Path,
     output_path: pathlib.Path,
-    test_code_path: pathlib.Path,
+    test_code_path: Optional[pathlib.Path],
     overwrite: bool,
     eval_languages: Optional[str] = None,
     debug: bool = False,
@@ -114,16 +124,19 @@ def execute_predictions_from_file(
 
   # Allow the use of multiple language predictions in a single file by using
   # the language in the key during reading.
-  key_fn = lambda l: f'{l["language"]}/{l["qid"]}/{l["id"]}'
-  all_predictions = utils.jsonl_file_to_map(prediction_path, key_fn)
-  logging.info('Found %d total predictions', len(all_predictions.keys()))
+  all_predictions = list(map(json.loads, prediction_path.open()))
+  logging.info('Found %d total predictions', len(all_predictions))
 
   # Separate the predictions into their own language buckets.
   preds_by_lang = collections.defaultdict(dict)
+  question_id_counter = collections.Counter()
   logging.debug('Grouping predictions by language')
-  for full_key, value in all_predictions.items():
-    language, key = full_key.split('/',1)
-    preds_by_lang[language][key] = value
+  for prediction in all_predictions:
+    language = prediction[f"language"]
+    pid = question_id_counter[f"{prediction['language']}/{prediction['qid']}"]
+    prediction['id'] = pid
+    preds_by_lang[language][f"{prediction['qid']}/{pid}"] = prediction
+    question_id_counter[f"{prediction['language']}/{prediction['qid']}"] += 1
 
   langs_found = list(sorted(preds_by_lang))
   logging.info('%d language(s) found', len(langs_found))
@@ -154,20 +167,29 @@ def execute_predictions_from_file(
         f,
         indent=True,
     )
-
-  logging.info('Reading questions from %s', test_code_path)
+  
   question_mapping = collections.defaultdict(dict)
-  found = 0
-  for line in map(
-      json.loads, test_code_path.joinpath('testing_code.jsonl').open()
-  ):
-    question_mapping[line['language']][str(line['qid'])] = line
-    found += 1
 
+  found = 0
+  if test_code_path:
+    logging.info('Reading questions from %s', test_code_path)
+    for line in map(
+        json.loads, test_code_path.joinpath('testing_code.jsonl').open()
+    ):
+      question_mapping[line['language']][str(line['qid'])] = line
+      found += 1
+  else:
+    logging.info('Making question mapping from predictions found.')
+    for lang, preds in preds_by_lang.items():
+      for pid, pred in preds.items():
+        qid, _ = pid.split('/')
+        question_mapping[lang][qid] ={k:pred[k] for k in QUESTION_DATA_KEYS}
+      found += len(question_mapping[language])
+  
   logging.info(
       'Found %d questions across %d languages', found, len(question_mapping)
   )
-
+  
   all_metrics = {}
   all_pred_metrics = []
   all_error_per_lang = {}
@@ -331,11 +353,14 @@ if __name__ == '__main__':
     gin.parse_config_file(str(gin_path))
     gin.parse_config(bindings=bindings)
 
+    test_code_path = None
+    if _TEST_CODE_PATH.value:
+      test_code_path = pathlib.Path(_TEST_CODE_PATH.value).resolve()
     execute_predictions_from_file(
         experiment_name=_EXP_NAME.value,
         prediction_path=pathlib.Path(_PRED_PATH.value).resolve(),
         output_path=pathlib.Path(_OUTPUT_PATH.value).resolve(),
-        test_code_path=pathlib.Path(_TEST_CODE_PATH.value).resolve(),
+        test_code_path=test_code_path,
         overwrite=_OVERWRITE.value,
         validation_mode=_VALIDATION_MODE.value,
         eval_languages=_LANGUAGES.value,
@@ -346,6 +371,5 @@ if __name__ == '__main__':
       _EXP_NAME.name,
       _OUTPUT_PATH.name,
       _PRED_PATH.name,
-      _TEST_CODE_PATH.name,
   ])
   app.run(eval_preds_main)

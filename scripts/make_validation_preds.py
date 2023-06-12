@@ -28,6 +28,7 @@ if str(pathlib.Path(__file__).parents[1]) not in sys.path:
 
 from babelcode import languages
 from babelcode import schema_parsing
+from babelcode import data_types
 
 _NAME = flags.DEFINE_string('name',
                             None,
@@ -42,9 +43,24 @@ _OUT_PATH = flags.DEFINE_string('output_path',
                                 required=True,
                                 help="Path to save.")
 
+_ADD_TEST_DATA = flags.DEFINE_bool("add_test_data", False, help="Add Testing data to the predictions")
 
-def make_pred_dict(qid, pid, code, lang):
-  return {'qid': qid, 'id': pid, 'code': code, 'language': lang}
+_ONLY_LANG=flags.DEFINE_string("language", default=None, help="Only Make validation predictions in this language.")
+
+
+QUESTION_DATA_KEYS = {
+  "test_code",
+  "entry_fn_name",
+  "entry_cls_name",
+  "qid",
+  "language",
+  "test_list",
+  "test_case_ids",
+} 
+
+
+def make_pred_dict(qid, code, lang):
+  return {'qid': qid, 'code': code, 'language': lang}
 
 
 def group_by_lang(generator):
@@ -83,8 +99,10 @@ def main(_):
         validation_preds.append(pred)
         if qid in prompt_info[lang]:
           prompt_info[lang].pop(qid)
-
   for lang, prompt_map in prompt_info.items():
+    if _ONLY_LANG.value and lang != _ONLY_LANG.value:
+      continue
+    
     if not prompt_map:
       continue
     print(f'Generating {len(prompt_map)} validation predictions for {lang}...')
@@ -100,14 +118,19 @@ def main(_):
 
       schema, _ = schema_parsing.parse_schema_and_input_order(
           language_spec, question_data['schema'])
-      return_type = schema['expected']
+      return_type = schema[data_types.EXPECTED_KEY_NAME]
       return_value = question_data['test_list'][0]['outputs']
 
       return_code = translator.convert_var_to_literal(return_type, return_value)
       signature = prompt['signature_with_docstring'] or prompt['signature']
       input_code = func_template.replace('FN_SIGNATURE', signature)
       input_code = input_code.replace('RETURN_VALUE', return_code)
-      validation_preds.append(make_pred_dict(qid, '1', input_code, lang))
+      p_dict = make_pred_dict(qid, input_code, lang)
+      
+      if _ADD_TEST_DATA.value:
+        for k in QUESTION_DATA_KEYS:
+          p_dict[k] = question_data[k]
+      validation_preds.append(p_dict)
 
   out_path = pathlib.Path(_OUT_PATH.value)
   if not out_path.exists():

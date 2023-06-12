@@ -12,7 +12,7 @@ A framework for execution-based evaluation of any dataset in any language from t
 ```bash
 python convert_dataset.py --dataset_name="human_eval" --input_path="data/raw_datasets/human_eval_questions.jsonl"
 ```
-This will create the parsed dataset located in `data/parsed_datasets/human_eval.jsonl`. It will additionally create the files `data/golden_predictions/human_eval.jsonl` and `data/convert_failures/human_eval.txt`. The former is the gold solutions from the dataset that allows validation of BabelCode. The convert failures is the description of all failures that occured when trying to convert the dataset.
+This will create the parsed dataset located in `data/parsed_datasets/human_eval.jsonl`. It will additionally create the files `data/golden_predictions/human_eval.jsonl` and `data/convert_failures/human_eval.txt`. The former is the gold solutions from the dataset that allows validation of BabelCode. The convert failures is the description of all failures that occurred when trying to convert the dataset.
 
 4.  To generate the testing code and prompt data for the dataset run 
 
@@ -26,7 +26,7 @@ This will create the `data/problem_code/human_eval` directory. In it will be the
 
 * `testing_code.jsonl`: The jinja testing scripts and problem information for each problem in the dataset and each language supported by BabelCode.
 * `prompt_info.jsonl`: The translated signatures, both with and without docstrings, for each problem in the dataset and each language supported by BabelCode.  
-* `failures`: A directory of JSONL files where each file contains the failures for each langauge.
+* `failures`: A directory of JSONL files where each file contains the failures for each language.
 
 4. Next build the docker image with
 
@@ -40,7 +40,7 @@ docker build -t babelcode:latest .
 
 ```bash
 docker run -v "$(pwd)/eval_outputs":"$(pwd)/eval_outputs":z -e ALLOW_EXECUTION=true babelcode:latest \
-    python evaluate_predictions.py --gin_file="configs/validate.gin" \
+    python evaluate_predictions.py --gin_file="configs/validation.gin" \
     --experiment_name="tutorial" \
     --predictions="data/golden_predictions/human_eval.jsonl" \
     --test_code="data/problem_code/human_eval" \
@@ -59,8 +59,6 @@ follwing keys:
 1.  `qid`: A question ID the prediction is for.
 2.  `language`: The language the prediction is in.
 3.  `code`: The code prediction to run.
-4.  `id`: The id of the prediction. For each question, no two predictions may
-    have the same id.
 
 Optional Keys are:
 
