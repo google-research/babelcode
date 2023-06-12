@@ -1,0 +1,54 @@
+I0204 16:20:54.008981 140043808352064 evaluate_predictions.py:97] Evaluating predictions from /evaluation/data/golden_predictions/human_eval.jsonl
+I0204 16:20:54.009155 140043808352064 evaluate_predictions.py:98] Saving to /home/gabe/Projects/babelcode/eval_outputs/tutorial
+I0204 16:20:54.009213 140043808352064 evaluate_predictions.py:99] Reading tests from /evaluation/data/problem_code/human_eval
+I0204 16:20:54.019282 140043808352064 evaluate_predictions.py:113] No prior results found
+I0204 16:20:54.020300 140043808352064 evaluate_predictions.py:119] Found 161 total predictions
+I0204 16:20:54.020563 140043808352064 evaluate_predictions.py:129] 1 language(s) found
+I0204 16:20:54.020624 140043808352064 evaluate_predictions.py:131] # Preds by Language:
+I0204 16:20:54.020680 140043808352064 evaluate_predictions.py:134]     Python = 161
+I0204 16:20:54.020733 140043808352064 evaluate_predictions.py:144] Saving launch information...
+I0204 16:20:54.021831 140043808352064 evaluate_predictions.py:158] Reading questions from /evaluation/data/problem_code/human_eval
+I0204 16:20:54.131813 140043808352064 evaluate_predictions.py:167] Found 2576 questions across 16 languages
+I0204 16:20:54.132096 140043808352064 drivers.py:456] Force Use Question Entry is disabled.
+I0204 16:20:54.132164 140043808352064 drivers.py:470] Skipping 0 already executed predictions out of 161
+I0204 16:20:54.145781 140043808352064 execution.py:278] Evaluating 161 predictions in Python
+I0204 16:20:54.146447 140043808352064 execution.py:294] 0/161 are not be able to be executed
+I0204 16:20:54.146591 140043808352064 execution.py:310] Starting 4 workers...
+I0204 16:20:55.408114 140043808352064 execution.py:438] Finished executing 161 in 0:00:01.261429
+I0204 16:20:55.408513 140043808352064 metrics.py:386] Calculating metrics from 161 results
+I0204 16:20:55.410008 140043808352064 metrics.py:305] Finished parsing 161 (expected 161) for 161 questions
+I0204 16:20:55.410078 140043808352064 metrics.py:330] Creating 161 question results...
+I0204 16:20:55.413602 140043808352064 metrics.py:179] Calculating question aggregate metrics.
+I0204 16:20:55.435237 140043808352064 metrics.py:406] Calculating percentages for prediction outcomes...
+I0204 16:20:55.435330 140043808352064 metrics.py:230] Calculating pass@k values for 161 questions.
+I0204 16:20:55.439578 140043808352064 metrics.py:89] Calculating subsampling passes for k=1 and passing_vals.shape=(161, 200)
+I0204 16:20:55.439647 140043808352064 metrics.py:92] Doing 5 rounds with 10 iterations per round.
+I0204 16:20:55.532809 140043808352064 metrics.py:89] Calculating subsampling passes for k=10 and passing_vals.shape=(161, 200)
+I0204 16:20:55.532907 140043808352064 metrics.py:92] Doing 5 rounds with 10 iterations per round.
+I0204 16:20:55.627604 140043808352064 metrics.py:89] Calculating subsampling passes for k=25 and passing_vals.shape=(161, 200)
+I0204 16:20:55.627687 140043808352064 metrics.py:92] Doing 5 rounds with 10 iterations per round.
+I0204 16:20:55.726131 140043808352064 metrics.py:89] Calculating subsampling passes for k=50 and passing_vals.shape=(161, 200)
+I0204 16:20:55.726214 140043808352064 metrics.py:92] Doing 5 rounds with 10 iterations per round.
+I0204 16:20:55.829215 140043808352064 metrics.py:89] Calculating subsampling passes for k=100 and passing_vals.shape=(161, 200)
+I0204 16:20:55.829305 140043808352064 metrics.py:92] Doing 5 rounds with 10 iterations per round.
+I0204 16:20:56.034270 140043808352064 drivers.py:412] Adding metadata to 161 questions
+I0204 16:20:56.040192 140043808352064 evaluate_predictions.py:226] Saving metrics to /home/gabe/Projects/babelcode/eval_outputs/tutorial/metrics.json
+I0204 16:20:56.048948 140043808352064 evaluate_predictions.py:231] Saving all prediction results to /home/gabe/Projects/babelcode/eval_outputs/tutorial/pred_results.jsonl
+I0204 16:20:56.058506 140043808352064 evaluate_predictions.py:254] Metrics:
+I0204 16:20:56.058571 140043808352064 evaluate_predictions.py:256] 	Python:
+I0204 16:20:56.058801 140043808352064 evaluate_predictions.py:271] 	                 estimate_pass@1 = 0.500
+I0204 16:20:56.058870 140043808352064 evaluate_predictions.py:271] 	                estimate_pass@10 = 5.000
+I0204 16:20:56.058932 140043808352064 evaluate_predictions.py:271] 	               estimate_pass@100 = 50.000
+I0204 16:20:56.058981 140043808352064 evaluate_predictions.py:271] 	                estimate_pass@25 = 12.500
+I0204 16:20:56.059033 140043808352064 evaluate_predictions.py:271] 	                estimate_pass@50 = 25.000
+I0204 16:20:56.059082 140043808352064 evaluate_predictions.py:271] 	                questions_passed = 161
+I0204 16:20:56.059134 140043808352064 evaluate_predictions.py:271] 	              subsampling_pass@1 = 0.460
+I0204 16:20:56.059181 140043808352064 evaluate_predictions.py:271] 	             subsampling_pass@10 = 4.882
+I0204 16:20:56.059230 140043808352064 evaluate_predictions.py:271] 	            subsampling_pass@100 = 50.224
+I0204 16:20:56.059276 140043808352064 evaluate_predictions.py:271] 	        subsampling_pass@100_var = 11.188
+I0204 16:20:56.059324 140043808352064 evaluate_predictions.py:271] 	         subsampling_pass@10_var = 2.762
+I0204 16:20:56.059369 140043808352064 evaluate_predictions.py:271] 	          subsampling_pass@1_var = 0.275
+I0204 16:20:56.059413 140043808352064 evaluate_predictions.py:271] 	             subsampling_pass@25 = 12.820
+I0204 16:20:56.059457 140043808352064 evaluate_predictions.py:271] 	         subsampling_pass@25_var = 9.487
+I0204 16:20:56.059506 140043808352064 evaluate_predictions.py:271] 	             subsampling_pass@50 = 25.565
+I0204 16:20:56.059550 140043808352064 evaluate_predictions.py:271] 	         subsampling_pass@50_var = 11.842

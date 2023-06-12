@@ -47,4 +47,4 @@ docker run -v "$(pwd)/tmp":"$(pwd)/tmp":z -e ALLOW_EXECUTION=true \
   
 
 cp -r "tmp/${OUTPUT_DIR_NAME}" "eval_output/"
-sudo rm -rf tmp
+rm -rf tmp
