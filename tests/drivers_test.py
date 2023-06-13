@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Tests for the driver functions."""
 from unittest import mock
 import pathlib
@@ -30,19 +29,16 @@ def test_generate_code_for_questions(sample_question_info):
       data_types.Question.from_dict(d) for d in sample_question_info.values()
   ]
 
-  with mock.patch(
-      'babelcode.schema_parsing.parse_schema_and_input_order'
-  ) as mock_parse_schema:
+  with mock.patch('babelcode.schema_parsing.parse_schema_and_input_order'
+                 ) as mock_parse_schema:
     mock_parse_schema.return_value = ('MOCK_SCHEMA', 'MOCK_INPUT_ORDER')
     with mock.patch(
-        'babelcode.drivers._generate_question_code'
-    ) as mock_generate:
+        'babelcode.drivers._generate_question_code') as mock_generate:
       mock_generate.return_value = 'MOCK_QUESTION'
       with mock.patch('babelcode.drivers.generate_prompt_info') as mock_prompt:
         mock_prompt.return_value = 'MOCK_PROMPT'
         result, result_failures = drivers.generate_code_for_questions(
-            questions, language
-        )
+            questions, language)
         assert len(result) == 3
         assert all(r == ('MOCK_QUESTION', 'MOCK_PROMPT') for r in result)
         assert not result_failures
@@ -62,24 +58,27 @@ def test_generate_code_for_questions(sample_question_info):
           assert call_kwargs['input_order'] == 'MOCK_INPUT_ORDER'
 
     assert mock_parse_schema.call_count == len(questions)
-    assert all(
-        v.kwargs['raw_schema'] == questions[i].schema
-        for i, v in enumerate(mock_parse_schema.call_args_list)
-    )
+    assert all(v.kwargs['raw_schema'] == questions[i].schema
+               for i, v in enumerate(mock_parse_schema.call_args_list))
 
 
 def test_generate_prompt_info():
   question = data_types.Question(
       '1',
       schema={
-          'params': [
-              {'name': 'scooby', 'type': 'integer'},
-          ],
-          'return': {'type': 'string'},
+          'params': [{
+              'name': 'scooby',
+              'type': 'integer'
+          },],
+          'return': {
+              'type': 'string'
+          },
       },
       test_list=[{
           'idx': 0,
-          'inputs': {'scooby': 1},
+          'inputs': {
+              'scooby': 1
+          },
           'outputs': 'test',
       }],
       entry_fn_name='entry',
@@ -114,23 +113,37 @@ def test_generate_prompt_info():
   assert result['qid'] == question.qid
   assert result['signature'] == 'def model_prediction(arg0: int) -> str:'
   assert (
-      result['text'] == 'Testing the C++ Question Prompts for model_prediction'
-  )
+      result['text'] == 'Testing the C++ Question Prompts for model_prediction')
   assert result['entry_fn_name'] == 'model_prediction'
   assert result['entry_cls_name'] == 'Prediction'
 
 
 def test_setup_language_code_dirs(tmp_path):
   preds = [
-      {'id': '1', 'qid': '1', 'code': 'Pred 1.1', 'entry_fn_name': 'testd'},
-      {'id': '2', 'qid': '1', 'code': 'Pred 1.2', 'entry_fn_name': 'tesrt'},
+      {
+          'id': '1',
+          'qid': '1',
+          'code': 'Pred 1.1',
+          'entry_fn_name': 'testd'
+      },
+      {
+          'id': '2',
+          'qid': '1',
+          'code': 'Pred 1.2',
+          'entry_fn_name': 'tesrt'
+      },
       {
           'id': '1',
           'qid': '2',
           'code': 'Pred 2.1',
           'entry_fn_name': 'teqst',
       },
-      {'id': '1', 'qid': '10', 'code': 'Pred 10.1', 'entry_fn_name': 'tsest'},
+      {
+          'id': '1',
+          'qid': '10',
+          'code': 'Pred 10.1',
+          'entry_fn_name': 'tsest'
+      },
   ]
   preds = {f'{v["qid"]}/{v["id"]}': v for v in preds}
   questions = {
@@ -252,15 +265,18 @@ def test_load_progress_from_dir(tmp_path: pathlib.Path):
   result = drivers.load_progress_from_dir(tmp_path)
 
   expected = {
-      'Python': {'2/1': py_execution_result},
-      'C++': {'2/1': cpp_execution_result},
+      'Python': {
+          '2/1': py_execution_result
+      },
+      'C++': {
+          '2/1': cpp_execution_result
+      },
   }
   assert result == expected
 
 
-@pytest.mark.parametrize(
-    'with_progress', [True, False], ids=['With Progress', 'No Progress']
-)
+@pytest.mark.parametrize('with_progress', [True, False],
+                         ids=['With Progress', 'No Progress'])
 def test_run_execution_for_lang(tmp_path, passing_prediction, with_progress):
   language = languages.LanguageRegistry.get_language('Python')
 
@@ -268,9 +284,8 @@ def test_run_execution_for_lang(tmp_path, passing_prediction, with_progress):
     p_dict = passing_prediction.to_dict()
     p_dict['qid'] = qid
     p_dict['id'] = id
-    return data_types.Prediction.from_dict(
-        p_dict, passing_prediction.file_path, language.name
-    )
+    return data_types.Prediction.from_dict(p_dict, passing_prediction.file_path,
+                                           language.name)
 
   question_mapping = {'1': {'title': 'Test Question'}}
   preds = {
@@ -284,10 +299,12 @@ def test_run_execution_for_lang(tmp_path, passing_prediction, with_progress):
   if with_progress:
     progress = {'1/2': preds.pop('1/2')}
   with mock.patch(
-      'babelcode.drivers.setup_language_code_dirs'
-  ) as mock_setup_dirs:
+      'babelcode.drivers.setup_language_code_dirs') as mock_setup_dirs:
     mock_setup_dirs.return_value = {
-        k: {'prediction': v, 'full_code': None} for k, v in preds.items()
+        k: {
+            'prediction': v,
+            'full_code': None
+        } for k, v in preds.items()
     }
     with mock.patch('babelcode.execution.execute_predictions') as mock_execute:
       mock_execute.return_value = (list(preds.values()), '1:1:1')
@@ -296,7 +313,10 @@ def test_run_execution_for_lang(tmp_path, passing_prediction, with_progress):
         result = drivers.run_execution_for_lang_predictions(
             lang=language,
             question_mapping=question_mapping,
-            raw_predictions={**preds, **progress},
+            raw_predictions={
+                **preds,
+                **progress
+            },
             debug_dir_path=tmp_path,
             output_path=tmp_path,
             executed_predictions=progress,
@@ -310,8 +330,8 @@ def test_run_execution_for_lang(tmp_path, passing_prediction, with_progress):
         passed_results = mock_process.call_args_list[0].kwargs['raw_results']
         actual_ids = {f'{result.qid}/{result.id}' for result in passed_results}
         assert set(
-            mock_setup_dirs.call_args_list[0].kwargs['predictions']
-        ) == set(preds.keys())
+            mock_setup_dirs.call_args_list[0].kwargs['predictions']) == set(
+                preds.keys())
         assert actual_ids == expected_process_input_results
         assert mock_execute.call_count == 1
         assert mock_process.call_count == 1

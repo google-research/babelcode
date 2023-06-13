@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Tests for result data types."""
 import math
 import pathlib
@@ -32,42 +31,44 @@ def test_read_execution_results_from_file(tmp_path: pathlib.Path):
   """Tests reading execution results from a file."""
   expected_results = {
       'C++': {
-          '1/test': ExecutionResult(
-              Prediction(
-                  qid='1',
-                  id='test',
-                  lang='C++',
-                  code='cpp_code',
-                  file_path=pathlib.Path('1.cpp').resolve().absolute(),
-              ),
-              commands=[Command('test command')],
-              net_runtime=0.1,
-              stdout='Test STDOUT',
-              stderr='',
-              command_runtimes=[None],
-              command_memory=[None],
-              return_code=1,
-              last_ran_command_idx=0,
-          )
+          '1/test':
+              ExecutionResult(
+                  Prediction(
+                      qid='1',
+                      id='test',
+                      lang='C++',
+                      code='cpp_code',
+                      file_path=pathlib.Path('1.cpp').resolve().absolute(),
+                  ),
+                  commands=[Command('test command')],
+                  net_runtime=0.1,
+                  stdout='Test STDOUT',
+                  stderr='',
+                  command_runtimes=[None],
+                  command_memory=[None],
+                  return_code=1,
+                  last_ran_command_idx=0,
+              )
       },
       'Python': {
-          '2/test': ExecutionResult(
-              Prediction(
-                  qid='2',
-                  id='test',
-                  lang='Python',
-                  code='cpp_code',
-                  file_path=pathlib.Path('1.cpp').resolve().absolute(),
+          '2/test':
+              ExecutionResult(
+                  Prediction(
+                      qid='2',
+                      id='test',
+                      lang='Python',
+                      code='cpp_code',
+                      file_path=pathlib.Path('1.cpp').resolve().absolute(),
+                  ),
+                  commands=[Command('test command')],
+                  stdout='',
+                  stderr='Test Stderr',
+                  net_runtime=0.1,
+                  command_runtimes=[None],
+                  command_memory=[None],
+                  return_code=1,
+                  last_ran_command_idx=0,
               ),
-              commands=[Command('test command')],
-              stdout='',
-              stderr='Test Stderr',
-              net_runtime=0.1,
-              command_runtimes=[None],
-              command_memory=[None],
-              return_code=1,
-              last_ran_command_idx=0,
-          ),
       },
   }
 
@@ -82,8 +83,7 @@ def test_read_execution_results_from_file(tmp_path: pathlib.Path):
 
   for lang, expected_lang_res in expected_results.items():
     assert set(result.get(lang, {}).keys()) == set(
-        expected_lang_res.keys()
-    ), f'{lang} does not have right keys.'
+        expected_lang_res.keys()), f'{lang} does not have right keys.'
 
     expected_attrs = dataclasses.asdict(next(iter(expected_lang_res.values())))
     for key, expected_exec_result in expected_lang_res.items():
@@ -91,9 +91,8 @@ def test_read_execution_results_from_file(tmp_path: pathlib.Path):
       for k in expected_attrs:
         result_value = getattr(actual, k)
         expected_value = getattr(expected_exec_result, k)
-        assert (
-            result_value == expected_value
-        ), f'result[{i}].{k} does not have the correct value'
+        assert (result_value == expected_value
+               ), f'result[{i}].{k} does not have the correct value'
 
   assert len(input_path.read_text().strip().split('\n')) == 2
 
@@ -119,9 +118,8 @@ class TestPredictionResult:
           'Passed_Warnings',
       ],
   )
-  def test_process_execution_result_failures(
-      self, return_code, stdout, stderr, expected
-  ):
+  def test_process_execution_result_failures(self, return_code, stdout, stderr,
+                                             expected):
     pred = Prediction(
         qid='1',
         id='test',
@@ -147,8 +145,7 @@ class TestPredictionResult:
       tc_results = {'0': stdout.split('.')[-1].strip()}
 
     result = result_types.PredictionResult.from_execution_result(
-        exec_result, {'test_case_ids': ['0']}
-    )
+        exec_result, {'test_case_ids': ['0']})
     expected_result = result_types.PredictionResult(
         qid=exec_result.prediction.qid,
         id=exec_result.prediction.id,
@@ -173,11 +170,19 @@ class TestPredictionResult:
       ['tc_results', 'expected_outcome'],
       [
           (
-              {'1': 'PASSED', '2': 'PASSED', 'CHEESE.BALL': 'PASSED'},
+              {
+                  '1': 'PASSED',
+                  '2': 'PASSED',
+                  'CHEESE.BALL': 'PASSED'
+              },
               PredictionOutcome.PASSED,
           ),
           (
-              {'1': 'PASSED', '2': 'FAILED', 'CHEESE.BALL': 'PASSED'},
+              {
+                  '1': 'PASSED',
+                  '2': 'FAILED',
+                  'CHEESE.BALL': 'PASSED'
+              },
               PredictionOutcome.FAILED_TEST,
           ),
       ],
@@ -205,15 +210,12 @@ class TestPredictionResult:
     )
     result: result_types.PredictionResult = (
         result_types.PredictionResult.from_execution_result(
-            exec_result, {'test_case_ids': ['1', '2', 'CHEESE.BALL']}
-        )
-    )
+            exec_result, {'test_case_ids': ['1', '2', 'CHEESE.BALL']}))
     assert result.outcome == expected_outcome
     assert result.test_case_results == tc_results
     assert result.num_tc == 3
     assert result.num_tc_passed == sum(
-        1 if v == 'PASSED' else 0 for v in tc_results.values()
-    )
+        1 if v == 'PASSED' else 0 for v in tc_results.values())
     assert result.net_runtime == 1.0
     assert result.code == pred.code
     assert math.isclose(result.final_command_runtime, 2.0)
@@ -242,8 +244,7 @@ class TestPredictionResult:
     )
 
     result = result_types.PredictionResult.from_execution_result(
-        exec_result, {'test_case_ids': ['0', '1', '2']}
-    )
+        exec_result, {'test_case_ids': ['0', '1', '2']})
     assert result.outcome == PredictionOutcome.HAD_ERROR
     assert result.test_case_results == {
         '0': 'MISSING',
@@ -261,7 +262,10 @@ def prediction_result(request) -> result_types.PredictionResult:
       'id': '0',
       'lang': 'Python',
       'outcome': PredictionOutcome.PASSED,
-      'test_case_results': {'0': 'PASSED', '1': 'PASSED'},
+      'test_case_results': {
+          '0': 'PASSED',
+          '1': 'PASSED'
+      },
       'net_runtime': 1.1,
       'num_tc_passed': 2,
       'num_tc': 2,
@@ -288,8 +292,7 @@ class TestQuestionResult:
 
   def test_update_with_result(self, prediction_result):
     result = result_types.QuestionResult(
-        '0', 'Python', 2, tracked_attributes=['final_command_memory']
-    )
+        '0', 'Python', 2, tracked_attributes=['final_command_memory'])
     result.update_with_result(prediction_result)
 
     assert result.num_predictions == 1
@@ -320,8 +323,7 @@ class TestQuestionResult:
 
   def test_get_vals_for_idx(self, prediction_result):
     q_result = result_types.QuestionResult(
-        '0', 'Python', 2, tracked_attributes=['final_command_memory']
-    )
+        '0', 'Python', 2, tracked_attributes=['final_command_memory'])
     q_result.update_with_result(prediction_result)
 
     result = q_result.get_vals_for_idx(0)

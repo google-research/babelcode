@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """C# Specific Classes and Functions."""
 
 import pathlib
@@ -29,9 +28,8 @@ SchemaType = schema_parsing.SchemaType
 class CSharpLiteralTranslator(translation.LiteralTranslator):
   """The C# generator."""
 
-  def format_list(
-      self, generic_type: SchemaType, list_values: List[str]
-  ) -> str:
+  def format_list(self, generic_type: SchemaType,
+                  list_values: List[str]) -> str:
     """Convert the list of values to the code to initialize the list.
 
     Args:
@@ -41,16 +39,11 @@ class CSharpLiteralTranslator(translation.LiteralTranslator):
     Returns:
       The code to initialize an array object in the current language.
     """
-    return (
-        f'new List<{generic_type.elements[0].lang_type}>'
-        + '{'
-        + ', '.join(list_values)
-        + '}'
-    )
+    return (f'new List<{generic_type.elements[0].lang_type}>' + '{' +
+            ', '.join(list_values) + '}')
 
-  def format_map(
-      self, key_type: SchemaType, value_type: SchemaType, entries: List[str]
-  ) -> str:
+  def format_map(self, key_type: SchemaType, value_type: SchemaType,
+                 entries: List[str]) -> str:
     """Format the map with keys and entries to the code to initialize the map.
 
     We include the `key_type` and `value_type` for languages that require them
@@ -80,17 +73,12 @@ class CSharpLiteralTranslator(translation.LiteralTranslator):
     return '{' + key + ', ' + value + '}'
 
   def format_set(self, generic_type: SchemaType, set_values: List[str]):
-    return (
-        f'new HashSet<{generic_type.elements[0].lang_type}>'
-        + '{'
-        + ', '.join(set_values)
-        + '}'
-    )
+    return (f'new HashSet<{generic_type.elements[0].lang_type}>' + '{' +
+            ', '.join(set_values) + '}')
 
 
-def make_argument_signature(
-    schema: Dict[str, SchemaType], input_order: List[str]
-) -> str:
+def make_argument_signature(schema: Dict[str, SchemaType],
+                            input_order: List[str]) -> str:
   """Make the argument signature for the language.
 
   Args:
@@ -134,19 +122,17 @@ class CSharpPromptTranslator(translation.PromptTranslator):
     return translation.escape_cpp_like_comment_chars(docstring)
 
   def format_docstring_for_lang(self, docstring: str) -> str:
-    return '    ' + translation.format_cpp_like_docstring(
-        docstring, join_seq='\n    '
-    )
+    return '    ' + translation.format_cpp_like_docstring(docstring,
+                                                          join_seq='\n    ')
 
-  def translate_signature_argument_to_lang(
-      self, arg_name: str, arg_type: SchemaType, use_type_annotation: bool
-  ) -> str:
+  def translate_signature_argument_to_lang(self, arg_name: str,
+                                           arg_type: SchemaType,
+                                           use_type_annotation: bool) -> str:
     _ = use_type_annotation
     return f'{arg_type.lang_type} {arg_name}'
 
-  def translate_signature_returns_to_lang(
-      self, return_type: SchemaType, use_type_annotation: bool
-  ) -> str:
+  def translate_signature_returns_to_lang(self, return_type: SchemaType,
+                                          use_type_annotation: bool) -> str:
     _ = use_type_annotation
     return return_type.lang_type
 
@@ -189,5 +175,4 @@ language.LanguageRegistry.register_language(
         },
         prompt_translator_cls=CSharpPromptTranslator,
         naming_convention=utils.NamingConvention.PASCAL_CASE,
-    )
-)
+    ))

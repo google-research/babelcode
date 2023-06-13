@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Init for main package."""
 from babelcode import code_generator
 from babelcode import data_types
@@ -23,3 +22,8 @@ from babelcode.drivers import generate_code_for_questions
 from babelcode.drivers import generate_prompt_info
 from babelcode.drivers import run_execution_for_lang_predictions
 from babelcode.drivers import load_progress_from_dir
+
+QUESTION_DATA_KEYS = {
+    "test_code", "entry_fn_name", "entry_cls_name", "qid", "language",
+    "test_list", "test_case_ids", "title"
+}

@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Script to generate testing code for a given set of problems."""
 import json
 import pathlib
@@ -79,19 +78,15 @@ def generate_problem_code_main(
                 'reason': str(reason),
                 'error': type(reason).__name__,
                 'question': question.to_dict(),
-            })
-            + '\n'
-        )
+            }) + '\n')
   with output_path.joinpath('testing_code.jsonl').open('w') as f:
-    logging.info(
-        'Saving questions to %s', output_path.joinpath('testing_code.jsonl')
-    )
+    logging.info('Saving questions to %s',
+                 output_path.joinpath('testing_code.jsonl'))
     for p in all_questions:
       f.write(json.dumps(p) + '\n')
   with output_path.joinpath('prompt_info.jsonl').open('w') as f:
-    logging.info(
-        'Saving prompt info to %s', output_path.joinpath('prompt_info.jsonl')
-    )
+    logging.info('Saving prompt info to %s',
+                 output_path.joinpath('prompt_info.jsonl'))
     for p in all_prompts:
       f.write(json.dumps(p) + '\n')
 
@@ -99,13 +94,13 @@ def generate_problem_code_main(
 if __name__ == '__main__':
   FLAGS = flags.FLAGS
   _GIN_FILE = flags.DEFINE_string('gin_file', None, help='Path to gin file.')
-  _INPUT = flags.DEFINE_string(
-      'input', None, help='pathlib.Path to input problems.'
-  )
+  _INPUT = flags.DEFINE_string('input',
+                               None,
+                               help='pathlib.Path to input problems.')
   _OUTPUT = flags.DEFINE_string('output', None, help='pathlib.Path to output.')
-  _LANG = flags.DEFINE_string(
-      'debug_lang', None, help='Debug a single language'
-  )
+  _LANG = flags.DEFINE_string('debug_lang',
+                              None,
+                              help='Debug a single language')
   _DEBUG = flags.DEFINE_bool('debug', False, help='Debug')
 
   def main(_):

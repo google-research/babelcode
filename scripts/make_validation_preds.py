@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Makes the validation predictions for testing that the literals can be parsed correctly."""
 import collections
 import json
@@ -29,6 +28,7 @@ if str(pathlib.Path(__file__).parents[1]) not in sys.path:
 from babelcode import languages
 from babelcode import schema_parsing
 from babelcode import data_types
+from babelcode import QUESTION_DATA_KEYS
 
 _NAME = flags.DEFINE_string('name',
                             None,
@@ -43,20 +43,14 @@ _OUT_PATH = flags.DEFINE_string('output_path',
                                 required=True,
                                 help="Path to save.")
 
-_ADD_TEST_DATA = flags.DEFINE_bool("add_test_data", False, help="Add Testing data to the predictions")
+_ADD_TEST_DATA = flags.DEFINE_bool("add_test_data",
+                                   False,
+                                   help="Add Testing data to the predictions")
 
-_ONLY_LANG=flags.DEFINE_string("language", default=None, help="Only Make validation predictions in this language.")
-
-
-QUESTION_DATA_KEYS = {
-  "test_code",
-  "entry_fn_name",
-  "entry_cls_name",
-  "qid",
-  "language",
-  "test_list",
-  "test_case_ids",
-} 
+_ONLY_LANG = flags.DEFINE_string(
+    "language",
+    default=None,
+    help="Only Make validation predictions in this language.")
 
 
 def make_pred_dict(qid, code, lang):
@@ -102,7 +96,7 @@ def main(_):
   for lang, prompt_map in prompt_info.items():
     if _ONLY_LANG.value and lang != _ONLY_LANG.value:
       continue
-    
+
     if not prompt_map:
       continue
     print(f'Generating {len(prompt_map)} validation predictions for {lang}...')
@@ -126,7 +120,7 @@ def main(_):
       input_code = func_template.replace('FN_SIGNATURE', signature)
       input_code = input_code.replace('RETURN_VALUE', return_code)
       p_dict = make_pred_dict(qid, input_code, lang)
-      
+
       if _ADD_TEST_DATA.value:
         for k in QUESTION_DATA_KEYS:
           p_dict[k] = question_data[k]

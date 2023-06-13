@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Tests for primitive_translator."""
 from typing import Any, List
 
@@ -27,9 +26,8 @@ SchemaType = schema_parsing.SchemaType
 class DummyLiteralTranslator(translation.LiteralTranslator):
   """Dummy LiteralTranslator for testing."""
 
-  def format_list(
-      self, generic_type: SchemaType, list_values: List[Any]
-  ) -> str:
+  def format_list(self, generic_type: SchemaType,
+                  list_values: List[Any]) -> str:
     """Format the list of values to the code to initialize the list.
 
     Args:
@@ -56,9 +54,8 @@ class DummyLiteralTranslator(translation.LiteralTranslator):
     # Some languages require the generic_type to create the set.
     return f'({generic_type.to_generic()}, set[{", ".join(set_values)}])'
 
-  def format_map(
-      self, key_type: SchemaType, value_type: SchemaType, entries: List[str]
-  ) -> str:
+  def format_map(self, key_type: SchemaType, value_type: SchemaType,
+                 entries: List[str]) -> str:
     """Format the map with keys and entries to the code to initialize the map.
 
     We include the `key_type` and `value_type` for languages that require them
@@ -72,10 +69,8 @@ class DummyLiteralTranslator(translation.LiteralTranslator):
     Returns:
       The code to initialize an map object in the current language.
     """
-    return (
-        f'({key_type.to_generic()}, {value_type.to_generic()},'
-        f' {", ".join(entries)})'
-    )
+    return (f'({key_type.to_generic()}, {value_type.to_generic()},'
+            f' {", ".join(entries)})')
 
   def format_map_entry(self, key: str, value: str) -> str:
     """Format a single map entry to the literal code.
@@ -104,7 +99,10 @@ class TestLiteralTranslator:
     """Test the generate test case literals function."""
     input_tc = {
         'idx': '0',
-        'inputs': {'arg0': 1, 'arg2': 'Hello World\n'},
+        'inputs': {
+            'arg0': 1,
+            'arg2': 'Hello World\n'
+        },
         'outputs': 1e-2,
     }
 
@@ -117,8 +115,7 @@ class TestLiteralTranslator:
     input_order = ['arg2', 'arg0']
 
     result = self.literal_translator.generate_test_case_literals(
-        '1', input_tc, schema, input_order
-    )
+        '1', input_tc, schema, input_order)
 
     assert result == {
         'idx': '0',
@@ -138,8 +135,7 @@ class TestLiteralTranslator:
     generic_type = SchemaType.from_generic_type_string(f'{type_str}<integer>')
     input_values = [1, 2, 1]
     result = self.literal_translator.convert_var_to_literal(
-        generic_type, input_values
-    )
+        generic_type, input_values)
     expected_values = input_values
     if type_str == 'set':
       expected_values = set(input_values)
@@ -153,8 +149,7 @@ class TestLiteralTranslator:
     generic_type = SchemaType.from_generic_type_string('map<string;integer>')
     input_values = {'1': 1, '2': 2}
     result = self.literal_translator.convert_var_to_literal(
-        generic_type, input_values
-    )
+        generic_type, input_values)
 
     expected_value = '["1"|1], ["2"|2]'
 
@@ -165,9 +160,8 @@ class TestLiteralTranslator:
     """Test list of sets."""
     generic_type = SchemaType.from_generic_type_string('list<set<integer>>')
     input_values = [[1, 2]]
-    
+
     expected = '(list<set<integer>>, list[(set<integer>, set[1, 2])])'
     result = self.literal_translator.convert_var_to_literal(
-        generic_type, input_values
-    )
+        generic_type, input_values)
     assert result == expected

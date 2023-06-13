@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Tests for the assertion parsing."""
 import ast
 import json
@@ -21,8 +20,7 @@ from babelcode.dataset_conversion import assertion_parsing
 import pytest
 
 TEST_DATA = json.loads(
-    utils.FIXTURES_PATH.joinpath('assertion_parsing_testdata.json').read_text()
-)
+    utils.FIXTURES_PATH.joinpath('assertion_parsing_testdata.json').read_text())
 TEST_NAME_TO_DATA = {
     'test_parses_basic': TEST_DATA['BASIC_ASSERTIONS'],
     'test_multiple_asserts': TEST_DATA['MULTIPLE_TEST_CASES'],

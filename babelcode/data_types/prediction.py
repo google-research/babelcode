@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Prediction data type."""
 import dataclasses
 import pathlib
@@ -83,4 +82,3 @@ class Prediction:
     self_dict['file_path'] = str(self.file_path.resolve().absolute())
 
     return self_dict
-  

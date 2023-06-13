@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Question data type."""
 
 import copy
@@ -77,8 +76,7 @@ class Question:
   use_type_annotation: bool = False
   metadata: Dict[str, Any] = dataclasses.field(default_factory=dict)
   challenge_test_list: List[Dict[str, utils.TestValueType]] = dataclasses.field(
-      default_factory=list
-  )
+      default_factory=list)
   solutions: Optional[Dict[str, str]] = dataclasses.field(default_factory=dict)
 
   def __len__(self):
@@ -89,9 +87,9 @@ class Question:
       yield test
 
   @classmethod
-  def from_dict(
-      cls, input_dict: Dict[str, Any], allow_arbitrary_order: bool = False
-  ) -> 'Question':
+  def from_dict(cls,
+                input_dict: Dict[str, Any],
+                allow_arbitrary_order: bool = False) -> 'Question':
     """Create a question object from a dictionary.
 
     Args:
@@ -117,25 +115,21 @@ class Question:
       missing_keys = [k for k in ['params', 'return'] if k not in raw_schema]
       if missing_keys:
         raise QuestionParsingError(
-            f'Question {qid} is missing keys {missing_keys}'
-        )
+            f'Question {qid} is missing keys {missing_keys}')
 
       for i, arg in enumerate(raw_schema['params']):
         missing_keys = [k for k in ['name', 'type'] if k not in arg]
         if missing_keys:
           raise QuestionParsingError(
-              f'Argument {i} of Question {qid} is missing keys {missing_keys}'
-          )
+              f'Argument {i} of Question {qid} is missing keys {missing_keys}')
 
       if 'type' not in raw_schema['return']:
         raise QuestionParsingError(
-            f'Question {qid} is missing "type" key in return.'
-        )
+            f'Question {qid} is missing "type" key in return.')
 
     else:
       raise QuestionParsingError(
-          f'"schema" must be a dict. Not {type(raw_schema).__name__} '
-      )
+          f'"schema" must be a dict. Not {type(raw_schema).__name__} ')
     test_list = input_dict['test_list']
 
     return cls(
@@ -194,8 +188,7 @@ class Question:
         if old_name not in test_dict['inputs']:
           raise QuestionValidationError(
               f'Test case {test_dict["idx"]} in question {self.qiq} does not'
-              f' have input {old_name}'
-          )
+              f' have input {old_name}')
 
         test_dict['inputs'][new_name] = test_dict['inputs'].pop(old_name)
 
@@ -249,9 +242,8 @@ def read_input_questions(
     try:
       line = json.loads(raw_line)
     except json.JSONDecodeError as e:
-      logging.exception(
-          'Line %s is not valid JSON for reason "%s"', line_number, e
-      )
+      logging.exception('Line %s is not valid JSON for reason "%s"',
+                        line_number, e)
       raise json.JSONDecodeError(
           f'Invalid JSON line: {line_number}, error={e}',
           doc=line,

@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Functions for handling the generation of code."""
 import pathlib
 from typing import Dict, List, Union
@@ -108,8 +107,7 @@ def _determine_question_requirements(
 
 
 def load_template_map(
-    template_map: Dict[str, pathlib.Path]
-) -> Dict[str, jinja2.Template]:
+    template_map: Dict[str, pathlib.Path]) -> Dict[str, jinja2.Template]:
   """Loads the Jinja template maps.
 
   Args:
@@ -132,9 +130,8 @@ def load_template_map(
   templates = {}
   for name, path in template_map.items():
     logging.info('Loading template "%s" located at "%s"', name, path)
-    templates[name] = jinja2.Template(
-        path.read_text(), undefined=jinja2.StrictUndefined
-    )
+    templates[name] = jinja2.Template(path.read_text(),
+                                      undefined=jinja2.StrictUndefined)
 
   return templates
 
@@ -168,8 +165,7 @@ def generate_code_for_question(
   """
 
   question_requirements = _determine_question_requirements(
-      question, parsed_schema, double_precision, float_precision
-  )
+      question, parsed_schema, double_precision, float_precision)
   logging.debug('question_requirements=%s', question_requirements)
 
   test_cases = []
@@ -180,18 +176,15 @@ def generate_code_for_question(
             io_pair=io_pair,
             underlying_schema=parsed_schema,
             input_order=input_order,
-        )
-    )
+        ))
 
   # Make the signature to use with the driver function.
   signature, params, _ = prompt_translator.translate_type_signature(
-      schema=parsed_schema, input_order=input_order, use_type_annotation=False
-  )
+      schema=parsed_schema, input_order=input_order, use_type_annotation=False)
   precision = question_requirements['precision']
   type_str = 'float' if question_requirements['use_float'] else 'double'
   precision = literal_translator.convert_primitive_fn(
-      SchemaType(type_str=type_str), precision
-  )
+      SchemaType(type_str=type_str), precision)
 
   evaluation_kwargs = {
       'evaluation_method': question_requirements['evaluation_method'],

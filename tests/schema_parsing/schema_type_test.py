@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Tests for non-language code generator functionality."""
 import copy
 from typing import Any, Dict, Optional, Union
@@ -29,50 +28,58 @@ SCHEMA_TYPE_TCS['primitive'] = {
     'schema': SchemaType(type_str='integer'),
 }
 SCHEMA_TYPE_TCS['primitive_ds_single'] = {
-    'str': 'string[]',
-    'schema': SchemaType(
-        type_str='list', elements=[SchemaType(type_str='string')]
-    ),
+    'str':
+        'string[]',
+    'schema':
+        SchemaType(type_str='list', elements=[SchemaType(type_str='string')]),
 }
 
 SCHEMA_TYPE_TCS['primitive_nested_ds'] = {
-    'str': 'list<tuple<boolean>>',
-    'schema': SchemaType(
-        type_str='list',
-        elements=[SchemaType('list', elements=[SchemaType('boolean')])],
-    ),
+    'str':
+        'list<tuple<boolean>>',
+    'schema':
+        SchemaType(
+            type_str='list',
+            elements=[SchemaType('list', elements=[SchemaType('boolean')])],
+        ),
 }
 SCHEMA_TYPE_TCS['double_brace'] = {
-    'str': 'integer[][]',
-    'schema': SchemaType(
-        type_str='list',
-        elements=[SchemaType('list', elements=[SchemaType('integer')])],
-    ),
+    'str':
+        'integer[][]',
+    'schema':
+        SchemaType(
+            type_str='list',
+            elements=[SchemaType('list', elements=[SchemaType('integer')])],
+        ),
 }
 SCHEMA_TYPE_TCS['map_nested_list'] = {
-    'str': 'map<string;list<integer>>',
-    'schema': SchemaType(
-        type_str='map',
-        key_type=SchemaType('string'),
-        elements=[
-            SchemaType(type_str='list', elements=[SchemaType('integer')])
-        ],
-    ),
+    'str':
+        'map<string;list<integer>>',
+    'schema':
+        SchemaType(
+            type_str='map',
+            key_type=SchemaType('string'),
+            elements=[
+                SchemaType(type_str='list', elements=[SchemaType('integer')])
+            ],
+        ),
 }
 SCHEMA_TYPE_TCS['nested_tuple'] = {
-    'str': 'tuple<tuple<string|string>|tuple<integer>>',
-    'schema': SchemaType(
-        type_str='tuple',
-        elements=[
-            SchemaType(
-                type_str='list',
-                elements=[
-                    SchemaType('string'),
-                ],
-            ),
-            SchemaType(type_str='list', elements=[SchemaType('integer')]),
-        ],
-    ),
+    'str':
+        'tuple<tuple<string|string>|tuple<integer>>',
+    'schema':
+        SchemaType(
+            type_str='tuple',
+            elements=[
+                SchemaType(
+                    type_str='list',
+                    elements=[
+                        SchemaType('string'),
+                    ],
+                ),
+                SchemaType(type_str='list', elements=[SchemaType('integer')]),
+            ],
+        ),
 }
 
 
@@ -89,8 +96,7 @@ class TestSchemaType:
   def test_depth(self):
     """Test getting depth of schema type."""
     schema_type = SchemaType.from_generic_type_string(
-        'map<string;list<integer>>'
-    )
+        'map<string;list<integer>>')
     assert schema_type.depth == 2
 
 
@@ -127,7 +133,9 @@ def test_reconcile_type(left: str, right: str, expected_str: Optional[str]):
 @pytest.mark.parametrize(
     ['type_str', 'value'],
     [
-        ('list<list<map<string;integer>>>', [[{'A': 1}]]),
+        ('list<list<map<string;integer>>>', [[{
+            'A': 1
+        }]]),
         ('list<integer>', []),
         ('string', ''),
     ],
@@ -146,7 +154,11 @@ def test_validate_correct_type_valid(type_str: str, value: Any):
     ['type_str', 'value', 'expected'],
     [
         ('list<integer>', None, []),
-        ('map<integer;integer>', {'1': 1}, {1: 1}),
+        ('map<integer;integer>', {
+            '1': 1
+        }, {
+            1: 1
+        }),
         ('double', 1, 1.0),
     ],
     ids=['empty_list', 'cast_int_key', 'int_to_float'],
@@ -167,8 +179,12 @@ def test_validate_correct_type_conversions(type_str, value, expected):
         ('integer', 'String'),
         ('integer', None),
         ('set<integer>', {'hello'}),
-        ('map<string;integer>', {(1,): 1}),
-        ('map<string;integer>', {'hello': 'hello'}),
+        ('map<string;integer>', {
+            (1,): 1
+        }),
+        ('map<string;integer>', {
+            'hello': 'hello'
+        }),
         ('list<integer>', [1, 'hello']),
     ],
     ids=[
@@ -200,12 +216,18 @@ def test_validate_correct_type_convert_iterable(iterable_type: str):
 
 @pytest.mark.parametrize(
     ['key_type', 'expected'],
-    [('string', {'1': 2.0, '3': 4.0}), ('integer', {1: 2.0, 3: 4.0})],
+    [('string', {
+        '1': 2.0,
+        '3': 4.0
+    }), ('integer', {
+        1: 2.0,
+        3: 4.0
+    })],
     ids=['str_keys', 'int_keys'],
 )
-def test_validate_correct_type_convert_dict(
-    key_type: str, expected: Dict[Union[str, int], Union[int, float]]
-):
+def test_validate_correct_type_convert_dict(key_type: str,
+                                            expected: Dict[Union[str, int],
+                                                           Union[int, float]]):
   """Test that the value conversion works for dicts."""
   type_str = f'map<{key_type};float>'
   schema = SchemaType.from_generic_type_string(type_str)

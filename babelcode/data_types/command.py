@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Command data type."""
 import dataclasses
 from typing import List, Dict, Any
@@ -31,12 +30,12 @@ class Command:
   """
   command: List[str]
   timeout: int = 10
-  
+
   def to_dict(self) -> Dict[str, Any]:
     """Converts a command to a dict."""
     return dataclasses.asdict(self)
-  
+
   @classmethod
-  def from_dict(cls, command_dict:Dict[str,Any]) -> 'Command':
+  def from_dict(cls, command_dict: Dict[str, Any]) -> 'Command':
     """Converts a dict to a command."""
     return cls(**command_dict)

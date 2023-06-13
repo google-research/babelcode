@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Rust Specific Classes and Functions."""
 import pathlib
 from typing import Callable, Dict, List, Optional
@@ -123,11 +122,10 @@ class RustPromptTranslator(translation.PromptTranslator):
 
 
 language.LanguageRegistry.register_language(
-    language.Language(
-        name='Rust',
-        file_ext='rs',
-        literal_translator_cls=RustLiteralTranslator,
-        command_fn=make_commands,
-        primitive_conversion_mapping={'string': _convert_string},
-        prompt_translator_cls=RustPromptTranslator,
-        naming_convention=utils.NamingConvention.SNAKE_CASE))
+    language.Language(name='Rust',
+                      file_ext='rs',
+                      literal_translator_cls=RustLiteralTranslator,
+                      command_fn=make_commands,
+                      primitive_conversion_mapping={'string': _convert_string},
+                      prompt_translator_cls=RustPromptTranslator,
+                      naming_convention=utils.NamingConvention.SNAKE_CASE))

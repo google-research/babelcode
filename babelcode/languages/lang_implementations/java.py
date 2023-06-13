@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Java Specific Classes and Functions."""
 
 from typing import Dict, List
@@ -77,8 +76,8 @@ class JavaPromptTranslator(translation.PromptTranslator):
   def format_docstring_for_lang(self, docstring: str) -> str:
     """Formats a docstring for Java."""
     # Manually add in the tab for formatting.
-    return '    ' + translation.format_cpp_like_docstring(
-        docstring, join_seq='\n    ')
+    return '    ' + translation.format_cpp_like_docstring(docstring,
+                                                          join_seq='\n    ')
 
   def translate_signature_argument_to_lang(self, arg_name: str,
                                            arg_type: SchemaType,
@@ -95,14 +94,14 @@ class JavaPromptTranslator(translation.PromptTranslator):
 
 
 language.LanguageRegistry.register_language(
-    language.Language(
-        name='Java',
-        file_ext='java',
-        literal_translator_cls=JavaLiteralTranslator,
-        command_fn=lambda fp: [data_types.Command(['java', fp.name],timeout=15)],
-        primitive_conversion_mapping={
-            'float': lambda v: translation.convert_float(v, 'f'),
-            'long': lambda v: f'{v}L'
-        },
-        prompt_translator_cls=JavaPromptTranslator,
-        naming_convention=utils.NamingConvention.CAMEL_CASE))
+    language.Language(name='Java',
+                      file_ext='java',
+                      literal_translator_cls=JavaLiteralTranslator,
+                      command_fn=lambda fp:
+                      [data_types.Command(['java', fp.name], timeout=15)],
+                      primitive_conversion_mapping={
+                          'float': lambda v: translation.convert_float(v, 'f'),
+                          'long': lambda v: f'{v}L'
+                      },
+                      prompt_translator_cls=JavaPromptTranslator,
+                      naming_convention=utils.NamingConvention.CAMEL_CASE))

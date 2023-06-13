@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Implementation of the base class for translating objects to literal code representation.
 """
 import json
@@ -219,7 +218,7 @@ class LiteralTranslator:
       except TypeError as e:
         raise data_types.QuestionValidationError(
             'Could not convert nested values to set') from e
-    
+
     def convert_nested(current_type, nested_list):
 
       if current_type.type_str != target_type:

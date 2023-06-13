@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """TypeScript Specific Classes and Functions."""
 import pathlib
 from typing import Dict, List
@@ -109,11 +108,10 @@ def make_commands(file_path: pathlib.Path) -> List[data_types.Command]:
 
 
 LanguageRegistry.register_language(
-    Language(
-        name='TypeScript',
-        file_ext='ts',
-        literal_translator_cls=TSLiteralTranslator,
-        command_fn=make_commands,
-        primitive_conversion_mapping={},
-        prompt_translator_cls=TSPromptTranslator,
-        naming_convention=utils.NamingConvention.CAMEL_CASE))
+    Language(name='TypeScript',
+             file_ext='ts',
+             literal_translator_cls=TSLiteralTranslator,
+             command_fn=make_commands,
+             primitive_conversion_mapping={},
+             prompt_translator_cls=TSPromptTranslator,
+             naming_convention=utils.NamingConvention.CAMEL_CASE))

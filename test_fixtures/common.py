@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Common fixtures for testing."""
 import json
 import pathlib
@@ -49,8 +48,7 @@ def sample_execution_results():
   out = []
   for line in map(json.loads, sample_file.open()):
     stdout_str = '\n'.join(
-        f'TEST-{i}...{v}' for i, v in enumerate(line['test_results'])
-    )
+        f'TEST-{i}...{v}' for i, v in enumerate(line['test_results']))
     pred_id = str(line['id'])
     qid = str(line['qid'])
     fp = pathlib.Path(f'{qid}_{id}.test')
@@ -67,8 +65,7 @@ def sample_execution_results():
             command_runtimes=line['command_runtimes'],
             last_ran_command_idx=0,
             had_error=had_error,
-        )
-    )
+        ))
   yield out
 
 

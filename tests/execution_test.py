@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 """Tests the execution functions."""
 import json
 import os
@@ -70,9 +68,8 @@ def test_execute_code_fail(failing_prediction):
 
 
 @pytest.mark.parametrize('num_workers', [1, 2], ids=['Single', 'Parallel'])
-def test_execute_predictions(
-    num_workers, passing_prediction, failing_prediction, tmp_path
-):
+def test_execute_predictions(num_workers, passing_prediction,
+                             failing_prediction, tmp_path):
   prediction_list = [
       passing_prediction,
       failing_prediction,
@@ -89,16 +86,14 @@ def test_execute_predictions(
     )
 
   debug_results = list(
-      map(json.loads, tmp_path.joinpath('Python_runtime_tracking.jsonl').open())
-  )
+      map(json.loads,
+          tmp_path.joinpath('Python_runtime_tracking.jsonl').open()))
   assert len(debug_results) == 1
   assert [d['completed'] for d in debug_results] == [3]
 
   execution_results = list(
-      map(
-          json.loads, tmp_path.joinpath('Python_execution_results.jsonl').open()
-      )
-  )
+      map(json.loads,
+          tmp_path.joinpath('Python_execution_results.jsonl').open()))
 
   assert len(execution_results) == 4
   result = []

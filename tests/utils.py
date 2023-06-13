@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Testing Utilities."""
 import pathlib
 from typing import Dict
@@ -60,8 +59,7 @@ class LanguageSpec:
     self.name = name
     self.lang_dir = CODE_DIR / self.name
     self.testing_spec = yaml.load(
-        self.lang_dir.joinpath('spec.yaml').open(), yaml.Loader
-    )
+        self.lang_dir.joinpath('spec.yaml').open(), yaml.Loader)
     self.func_template_path = self.lang_dir / 'func_template.txt'
 
   def __repr__(self) -> str:
@@ -77,6 +75,7 @@ class LanguageSpec:
   ) -> schema_parsing.SchemaValueType:
     """Gets the testing specification for key and with value."""
     return self.testing_spec.get(key, default_value)
+
 
 LANGUAGE_SPECS = {l: LanguageSpec(name=l) for l in LANGS_TO_TEST}
 
@@ -101,20 +100,18 @@ class BaseLanguageTestingClass:
       self.literal_translator = None
     try:
       self.template_map = code_generator.load_template_map(
-          self.lang.make_template_map()
-      )
+          self.lang.make_template_map())
     except:
       self.template_map = None
     self.schema_spec = schema_parsing.LanguageSchemaSpecRegistry.get_lang_spec(
-        self.lang_name
-    )
+        self.lang_name)
 
   def get_primitive_data(self, convert_type: str) -> Dict[str, str]:
     """Gets the primitive language specification for a generic."""
     return self.lang_spec['primitives'][convert_type]
 
   def parse_lang_schema(
-      self, schema: schema_parsing.SchemaMapType
-  ) -> schema_parsing.SchemaMapType:
+      self,
+      schema: schema_parsing.SchemaMapType) -> schema_parsing.SchemaMapType:
     """Parses the language types from the schema."""
     return schema_parsing.parse_language_schema(self.schema_spec, schema)

@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """General Utility File."""
 
 import json
@@ -20,13 +19,12 @@ from typing import Any, Callable, Dict, Optional
 
 from absl import logging
 
-
 __all__ = ["setup_logging", "jsonl_file_to_map"]
 
 
-def setup_logging(
-    file_name: str, debug: bool, log_path: Optional[pathlib.Path] = None
-):
+def setup_logging(file_name: str,
+                  debug: bool,
+                  log_path: Optional[pathlib.Path] = None):
   """Sets up logging."""
   log_path = log_path or pathlib.Path("logs")
   log_path = log_path.joinpath(file_name)
@@ -41,8 +39,8 @@ def setup_logging(
 
 
 def jsonl_file_to_map(
-    file_path: pathlib.Path, mapping_fn: Callable[[Dict[str, Any]], str]
-) -> Dict[str, Dict[str, Any]]:
+    file_path: pathlib.Path,
+    mapping_fn: Callable[[Dict[str, Any]], str]) -> Dict[str, Dict[str, Any]]:
   """Reads a json lines file to a dictionary mapping.
 
   Args:

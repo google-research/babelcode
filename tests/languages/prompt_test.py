@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Testing code prompt translation in each language."""
 # Because of how pytest fixtures work, this error will be incorrectly triggered,
 # so disable it for the file here. Pytest Fixture docs:
@@ -40,8 +39,7 @@ class TestLanguagePromptTranslation(testing_utils.BaseLanguageTestingClass):
     input_docstring = 'Test Docstring.\n/**///*/--"""'
     expected = self.prompt_spec['docstring']
     cleaned_docstring = self.prompt_translator.clean_docstring_for_lang(
-        input_docstring
-    )
+        input_docstring)
     result = self.prompt_translator.format_docstring_for_lang(cleaned_docstring)
     assert result == expected
 
@@ -51,11 +49,9 @@ class TestLanguagePromptTranslation(testing_utils.BaseLanguageTestingClass):
     type_name = self.lang_spec['primitives']['string']['type_name']
 
     expected = self.prompt_spec['signature_argument'].replace(
-        'TYPE_NAME', type_name
-    )
+        'TYPE_NAME', type_name)
     result = self.prompt_translator.translate_signature_argument_to_lang(
-        'arg_name', SchemaType('string', type_name), use_type_annotation=True
-    )
+        'arg_name', SchemaType('string', type_name), use_type_annotation=True)
 
     assert result == expected
 
@@ -66,8 +62,7 @@ class TestLanguagePromptTranslation(testing_utils.BaseLanguageTestingClass):
 
     expected = self.prompt_spec['return_type'].replace('TYPE_NAME', type_name)
     result = self.prompt_translator.translate_signature_returns_to_lang(
-        SchemaType('string', type_name), use_type_annotation=True
-    )
+        SchemaType('string', type_name), use_type_annotation=True)
 
     assert result == expected
 
@@ -91,11 +86,9 @@ class TestLanguagePromptTranslation(testing_utils.BaseLanguageTestingClass):
     input_order = ['arg_name']
 
     signature = self.prompt_spec['signature_argument'].replace(
-        'TYPE_NAME', type_name
-    )
+        'TYPE_NAME', type_name)
     return_type = self.prompt_spec['return_type'].replace(
-        'TYPE_NAME', type_name
-    )
+        'TYPE_NAME', type_name)
     docstring = self.prompt_spec['docstring']
 
     expected = self.prompt_spec['signature_with_docstring']

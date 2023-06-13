@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Tests for code_generator.py."""
 # Because of how pytest fixtures work, this error will be incorrectly triggered,
 # so disable it for the file here. Pytest Fixture docs:
@@ -31,9 +30,8 @@ SchemaType = schema_parsing.SchemaType
 Question = data_types.Question
 
 
-@pytest.mark.parametrize(
-    'schema_type', ['float', 'double', 'list<float>', 'string']
-)
+@pytest.mark.parametrize('schema_type',
+                         ['float', 'double', 'list<float>', 'string'])
 def test_determine_question_requirements(schema_type):
   """Tests determing question specific requirements."""
   double_precision = 1e-10
@@ -41,8 +39,14 @@ def test_determine_question_requirements(schema_type):
   question = data_types.Question(
       qid='0',
       schema=[
-          {'name': 'arg0', 'type': schema_type},
-          {'name': data_types.EXPECTED_KEY_NAME, 'type': schema_type},
+          {
+              'name': 'arg0',
+              'type': schema_type
+          },
+          {
+              'name': data_types.EXPECTED_KEY_NAME,
+              'type': schema_type
+          },
       ],
       title='testing',
       test_list=[],
@@ -50,10 +54,10 @@ def test_determine_question_requirements(schema_type):
   )
 
   schema = {
-      'arg0': SchemaType.from_generic_type_string(schema_type),
-      data_types.EXPECTED_KEY_NAME: SchemaType.from_generic_type_string(
-          schema_type
-      ),
+      'arg0':
+          SchemaType.from_generic_type_string(schema_type),
+      data_types.EXPECTED_KEY_NAME:
+          SchemaType.from_generic_type_string(schema_type),
   }
 
   result = code_generator._determine_question_requirements(
@@ -99,46 +103,76 @@ def test_load_template_map(tmp_path: pathlib.Path):
 def test_naive_obfuscation():
   schema = {
       'params': [
-          {'name': 'always_money_in', 'type': 'integer'},
-          {'name': 'testing', 'type': 'boolean'},
+          {
+              'name': 'always_money_in',
+              'type': 'integer'
+          },
+          {
+              'name': 'testing',
+              'type': 'boolean'
+          },
       ],
-      'return': {'type': 'string'},
+      'return': {
+          'type': 'string'
+      },
   }
   tests = [
       {
           'idx': 0,
-          'inputs': {'always_money_in': 1, 'testing': True},
+          'inputs': {
+              'always_money_in': 1,
+              'testing': True
+          },
           'outputs': 'test',
       },
       {
           'idx': 1,
-          'inputs': {'always_money_in': 2, 'testing': False},
+          'inputs': {
+              'always_money_in': 2,
+              'testing': False
+          },
           'outputs': 'test',
       },
   ]
 
-  question = Question(
-      '1', schema=schema, test_list=tests, entry_fn_name='test', title='Test'
-  )
+  question = Question('1',
+                      schema=schema,
+                      test_list=tests,
+                      entry_fn_name='test',
+                      title='Test')
 
   expected = Question(
       '1',
       schema={
           'params': [
-              {'name': 'arg0', 'type': 'integer'},
-              {'name': 'arg1', 'type': 'boolean'},
+              {
+                  'name': 'arg0',
+                  'type': 'integer'
+              },
+              {
+                  'name': 'arg1',
+                  'type': 'boolean'
+              },
           ],
-          'return': {'type': 'string'},
+          'return': {
+              'type': 'string'
+          },
       },
       test_list=[
           {
               'idx': 0,
-              'inputs': {'arg0': 1, 'arg1': True},
+              'inputs': {
+                  'arg0': 1,
+                  'arg1': True
+              },
               'outputs': 'test',
           },
           {
               'idx': 1,
-              'inputs': {'arg0': 2, 'arg1': False},
+              'inputs': {
+                  'arg0': 2,
+                  'arg1': False
+              },
               'outputs': 'test',
           },
       ],
@@ -148,8 +182,7 @@ def test_naive_obfuscation():
       use_type_annotation=True,
   )
 
-  result = code_generator.naive_obfuscation(
-      question, force_type_annotation=True
-  )
+  result = code_generator.naive_obfuscation(question,
+                                            force_type_annotation=True)
 
   assert result == expected

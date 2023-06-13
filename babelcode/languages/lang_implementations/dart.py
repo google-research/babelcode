@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Dart Specific classes and functions."""
 
 import pathlib
@@ -46,17 +45,15 @@ def make_commands(file_path: pathlib.Path) -> List[data_types.Command]:
 class DartLiteralTranslator(translation.LiteralTranslator):
   """The Dart generator."""
 
-  def format_list(
-      self, generic_type: SchemaType, list_values: List[str]
-  ) -> str:
+  def format_list(self, generic_type: SchemaType,
+                  list_values: List[str]) -> str:
     """Formats a list for Dart."""
     if not list_values:
       return f'<{generic_type.elements[0].lang_type}>[]'
     return f'[{", ".join(list_values)}]'
 
-  def format_map(
-      self, key_type: SchemaType, value_type: SchemaType, entries: List[str]
-  ):
+  def format_map(self, key_type: SchemaType, value_type: SchemaType,
+                 entries: List[str]):
     """Formats a map for Dart."""
 
     if not entries:
@@ -106,17 +103,16 @@ class DartPromptTranslator(translation.PromptTranslator):
       out.append(f'/// {l}')
     return '\n'.join(out)
 
-  def translate_signature_argument_to_lang(
-      self, arg_name: str, arg_type: SchemaType, use_type_annotation: bool
-  ) -> str:
+  def translate_signature_argument_to_lang(self, arg_name: str,
+                                           arg_type: SchemaType,
+                                           use_type_annotation: bool) -> str:
     """Translates the signature argument to Dart."""
     if use_type_annotation:
       return f'{arg_type.lang_type} {arg_name}'
     return arg_name
 
-  def translate_signature_returns_to_lang(
-      self, return_type: SchemaType, use_type_annotation: bool
-  ) -> str:
+  def translate_signature_returns_to_lang(self, return_type: SchemaType,
+                                          use_type_annotation: bool) -> str:
     """Translates the signature return to Dart."""
     if use_type_annotation:
       return f'{return_type.lang_type} '
@@ -133,5 +129,4 @@ language.LanguageRegistry.register_language(
         prompt_translator_cls=DartPromptTranslator,
         naming_convention=utils.NamingConvention.CAMEL_CASE,
         escape_fn=lambda s: s.replace('$', '\\$'),
-    )
-)
+    ))

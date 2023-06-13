@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Result Data Types."""
 import collections
 import pathlib
@@ -100,9 +99,8 @@ class ExecutionResult:
     commands = [Command.from_dict(c) for c in commands]
 
     return cls(
-        prediction=Prediction.from_dict(
-            pred_dict, file_path, pred_dict['lang']
-        ),
+        prediction=Prediction.from_dict(pred_dict, file_path,
+                                        pred_dict['lang']),
         commands=commands,
         **execution_dict,
     )
@@ -116,8 +114,7 @@ class ExecutionResult:
 
 
 def read_execution_results_from_file(
-    file_path,
-) -> Dict[str, Dict[str, ExecutionResult]]:
+    file_path,) -> Dict[str, Dict[str, ExecutionResult]]:
   """Yiels execution results from a file."""
   parsed = collections.defaultdict(dict)
   line_num = 0
@@ -190,8 +187,8 @@ class PredictionResult:
 
   @classmethod
   def from_execution_result(
-      cls, execution_result: ExecutionResult, question_info: Dict[str, Any]
-  ) -> 'PredictionResult':
+      cls, execution_result: ExecutionResult,
+      question_info: Dict[str, Any]) -> 'PredictionResult':
     """Create a prediction execution_result from an Execution Result.
 
     Args:
@@ -304,11 +301,9 @@ class QuestionResult:
   num_predictions: int = 0
   tracked_attributes: List[str] = dataclasses.field(default_factory=list)
   specific_test_results: Dict[str, Dict[str, int]] = dataclasses.field(
-      default_factory=lambda: collections.defaultdict(collections.Counter)
-  )
+      default_factory=lambda: collections.defaultdict(collections.Counter))
   results: Dict[str, List[int]] = dataclasses.field(
-      default_factory=lambda: collections.defaultdict(list)
-  )
+      default_factory=lambda: collections.defaultdict(list))
 
   def __post__init__(self) -> None:
     """Remove reserved attrs from those tracked."""
@@ -357,9 +352,8 @@ class QuestionResult:
     """Checks if there is a result with the name."""
     return bool(self.count_result(name))
 
-  def padded(
-      self, name: Union[str, PredictionOutcome], max_len: int, value: Any
-  ) -> List[Any]:
+  def padded(self, name: Union[str, PredictionOutcome], max_len: int,
+             value: Any) -> List[Any]:
     """Pads the result with a value.
 
     Args:

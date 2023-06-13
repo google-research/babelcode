@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Kotlin Specific classes and functions."""
 
 import pathlib
@@ -103,14 +102,13 @@ class KotlinPromptTranslator(translation.PromptTranslator):
 
 
 language.LanguageRegistry.register_language(
-    language.Language(
-        name='Kotlin',
-        file_ext='kts',
-        literal_translator_cls=KotlinLiteralTranslator,
-        command_fn=make_commands,
-        primitive_conversion_mapping={
-            'float': lambda v: translation.convert_float(v, 'f')
-        },
-        prompt_translator_cls=KotlinPromptTranslator,
-        naming_convention=utils.NamingConvention.CAMEL_CASE,
-        escape_fn=lambda s: s.replace('$', '\\$')))
+    language.Language(name='Kotlin',
+                      file_ext='kts',
+                      literal_translator_cls=KotlinLiteralTranslator,
+                      command_fn=make_commands,
+                      primitive_conversion_mapping={
+                          'float': lambda v: translation.convert_float(v, 'f')
+                      },
+                      prompt_translator_cls=KotlinPromptTranslator,
+                      naming_convention=utils.NamingConvention.CAMEL_CASE,
+                      escape_fn=lambda s: s.replace('$', '\\$')))

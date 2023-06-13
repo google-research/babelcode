@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Functions for converting a question from a dataset to the correct format."""
 
 import ast
@@ -27,15 +26,12 @@ from babelcode import utils as bc_utils
 from babelcode.dataset_conversion import assertion_parsing
 from babelcode.dataset_conversion import utils
 
-
 # List of reserved keywords across languages, not exhaustive.
 PROJECT_ROOT = bc_utils.PROJECT_ROOT
 RESERVED_KEYWORDS = frozenset(
-    PROJECT_ROOT.joinpath('data', 'reserved_keywords.txt')
-    .read_text()
-    .splitlines(False)+[data_types.EXPECTED_KEY_NAME]
-)
-
+    PROJECT_ROOT.joinpath(
+        'data', 'reserved_keywords.txt').read_text().splitlines(False) +
+    [data_types.EXPECTED_KEY_NAME])
 
 # Define the list of potentially raised errors for use in try except.
 POTENTIAL_ERROR_TYPES = (
@@ -68,8 +64,7 @@ def _convert_type_annotation_to_schema(type_annotation) -> str:
   if not isinstance(type_annotation, ast.Subscript):
     raise utils.AnnotationError(
         'type_annotation must be either a Subscript or Name, '
-        f'got {type(type_annotation).__name__}'
-    )
+        f'got {type(type_annotation).__name__}')
 
   # Index can be a tuple or single value.
   value_node = type_annotation.slice
@@ -88,8 +83,7 @@ def _convert_type_annotation_to_schema(type_annotation) -> str:
   if node_name == 'Dict':
     if len(children) != 2:
       raise utils.AnnotationError(
-          f'Dicts must have 2 children, found {len(children)}'
-      )
+          f'Dicts must have 2 children, found {len(children)}')
     node_name = 'map'
     delimiter = ';'
   elif node_name == 'Tuple':
@@ -98,8 +92,7 @@ def _convert_type_annotation_to_schema(type_annotation) -> str:
   else:
     if len(children) != 1:
       raise utils.AnnotationError(
-          f'{node_name} must have 1 child, found {len(children)}'
-      )
+          f'{node_name} must have 1 child, found {len(children)}')
 
     if node_name in ['List', 'Set']:
       node_name = node_name.lower()
@@ -125,9 +118,8 @@ class PotentialType:
   depth: int
 
 
-def _determine_type_to_keep(
-    left: PotentialType, right: PotentialType
-) -> PotentialType:
+def _determine_type_to_keep(left: PotentialType,
+                            right: PotentialType) -> PotentialType:
   """Determines which of the two potential types to keep.
 
   Args:
@@ -153,9 +145,8 @@ def _determine_type_to_keep(
     return right
 
 
-def _get_final_schema_type(
-    qid: str, arg_name: str, schema_list: List[PotentialType], found_type: str
-):
+def _get_final_schema_type(qid: str, arg_name: str,
+                           schema_list: List[PotentialType], found_type: str):
   """Determines the final generic type for a given argument.
 
   Args:
@@ -171,16 +162,13 @@ def _get_final_schema_type(
       The generic test case string to use.
   """
   non_null_schemas = list(
-      filter(lambda s: 'null' not in s.generic_str, schema_list)
-  )
+      filter(lambda s: 'null' not in s.generic_str, schema_list))
 
   if len(non_null_schemas) > 1:
-    logging.error(
-        'qid=%s Found more than one potential schema type for %s', qid, arg_name
-    )
-    logging.debug(
-        'Schema types found %s', list(map(lambda s: s.generic_str, schema_list))
-    )
+    logging.error('qid=%s Found more than one potential schema type for %s',
+                  qid, arg_name)
+    logging.debug('Schema types found %s',
+                  list(map(lambda s: s.generic_str, schema_list)))
     logging.debug(
         'qid=%s has inconsistent types used in test cases for %s, %s',
         qid,
@@ -191,9 +179,8 @@ def _get_final_schema_type(
 
   if found_type is None:
     if not non_null_schemas:
-      logging.error(
-          'qid=%s Could not find any schema type for %s', qid, arg_name
-      )
+      logging.error('qid=%s Could not find any schema type for %s', qid,
+                    arg_name)
       logging.debug('Input types are: %s', [t.generic_str for t in schema_list])
       raise data_types.IOPairError('No Non-Null types found')
 
@@ -202,19 +189,16 @@ def _get_final_schema_type(
   else:
     if non_null_schemas:
       found_schema_type = schema_parsing.SchemaType.from_generic_type_string(
-          found_type
-      )
+          found_type)
       potential_schema_type = non_null_schemas[0].schema
       potential_schema_str = non_null_schemas[0].generic_str
       if 'null' in found_type:
         return potential_schema_str
 
-      if not schema_parsing.is_generic_equal(
-          potential_schema_type, found_schema_type
-      ):
+      if not schema_parsing.is_generic_equal(potential_schema_type,
+                                             found_schema_type):
         reconcile_result = schema_parsing.reconcile_type(
-            potential_schema_type, found_schema_type
-        )
+            potential_schema_type, found_schema_type)
         if reconcile_result is not None:
           new_type = reconcile_result.to_generic()
           logging.debug(
@@ -225,10 +209,8 @@ def _get_final_schema_type(
           )
           return new_type
         logging.error(
-            (
-                'qid=%s has non equal and non reconcilable types. found_type=%s'
-                ' != potential_schema_str=%s'
-            ),
+            ('qid=%s has non equal and non reconcilable types. found_type=%s'
+             ' != potential_schema_str=%s'),
             qid,
             found_type,
             potential_schema_str,
@@ -263,13 +245,11 @@ def _consolidate_type(
     )
     if schema_parsing.is_generic_equal(schema, existing_type.schema):
       logging.debug('They are equal, so determining the type to keep.')
-      existing_type_list[j] = _determine_type_to_keep(
-          potential_type, existing_type
-      )
+      existing_type_list[j] = _determine_type_to_keep(potential_type,
+                                                      existing_type)
       return existing_type_list
-    reconcile_result = schema_parsing.reconcile_type(
-        schema, existing_type.schema
-    )
+    reconcile_result = schema_parsing.reconcile_type(schema,
+                                                     existing_type.schema)
     if reconcile_result is not None:
       existing_type_list[j] = PotentialType(
           schema=reconcile_result,
@@ -324,16 +304,13 @@ def consolidate_schema_from_test_cases(
     logging.debug('Validating tc_id=%s...', tc_id)
     if len(tc['inputs']) != expected_number_of_args:
       logging.error(
-          (
-              'Test case tc_id=%s of qid=%s did not have the correct number of'
-              ' inputs'
-          ),
+          ('Test case tc_id=%s of qid=%s did not have the correct number of'
+           ' inputs'),
           tc_id,
           qid,
       )
-      logging.error(
-          'Expected %s, got %d', expected_number_of_args, len(tc['inputs'])
-      )
+      logging.error('Expected %s, got %d', expected_number_of_args,
+                    len(tc['inputs']))
       logging.debug('Expected arguments are %s', found_args)
       logging.debug('Test case is: %s', tc)
       raise data_types.IOPairError('Incorrect number of inputs')
@@ -343,8 +320,7 @@ def consolidate_schema_from_test_cases(
     for i, (schema_type_str, depth) in enumerate(tc['schema']['params']):
       try:
         schema = schema_parsing.SchemaType.from_generic_type_string(
-            schema_type_str
-        )
+            schema_type_str)
       except schema_parsing.SchemaTypeError as e:
         logging.error(
             'qid=%s tc_id=%s had invalid schema type string schema_type_str=%s',
@@ -356,33 +332,30 @@ def consolidate_schema_from_test_cases(
         raise e
 
       potential_type = PotentialType(schema, schema_type_str, 1, depth)
-      arg_schema_types_found[i] = _consolidate_type(
-          found_args[i], potential_type, arg_schema_types_found[i]
-      )
+      arg_schema_types_found[i] = _consolidate_type(found_args[i],
+                                                    potential_type,
+                                                    arg_schema_types_found[i])
     # Add the potential return type to the list of expected schemas.
     logging.debug('Parsing the return type')
 
     rtr_str = tc['schema']['returns'][0]
     try:
       parsed_schema_type = schema_parsing.SchemaType.from_generic_type_string(
-          rtr_str
-      )
+          rtr_str)
     except schema_parsing.SchemaTypeError as e:
       logging.error(tc['schema'])
       raise e
-    potential_expected_type = PotentialType(
-        parsed_schema_type, rtr_str, 1, tc['schema']['returns'][1]
-    )
-    expected_schema = _consolidate_type(
-        data_types.EXPECTED_KEY_NAME, potential_expected_type, expected_schema
-    )
+    potential_expected_type = PotentialType(parsed_schema_type, rtr_str, 1,
+                                            tc['schema']['returns'][1])
+    expected_schema = _consolidate_type(data_types.EXPECTED_KEY_NAME,
+                                        potential_expected_type,
+                                        expected_schema)
 
   # Go through and assert that only one schema type was found per argument.
   for arg_idx, schemas_found in arg_schema_types_found.items():
     if arg_idx >= len(found_args):
-      logging.error(
-          'arg_idx=%d is > len(found_args)=%d', arg_idx, len(found_args)
-      )
+      logging.error('arg_idx=%d is > len(found_args)=%d', arg_idx,
+                    len(found_args))
       raise data_types.IOPairError('Found arg idx too large.')
 
     found_arg_types[found_args[arg_idx]] = _get_final_schema_type(
@@ -391,9 +364,8 @@ def consolidate_schema_from_test_cases(
         schemas_found,
         found_arg_types[found_args[arg_idx]],
     )
-  return_type = _get_final_schema_type(
-      qid, 'return', expected_schema, return_type
-  )
+  return_type = _get_final_schema_type(qid, 'return', expected_schema,
+                                       return_type)
 
   return found_arg_types, return_type
 
@@ -420,9 +392,8 @@ def get_arguments_from_solution(qid, solution, entry_fn_name):
   for b in solution_tree.body:
     if isinstance(b, ast.FunctionDef):
       if b.name == entry_fn_name:
-        logging.debug(
-            'Found target function with entry_fn_name=%s', entry_fn_name
-        )
+        logging.debug('Found target function with entry_fn_name=%s',
+                      entry_fn_name)
         target_function = b
         break
 
@@ -453,19 +424,16 @@ def get_arguments_from_solution(qid, solution, entry_fn_name):
   argument_nodes = target_function.args.args
   if any(
       getattr(target_function.args, v)
-      for v in ['posonlyargs', 'vararg', 'kwonlyargs']
-  ):
+      for v in ['posonlyargs', 'vararg', 'kwonlyargs']):
     raise data_types.QuestionValidationError(
-        'Unsupported argument types in the solution'
-    )
+        'Unsupported argument types in the solution')
 
   if not argument_nodes:
     raise data_types.QuestionParsingError('No arguments')
   for arg in argument_nodes:
     arg_name = arg.arg.lower()
-    logging.debug(
-        'Found argument "%s" at position %d', arg_name, len(arg_order)
-    )
+    logging.debug('Found argument "%s" at position %d', arg_name,
+                  len(arg_order))
     if dupe_arg_types[arg_name] > 0:
       dupe_arg_types[arg_name] += 1
       arg_name = f'{arg_name}{dupe_arg_types[arg_name]}'
@@ -504,9 +472,8 @@ def get_arguments_from_solution(qid, solution, entry_fn_name):
   return arg_order, arg_types, return_type
 
 
-def parse_question_dict(
-    qid: str, testing_code: str, solution: str, entry_fn_name: str
-) -> Dict[str, Any]:
+def parse_question_dict(qid: str, testing_code: str, solution: str,
+                        entry_fn_name: str) -> Dict[str, Any]:
   """Parse the schema and test cases for a given question.
 
   First looks at the function specified by `entry_fn_name` to determine the
@@ -534,8 +501,7 @@ def parse_question_dict(
   # and order. Also check if there are annotations to use for the schema.
   logging.info('Parsing question dict for question "%s"...', qid)
   arg_order, arg_types, return_type = get_arguments_from_solution(
-      qid, solution, entry_fn_name
-  )
+      qid, solution, entry_fn_name)
 
   uses_type_annotation = False
   if any(v is not None for v in arg_types.values()) and arg_types:
@@ -553,8 +519,7 @@ def parse_question_dict(
       # manual fixing.
       logging.error('Imports found in testing code to qid=%s', qid)
       raise data_types.QuestionValidationError(
-          'Requires import(s) to generate tests'
-      ) from e
+          'Requires import(s) to generate tests') from e
     raise e
 
   if not visitor.test_cases:

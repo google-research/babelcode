@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Scala Specific classes and functions."""
 
 import pathlib
@@ -31,28 +30,24 @@ SchemaValueType = schema_parsing.SchemaValueType
 def make_commands(file_path: pathlib.Path) -> List[data_types.Command]:
   """Makes the Scala commands to run source code."""
   return [
+      data_types.Command(['scalac', '-d', 'evaluation.jar', file_path.name],
+                         timeout=15),
       data_types.Command(
-          ['scalac', '-d', 'evaluation.jar', file_path.name], timeout=15
-      ),
-      data_types.Command(
-          ['scala', '-d', 'evaluation.jar', 'QuestionEvaluator'],
-      ),  
+          ['scala', '-d', 'evaluation.jar', 'QuestionEvaluator'],),
   ]
 
 
 class ScalaLiteralTranslator(translation.LiteralTranslator):
   """The Scala generator."""
 
-  def format_list(
-      self, generic_type: SchemaType, list_values: List[str]
-  ) -> str:
+  def format_list(self, generic_type: SchemaType,
+                  list_values: List[str]) -> str:
     """Formats a list for Scala."""
     _ = generic_type
     return f'List({", ".join(list_values)})'
 
-  def format_map(
-      self, key_type: SchemaType, value_type: SchemaType, entries: List[str]
-  ):
+  def format_map(self, key_type: SchemaType, value_type: SchemaType,
+                 entries: List[str]):
     """Formats a map for Scala."""
     _ = key_type, value_type
     return f'HashMap({", ".join(entries)})'
@@ -92,16 +87,15 @@ class ScalaPromptTranslator(translation.PromptTranslator):
   def format_docstring_for_lang(self, docstring: str) -> str:
     return translation.format_cpp_like_docstring(docstring)
 
-  def translate_signature_argument_to_lang(
-      self, arg_name: str, arg_type: SchemaType, use_type_annotation: bool
-  ) -> str:
+  def translate_signature_argument_to_lang(self, arg_name: str,
+                                           arg_type: SchemaType,
+                                           use_type_annotation: bool) -> str:
     """Translates the signature argument to Scala."""
     _ = use_type_annotation
     return f'{arg_name}: {arg_type.lang_type}'
 
-  def translate_signature_returns_to_lang(
-      self, return_type: SchemaType, use_type_annotation: bool
-  ) -> str:
+  def translate_signature_returns_to_lang(self, return_type: SchemaType,
+                                          use_type_annotation: bool) -> str:
     """Translates the signature return to Scala."""
     if use_type_annotation:
       return f': {return_type.lang_type}'
@@ -121,5 +115,4 @@ language.LanguageRegistry.register_language(
         prompt_translator_cls=ScalaPromptTranslator,
         naming_convention=utils.NamingConvention.CAMEL_CASE,
         escape_fn=lambda s: s,
-    )
-)
+    ))

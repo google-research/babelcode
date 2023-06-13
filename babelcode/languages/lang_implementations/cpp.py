@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """C++ Specific classes and functions."""
 
 import pathlib
@@ -112,11 +111,10 @@ class CPPPromptTranslator(translation.PromptTranslator):
 
 
 language.LanguageRegistry.register_language(
-    language.Language(
-        name='C++',
-        file_ext='cpp',
-        literal_translator_cls=CPPLiteralTranslator,
-        command_fn=make_cpp_commands,
-        primitive_conversion_mapping={},
-        prompt_translator_cls=CPPPromptTranslator,
-        naming_convention=utils.NamingConvention.CAMEL_CASE))
+    language.Language(name='C++',
+                      file_ext='cpp',
+                      literal_translator_cls=CPPLiteralTranslator,
+                      command_fn=make_cpp_commands,
+                      primitive_conversion_mapping={},
+                      prompt_translator_cls=CPPPromptTranslator,
+                      naming_convention=utils.NamingConvention.CAMEL_CASE))

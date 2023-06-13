@@ -11,15 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Test configuration module."""
-
 
 # Because of how pytest fixtures work, this error will be incorrectly triggered,
 # so disable it for the file here. Pytest Fixture docs:
 # https://docs.pytest.org/en/6.2.x/fixture.html
 # pylint:disable=redefined-outer-name
-
 
 import json
 import pathlib
@@ -57,8 +54,7 @@ def sample_execution_results():
   out = []
   for line in map(json.loads, sample_file.open()):
     stdout_str = '\n'.join(
-        f'TEST-{i}...{v}' for i, v in enumerate(line['test_results'])
-    )
+        f'TEST-{i}...{v}' for i, v in enumerate(line['test_results']))
     pred_id = str(line['id'])
     qid = str(line['qid'])
     fp = pathlib.Path(f'{qid}_{id}.test')
@@ -75,8 +71,7 @@ def sample_execution_results():
             command_runtimes=line['command_runtimes'],
             last_ran_command_idx=0,
             had_error=had_error,
-        )
-    )
+        ))
   yield out
 
 
@@ -90,9 +85,12 @@ def sample_question_info():
 def sample_schema():
   """Sample schema fixture."""
   yield {
-      'arg0': SchemaType.from_generic_type_string('list<list<string>>'),
-      'arg1': SchemaType.from_generic_type_string('boolean'),
-      data_types.EXPECTED_KEY_NAME: SchemaType.from_generic_type_string('integer'),
+      'arg0':
+          SchemaType.from_generic_type_string('list<list<string>>'),
+      'arg1':
+          SchemaType.from_generic_type_string('boolean'),
+      data_types.EXPECTED_KEY_NAME:
+          SchemaType.from_generic_type_string('integer'),
   }
 
 
@@ -102,9 +100,11 @@ def passing_prediction(tmp_path, py_passing):
   pass_path.mkdir(parents=True)
   tmp_file = pass_path.joinpath(py_passing.name)
   shutil.copyfile(py_passing, tmp_file)
-  yield Prediction(
-      '1', 'PASS', 'Python', code=py_passing.read_text(), file_path=tmp_file
-  )
+  yield Prediction('1',
+                   'PASS',
+                   'Python',
+                   code=py_passing.read_text(),
+                   file_path=tmp_file)
 
 
 @pytest.fixture()
@@ -114,9 +114,8 @@ def failing_prediction(tmp_path, py_failing):
   tmp_file = fail_path.joinpath(py_failing.name)
   shutil.copyfile(py_failing, tmp_file)
 
-  yield Prediction(
-      '1', 'FAIL', 'Python', code=py_failing.read_text(), file_path=tmp_file
-  )
-  
-
-
+  yield Prediction('1',
+                   'FAIL',
+                   'Python',
+                   code=py_failing.read_text(),
+                   file_path=tmp_file)

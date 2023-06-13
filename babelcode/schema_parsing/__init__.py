@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Initialize the schema parsing module and register all of the languages."""
 from babelcode.schema_parsing.languages import LanguageSchemaSpec
 from babelcode.schema_parsing.languages import LanguageSchemaSpecRegistry

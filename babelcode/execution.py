@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Functions for executing a set of commands to evaluate a code prediction."""
 import collections
 import contextlib
@@ -72,9 +71,9 @@ def set_limits():
   p.nice(19)
 
 
-def safe_execute(
-    command: List[Command], cwd: pathlib.Path, timeout_buffer: float = 0.005
-) -> CommandResult:
+def safe_execute(command: List[Command],
+                 cwd: pathlib.Path,
+                 timeout_buffer: float = 0.005) -> CommandResult:
   """Executes a list of commands safely.
 
   Args:
@@ -122,9 +121,8 @@ def safe_execute(
   )
 
 
-def execute_code(
-    prediction: Prediction, commands: List[Command]
-) -> ExecutionResult:
+def execute_code(prediction: Prediction,
+                 commands: List[Command]) -> ExecutionResult:
   """Execute a file of code.
 
   Args:
@@ -153,8 +151,7 @@ def execute_code(
     command_result = safe_execute(command, cwd)
     command_memory_used[i] = command_result.max_memory_used
     command_runtimes[i] = convert_timedelta_to_milliseconds(
-        command_result.runtime
-    )
+        command_result.runtime)
     if command_result.timed_out:
       net_runtime = sum(filter(lambda t: t, command_runtimes))
       return ExecutionResult(
@@ -280,9 +277,8 @@ def execute_predictions(
   # Make the arguments to submit to the ThreadPoolExecutor. Do it here so we
   # can have a progress bar as well.
   executor_args = []
-  logging.debug(
-      'Creating args for executor with %d predictions', len(predictions)
-  )
+  logging.debug('Creating args for executor with %d predictions',
+                len(predictions))
   failed = 0
   for prediction in predictions:
     if not prediction.file_path.exists():
@@ -298,11 +294,9 @@ def execute_predictions(
   # temp_dir.mkdir(parents=True, exist_ok=True)
 
   execution_results_file = output_dir.joinpath(
-      f'{lang.name}_execution_results.jsonl'
-  )
+      f'{lang.name}_execution_results.jsonl')
   runtime_results_file = output_dir.joinpath(
-      f'{lang.name}_runtime_tracking.jsonl'
-  )
+      f'{lang.name}_runtime_tracking.jsonl')
 
   execution_results_fd = execution_results_file.open('a')
   runtime_results_fd = runtime_results_file.open('a')
@@ -352,18 +346,16 @@ def execute_predictions(
         else:
           batch_rate = update_freq / batch_elapsed.total_seconds()
 
-        rate_msg = (
-            f'{num_completed:,} ({pct_done:0.2f}%) done in'
-            f' {format_timedelta_str(elapsed)}'
-        )
+        rate_msg = (f'{num_completed:,} ({pct_done:0.2f}%) done in'
+                    f' {format_timedelta_str(elapsed)}')
         logging.info(rate_msg)
-        cpu_usage= max(batch_cpu_used)
+        cpu_usage = max(batch_cpu_used)
         memory_usage = max(batch_mem_used)
         summary_str = [
             'CPU Used = %-6s' % f'{cpu_usage:0.2f}',
             'RAM Used = %-6s' % f'{memory_usage:0.2f}',
         ]
-        
+
         batch_cpu_used = []
         batch_mem_used = []
         for k, v in summary_result_tracking.items():
@@ -381,9 +373,8 @@ def execute_predictions(
         start_write = datetime.datetime.utcnow()
         for i in range(last_written_idx, len(results)):
           execution_results_fd.write(json.dumps(results[i].to_dict()) + '\n')
-        batch_writing = (
-            datetime.datetime.utcnow() - start_write
-        ).total_seconds()
+        batch_writing = (datetime.datetime.utcnow() -
+                         start_write).total_seconds()
         last_written_idx = len(results)
 
         # Log the time spent writing.
@@ -414,16 +405,14 @@ def execute_predictions(
         # Save the batch runtime metrics
         write_runtime = datetime.datetime.utcnow()
         runtime_results_fd.write(json.dumps(batch_metrics) + '\n')
-        elapsed_write_runtime = (
-            datetime.datetime.utcnow() - write_runtime
-        ).total_seconds()
+        elapsed_write_runtime = (datetime.datetime.utcnow() -
+                                 write_runtime).total_seconds()
         logging.debug('Spent %-6f writing runtime batch', elapsed_write_runtime)
 
         batch_time = datetime.datetime.utcnow()
       if num_completed % garbage_collection_freq == 0:
-        logging.debug(
-            'Running garbage collection as num_completed=%d', num_completed
-        )
+        logging.debug('Running garbage collection as num_completed=%d',
+                      num_completed)
         gc.collect()
 
     # Cleanup pool
@@ -436,9 +425,8 @@ def execute_predictions(
 
   total_time = datetime.datetime.utcnow() - start_time
   logging.info('Finished executing %d in %s', num_to_complete, total_time)
-  logging.debug(
-      'Got %d results back, expected %d', num_completed, len(executor_args)
-  )
+  logging.debug('Got %d results back, expected %d', num_completed,
+                len(executor_args))
   execution_results_fd.close()
   runtime_results_fd.close()
 

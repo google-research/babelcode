@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Implementation of the primitive translator functions."""
 
 import functools
@@ -122,8 +121,9 @@ def make_primitive_translator(
   convert_mapping = {}
 
   string_converter = functools.partial(convert_string, escape_fn=escape_fn)
-  char_converter = functools.partial(
-      convert_string, wrap_char='\'', escape_fn=escape_fn)
+  char_converter = functools.partial(convert_string,
+                                     wrap_char='\'',
+                                     escape_fn=escape_fn)
   special_default_conversions = {
       'string': string_converter,
       'character': char_converter,

@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Testing each execution in each language."""
 import os
 
@@ -67,12 +66,10 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
 
     # Get the schema so we can get the return type of the expected outputs.
     schema, inputs = parsing.parse_schema_and_input_order(
-        self.schema_spec, question.schema
-    )
+        self.schema_spec, question.schema)
 
     return_value = self.literal_translator.convert_var_to_literal(
-        schema[data_types.EXPECTED_KEY_NAME], code_return_value
-    )
+        schema[data_types.EXPECTED_KEY_NAME], code_return_value)
 
     out_code_path = tmp_path.joinpath(f'code.{self.lang.file_ext}')
 
@@ -102,17 +99,15 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
       )
       code = code.replace('PLACEHOLDER_CODE_BODY', input_code)
       code = code.replace('PLACEHOLDER_FN_NAME', self.lang_spec['entry_point'])
-      code = code.replace(
-          'PLACEHOLDER_CLS_NAME', self.lang_spec.get('entry_cls', '')
-      )
+      code = code.replace('PLACEHOLDER_CLS_NAME',
+                          self.lang_spec.get('entry_cls', ''))
 
       print(code)
       f.write(code)
     return out_code_path, input_code
 
-  @pytest.mark.parametrize(
-      'is_correct', [True, False], ids=['correct', 'wrong']
-  )
+  @pytest.mark.parametrize('is_correct', [True, False],
+                           ids=['correct', 'wrong'])
   def test_map_equality(self, lang_name, is_correct, tmp_path):
     self._setup_test(lang_name)
 
@@ -121,7 +116,10 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
         title='testing',
         schema=self._make_schema(
             [
-                {'name': 'arg0', 'type': 'boolean'},
+                {
+                    'name': 'arg0',
+                    'type': 'boolean'
+                },
             ],
             'map<string;list<double>>',
         ),
@@ -146,20 +144,22 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
     assert result.stdout == f'TEST-0...{"PASSED" if is_correct else "FAILED"}\n'
     assert not result.stderr
 
-  @pytest.mark.parametrize(
-      'is_correct', [True, False], ids=['correct', 'wrong']
-  )
+  @pytest.mark.parametrize('is_correct', [True, False],
+                           ids=['correct', 'wrong'])
   def test_list_equality(self, lang_name, is_correct, tmp_path):
     self._setup_test(lang_name)
 
     question = Question(
         qid=0,
         title='testing',
-        schema=self._make_schema(
-            [{'name': 'arg0', 'type': 'boolean'}], 'list<map<string;boolean>>'
-        ),
+        schema=self._make_schema([{
+            'name': 'arg0',
+            'type': 'boolean'
+        }], 'list<map<string;boolean>>'),
         test_list=[
-            dict(idx=0, inputs={'arg0': True}, outputs=[{'A': False}]),
+            dict(idx=0, inputs={'arg0': True}, outputs=[{
+                'A': False
+            }]),
         ],
         entry_fn_name='test',
     )
@@ -179,18 +179,18 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
     assert result.stdout == f'TEST-0...{"PASSED" if is_correct else "FAILED"}\n'
     assert not result.stderr
 
-  @pytest.mark.parametrize(
-      'is_correct', [True, False], ids=['correct', 'wrong']
-  )
+  @pytest.mark.parametrize('is_correct', [True, False],
+                           ids=['correct', 'wrong'])
   def test_set_equality(self, lang_name, is_correct, tmp_path):
     self._setup_test(lang_name)
 
     question = Question(
         qid=0,
         title='testing',
-        schema=self._make_schema(
-            [{'name': 'arg0', 'type': 'set<string>'}], 'set<integer>'
-        ),
+        schema=self._make_schema([{
+            'name': 'arg0',
+            'type': 'set<string>'
+        }], 'set<integer>'),
         test_list=[
             dict(idx=0, inputs={'arg0': ['1', '2']}, outputs=[1, 2, 2]),
         ],
@@ -223,9 +223,10 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
     question = Question(
         qid=0,
         title='testing',
-        schema=self._make_schema(
-            [{'name': 'arg0', 'type': type_str}], type_str
-        ),
+        schema=self._make_schema([{
+            'name': 'arg0',
+            'type': type_str
+        }], type_str),
         test_list=[
             dict(idx=0, inputs={'arg0': None}, outputs=None),
         ],
@@ -243,9 +244,8 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
     assert result.stdout == 'TEST-0...PASSED\n'
     assert not result.stderr
 
-  @pytest.mark.parametrize(
-      'is_correct', [True, False], ids=['correct', 'wrong']
-  )
+  @pytest.mark.parametrize('is_correct', [True, False],
+                           ids=['correct', 'wrong'])
   @pytest.mark.parametrize(
       'primitive',
       [('string', '1,2'), ('character', '1')],
@@ -257,9 +257,10 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
     question = Question(
         qid=0,
         title='testing',
-        schema=self._make_schema(
-            [{'name': 'arg0', 'type': 'boolean'}], primitive_type
-        ),
+        schema=self._make_schema([{
+            'name': 'arg0',
+            'type': 'boolean'
+        }], primitive_type),
         test_list=[
             dict(idx=0, inputs={'arg0': True}, outputs='2'),
         ],
@@ -267,8 +268,7 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
     )
 
     code_path, pred_code = self.make_executable_code(
-        tmp_path, question, '2' if is_correct else primitive_value
-    )
+        tmp_path, question, '2' if is_correct else primitive_value)
     result = execute_code(
         prediction=Prediction('1', '0', lang_name, pred_code, code_path),
         commands=self.lang.command_fn(code_path),
@@ -279,18 +279,18 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
     assert result.stdout == f'TEST-0...{"PASSED" if is_correct else "FAILED"}\n'
     assert not result.stderr
 
-  @pytest.mark.parametrize(
-      'is_correct', [True, False], ids=['correct', 'wrong']
-  )
+  @pytest.mark.parametrize('is_correct', [True, False],
+                           ids=['correct', 'wrong'])
   def test_float_equality(self, lang_name, is_correct, tmp_path):
     self._setup_test(lang_name)
 
     question = Question(
         qid=0,
         title='testing',
-        schema=self._make_schema(
-            [{'name': 'arg0', 'type': 'boolean'}], 'float'
-        ),
+        schema=self._make_schema([{
+            'name': 'arg0',
+            'type': 'boolean'
+        }], 'float'),
         test_list=[
             dict(idx=0, inputs={'arg0': True}, outputs=float('0.0001202')),
         ],
@@ -312,18 +312,18 @@ class TestLanguageExecution(testing_utils.BaseLanguageTestingClass):
     assert result.stdout == f'TEST-0...{"PASSED" if is_correct else "FAILED"}\n'
     assert not result.stderr
 
-  @pytest.mark.parametrize(
-      'is_correct', [True, False], ids=['correct', 'wrong']
-  )
+  @pytest.mark.parametrize('is_correct', [True, False],
+                           ids=['correct', 'wrong'])
   def test_double_equality(self, lang_name, is_correct, tmp_path):
     self._setup_test(lang_name)
 
     question = Question(
         qid=0,
         title='testing',
-        schema=self._make_schema(
-            [{'name': 'arg0', 'type': 'boolean'}], 'double'
-        ),
+        schema=self._make_schema([{
+            'name': 'arg0',
+            'type': 'boolean'
+        }], 'double'),
         test_list=[
             dict(idx=0, inputs={'arg0': True}, outputs=float('0.0000001202')),
         ],

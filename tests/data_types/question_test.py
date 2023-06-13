@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Tests for question data types."""
 # Because of how pytest fixtures work, this error will be incorrectly triggered,
 # so disable it for the file here. Pytest Fixture docs:
@@ -33,10 +32,13 @@ Question = data_types.Question
 def expected_schema():
   """Expected schema fixture."""
   yield {
-      'params': [
-          {'name': 'arg', 'type': 'integer'},
-      ],
-      'return': {'type': 'string'},
+      'params': [{
+          'name': 'arg',
+          'type': 'integer'
+      },],
+      'return': {
+          'type': 'string'
+      },
   }
 
 
@@ -53,10 +55,21 @@ def schema_dict_question(expected_schema, expected_tests):
       'qid': 4,
       'title': 'Valid schema dict',
       'schema': {
-          'params': [{'name': 'arg', 'type': 'integer'}],
-          'return': {'type': 'string'},
+          'params': [{
+              'name': 'arg',
+              'type': 'integer'
+          }],
+          'return': {
+              'type': 'string'
+          },
       },
-      'test_list': [{'idx': 0, 'inputs': {'arg': 1}, 'outputs': 'test'}],
+      'test_list': [{
+          'idx': 0,
+          'inputs': {
+              'arg': 1
+          },
+          'outputs': 'test'
+      }],
       'entry_fn_name': 'test_dict',
       'text': 'This question has NL',
   }
@@ -73,13 +86,23 @@ def schema_dict_question(expected_schema, expected_tests):
 
 # Don't make this into a fixture so we can parametrize it.
 INVALID_QUESTION_DICTS = [
-    {'qid': 1, 'title': 'Fail no schema dict', 'schema': {}},
+    {
+        'qid': 1,
+        'title': 'Fail no schema dict',
+        'schema': {}
+    },
     {
         'qid': 2,
         'title': 'Fail no schema list',
-        'schema': [{'name': '1'}],
+        'schema': [{
+            'name': '1'
+        }],
     },
-    {'qid': 3, 'title': 'Fail wrong schema type', 'schema': 1},
+    {
+        'qid': 3,
+        'title': 'Fail wrong schema type',
+        'schema': 1
+    },
 ]
 
 
@@ -120,9 +143,8 @@ class TestQuestion:
   # unreadable type annotation.
   # pylint:disable=g-bare-generic
 
-  def test_from_dict_schema_dict(
-      self, schema_dict_question: Tuple[Dict, Question]
-  ):
+  def test_from_dict_schema_dict(self, schema_dict_question: Tuple[Dict,
+                                                                   Question]):
     """Test the from_dict function with a schema dict."""
     input_dict, expected = schema_dict_question
     assert Question.from_dict(input_dict) == expected
@@ -140,20 +162,34 @@ class TestQuestion:
   def test_change_var_names(self):
     schema = {
         'params': [
-            {'name': 'always_money_in', 'type': 'integer'},
-            {'name': 'testing', 'type': 'boolean'},
+            {
+                'name': 'always_money_in',
+                'type': 'integer'
+            },
+            {
+                'name': 'testing',
+                'type': 'boolean'
+            },
         ],
-        'return': {'type': 'string'},
+        'return': {
+            'type': 'string'
+        },
     }
     tests = [
         {
             'idx': 0,
-            'inputs': {'always_money_in': 1, 'testing': True},
+            'inputs': {
+                'always_money_in': 1,
+                'testing': True
+            },
             'outputs': 'test',
         },
         {
             'idx': 1,
-            'inputs': {'always_money_in': 2, 'testing': False},
+            'inputs': {
+                'always_money_in': 2,
+                'testing': False
+            },
             'outputs': 'test',
         },
     ]
@@ -166,12 +202,14 @@ class TestQuestion:
     expected_change_tests = copy.deepcopy(tests)
     for i in range(len(expected_change_tests)):
       expected_change_tests[i]['inputs'][
-          'the_banana_stand'
-      ] = expected_change_tests[i]['inputs'].pop('testing')
+          'the_banana_stand'] = expected_change_tests[i]['inputs'].pop(
+              'testing')
 
-    question = Question(
-        '1', schema=schema, test_list=tests, entry_fn_name='test', title='Test'
-    )
+    question = Question('1',
+                        schema=schema,
+                        test_list=tests,
+                        entry_fn_name='test',
+                        title='Test')
 
     question.change_var_names({'testing': 'the_banana_stand'})
 

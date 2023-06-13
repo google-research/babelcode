@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Metric functions."""
 import collections
 import copy
@@ -108,8 +107,9 @@ def calculate_subsampling_passes(passing_vals: np.ndarray, k_val: int,
       # Go over each question and determine if at least 1 prediction in the
       # sampled subset passed.
       for i in range(passing_vals.shape[0]):
-        had_passing_subset = pass_at_k_subsampling(
-            passing_vals[i], k=k_val, rng=rng)
+        had_passing_subset = pass_at_k_subsampling(passing_vals[i],
+                                                   k=k_val,
+                                                   rng=rng)
         iteration_results.append(had_passing_subset)
 
       logging.debug('Finished iteration %d of round %d', iteration_num,
@@ -257,8 +257,9 @@ def calculate_pass_metrics(
     estimator_values = []
     for results_for_question in passed_counts:
       estimator_values.append(
-          pass_at_k_estimator(
-              n=num_preds_per_question, c=results_for_question, k=k))
+          pass_at_k_estimator(n=num_preds_per_question,
+                              c=results_for_question,
+                              k=k))
 
     # Cast to float for later serialization.
     estimated_pass_at_k = float(np.mean(estimator_values) * 100)
@@ -345,8 +346,8 @@ def _create_question_results(
   return max_preds, question_results
 
 
-@gin.configurable(
-    'metrics', denylist=['raw_results', 'question_data', 'seed', 'runtime'])
+@gin.configurable('metrics',
+                  denylist=['raw_results', 'question_data', 'seed', 'runtime'])
 def calculate_metrics_from_raw_results(
     raw_results: List[data_types.ExecutionResult],
     question_data: Dict[str, Any],
@@ -465,8 +466,8 @@ def format_output_metrics(
   }
 
   for question_result in question_metrics:
-    key = question_key_format.format(
-        language=language, question_id=question_result['qid'])
+    key = question_key_format.format(language=language,
+                                     question_id=question_result['qid'])
     formatted_metrics[key] = question_result
 
   return formatted_metrics

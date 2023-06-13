@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Testing code generation in each language."""
 # Because of how pytest fixtures work, this error will be incorrectly triggered,
 # so disable it for the file here. Pytest Fixture docs:
@@ -29,9 +28,12 @@ SchemaType = schema_parsing.SchemaType
 def sample_schema():
   """Sample schema fixture."""
   yield {
-      'arg0': SchemaType.from_generic_type_string('list<list<string>>'),
-      'arg1': SchemaType.from_generic_type_string('boolean'),
-      data_types.EXPECTED_KEY_NAME: SchemaType.from_generic_type_string('integer'),
+      'arg0':
+          SchemaType.from_generic_type_string('list<list<string>>'),
+      'arg1':
+          SchemaType.from_generic_type_string('boolean'),
+      data_types.EXPECTED_KEY_NAME:
+          SchemaType.from_generic_type_string('integer'),
   }
 
 
@@ -54,17 +56,15 @@ class TestLanguageGeneration(testing_utils.BaseLanguageTestingClass):
   def test_convert_primitive(self, lang_name, convert_type):
     """Test converting each primitive type."""
     self._setup_conversion_test(lang_name, convert_type)
-    self.assert_convert_method_correct(
-        convert_type, self.type_spec['input'], self.type_spec['output']
-    )
+    self.assert_convert_method_correct(convert_type, self.type_spec['input'],
+                                       self.type_spec['output'])
 
   @pytest.mark.parametrize('convert_type', schema_parsing.PRIMITIVE_WITH_NULL)
   def test_convert_primitive_null_value(self, lang_name, convert_type):
     """Test that converting the primitives that can be null are correct."""
     self._setup_conversion_test(lang_name, convert_type)
-    self.assert_convert_method_correct(
-        convert_type, None, self.type_spec['null_output']
-    )
+    self.assert_convert_method_correct(convert_type, None,
+                                       self.type_spec['null_output'])
 
   @pytest.mark.parametrize('type_test', ['list', 'set'])
   @pytest.mark.parametrize('convert_type', schema_parsing.PRIMITIVE_TYPES)
@@ -74,11 +74,10 @@ class TestLanguageGeneration(testing_utils.BaseLanguageTestingClass):
 
     input_val = self.type_spec['input']
     template_dict = self.lang_spec['data_structures_literals']
-    
+
     if type_test == 'list':
       arg_type = SchemaType.from_generic_type_string(
-          f'list<list<{convert_type}>>'
-      )
+          f'list<list<{convert_type}>>')
       input_value = [[input_val, input_val], [input_val]]
       expected = template_dict['nested_list']
     else:
@@ -88,8 +87,7 @@ class TestLanguageGeneration(testing_utils.BaseLanguageTestingClass):
     schema = self.parse_lang_schema({'arg0': arg_type})
 
     result = self.literal_translator.convert_array_like_type(
-        schema['arg0'], input_value, type_test == 'set'
-    )
+        schema['arg0'], input_value, type_test == 'set')
     expected = expected.replace('TYPE_VAL_1', self.type_spec['output'])
 
     type_name_to_replace = schema['arg0'].lang_type
@@ -106,28 +104,23 @@ class TestLanguageGeneration(testing_utils.BaseLanguageTestingClass):
     self._setup_conversion_test(lang_name, convert_type)
 
     input_val = self.type_spec['input']
-    schema = self.parse_lang_schema(
-        {
-            'arg0': SchemaType.from_generic_type_string(
-                f'map<string;list<{convert_type}>>'
-            )
-        }
-    )
+    schema = self.parse_lang_schema({
+        'arg0':
+            SchemaType.from_generic_type_string(
+                f'map<string;list<{convert_type}>>')
+    })
 
     result = self.literal_translator.convert_map(
-        schema['arg0'], {'key_value': [input_val, input_val]}
-    )
+        schema['arg0'], {'key_value': [input_val, input_val]})
 
     map_template = self.lang_spec['data_structures_literals']['nested_map']
     expected = map_template.replace('TYPE_VAL_1', self.type_spec['output'])
 
     key_value = self.literal_translator.convert_primitive_fn(
-        SchemaType(type_str='string'), 'key_value'
-    )
+        SchemaType(type_str='string'), 'key_value')
     expected = expected.replace('KEY_VAL_1', key_value)
     expected = expected.replace(
-        'KEY_TYPE_1', self.lang_spec['primitives']['string']['type_name']
-    )
+        'KEY_TYPE_1', self.lang_spec['primitives']['string']['type_name'])
 
     type_name_to_replace = schema['arg0'].lang_type
 

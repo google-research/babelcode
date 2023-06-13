@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Utilities Module."""
 from pathlib import Path
 
@@ -27,4 +26,4 @@ from babelcode.utils.utilities import TestValueType
 PROJECT_ROOT = (Path(__file__) / ".." / ".." / "..").resolve()
 FIXTURES_PATH = PROJECT_ROOT / "test_fixtures"
 
-TEMP_EXECUTION_PATH=PROJECT_ROOT/'tmp_execution_results'
+TEMP_EXECUTION_PATH = PROJECT_ROOT / 'tmp_execution_results'

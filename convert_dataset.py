@@ -34,6 +34,7 @@ from babelcode.languages import LanguageRegistry
 
 Path = pathlib.Path
 
+
 @dataclasses.dataclass
 class RawQuestion:
   """Dataclass used to validate that the keys for each lin in the input file."""
@@ -151,9 +152,8 @@ def convert_dataset(
   logging.info('Converting %s located at "%s"', dataset_name, input_path)
   fixes = {}
   if not disable_fixes:
-    fix_file_path = utils.PROJECT_ROOT.joinpath(
-        'data', 'dataset_fixes', f'{dataset_name}.jsonl'
-    )
+    fix_file_path = utils.PROJECT_ROOT.joinpath('data', 'dataset_fixes',
+                                                f'{dataset_name}.jsonl')
     if fix_file_path.exists():
       logging.info('Using fixes file located at %s', fix_file_path)
       for line_number, line in enumerate(fix_file_path.open()):
@@ -168,9 +168,8 @@ def convert_dataset(
         qid = str(line.pop('id'))
         fixes[qid] = line
     else:
-      logging.warning(
-          'Fixes are enabled but no fixes found at %s', fix_file_path
-      )
+      logging.warning('Fixes are enabled but no fixes found at %s',
+                      fix_file_path)
   else:
     logging.info('No fixes passed')
 
@@ -191,17 +190,15 @@ def convert_dataset(
   )
 
   if debug_question:
-    logging.warning('Only parsing debug_question=%s',debug_question)
+    logging.warning('Only parsing debug_question=%s', debug_question)
     raw_question_map = {debug_question: raw_question_map[debug_question]}
 
   parsed_questions, failed_to_parse = convert_raw_questions(
-      raw_question_map, copy.deepcopy(fixes)
-  )
+      raw_question_map, copy.deepcopy(fixes))
   if failed_to_parse:
     logging.warning(
         f'{sum(map(len,failed_to_parse.values()))}/{len(raw_question_map)} failed'
-        ' to parse.'
-    )
+        ' to parse.')
   else:
     logging.info('All questions parsed successfully')
 
@@ -239,12 +236,12 @@ if __name__ == '__main__':
   _DATASET_NAME = flags.DEFINE_string('dataset_name', None, help='Dataset name')
   _INPUT_PATH = flags.DEFINE_string('input_path', None, help='Input path')
   _DEBUG = flags.DEFINE_bool('debug', False, help='Debug')
-  _DISABLE_FIXES = flags.DEFINE_bool(
-      'disable_fixes', False, help='Disable fixes'
-  )
-  _DEBUG_QID = flags.DEFINE_string(
-      'debug_question', None, help='Single question id to debug.'
-  )
+  _DISABLE_FIXES = flags.DEFINE_bool('disable_fixes',
+                                     False,
+                                     help='Disable fixes')
+  _DEBUG_QID = flags.DEFINE_string('debug_question',
+                                   None,
+                                   help='Single question id to debug.')
 
   def convert_main(_):
     FLAGS['alsologtostderr'].value = True

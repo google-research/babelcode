@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Haskell Specific Classes and Functions."""
 
 import pathlib
@@ -127,11 +126,12 @@ class HaskellPromptTranslator(translation.PromptTranslator):
 
 
 language.LanguageRegistry.register_language(
-    language.Language(
-        name='Haskell',
-        file_ext='hs',
-        literal_translator_cls=HaskellLiteralTranslator,
-        command_fn=make_commands,
-        primitive_conversion_mapping={'boolean': lambda v: 'True' if v else 'False'},
-        prompt_translator_cls=HaskellPromptTranslator,
-        naming_convention=utils.NamingConvention.CAMEL_CASE))
+    language.Language(name='Haskell',
+                      file_ext='hs',
+                      literal_translator_cls=HaskellLiteralTranslator,
+                      command_fn=make_commands,
+                      primitive_conversion_mapping={
+                          'boolean': lambda v: 'True' if v else 'False'
+                      },
+                      prompt_translator_cls=HaskellPromptTranslator,
+                      naming_convention=utils.NamingConvention.CAMEL_CASE))

@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Script to execute code for evaluation across multiple languages."""
 import collections
 import json
@@ -29,17 +28,8 @@ from babelcode import utils
 from babelcode.languages import LanguageRegistry
 import gin
 import tensorflow as tf
+from babelcode import QUESTION_DATA_KEYS
 
-
-QUESTION_DATA_KEYS = {
-  "test_code",
-  "entry_fn_name",
-  "entry_cls_name",
-  "qid",
-  "language",
-  "test_list",
-  "test_case_ids",
-} 
 
 @gin.configurable(
     'general',
@@ -108,9 +98,8 @@ def execute_predictions_from_file(
   logging.info('Saving to %s', output_path)
   logging.info('Reading tests from %s', test_code_path)
 
-  summary_writer = tf.summary.create_file_writer(
-      str(output_path), flush_millis=120
-  )
+  summary_writer = tf.summary.create_file_writer(str(output_path),
+                                                 flush_millis=120)
 
   existing_results = {}
   if must_load_progress:
@@ -167,15 +156,14 @@ def execute_predictions_from_file(
         f,
         indent=True,
     )
-  
+
   question_mapping = collections.defaultdict(dict)
 
   found = 0
   if test_code_path:
     logging.info('Reading questions from %s', test_code_path)
-    for line in map(
-        json.loads, test_code_path.joinpath('testing_code.jsonl').open()
-    ):
+    for line in map(json.loads,
+                    test_code_path.joinpath('testing_code.jsonl').open()):
       question_mapping[line['language']][str(line['qid'])] = line
       found += 1
   else:
@@ -183,13 +171,12 @@ def execute_predictions_from_file(
     for lang, preds in preds_by_lang.items():
       for pid, pred in preds.items():
         qid, _ = pid.split('/')
-        question_mapping[lang][qid] ={k:pred[k] for k in QUESTION_DATA_KEYS}
+        question_mapping[lang][qid] = {k: pred[k] for k in QUESTION_DATA_KEYS}
       found += len(question_mapping[language])
-  
-  logging.info(
-      'Found %d questions across %d languages', found, len(question_mapping)
-  )
-  
+
+  logging.info('Found %d questions across %d languages', found,
+               len(question_mapping))
+
   all_metrics = {}
   all_pred_metrics = []
   all_error_per_lang = {}
@@ -264,10 +251,8 @@ def execute_predictions_from_file(
         with_timeout,
         num_questions,
     ) in all_error_per_lang.items():
-      msg = (
-          f'{lang_name:>16} ='
-          f' {len(with_error)+len(with_timeout)}/{num_questions}'
-      )
+      msg = (f'{lang_name:>16} ='
+             f' {len(with_error)+len(with_timeout)}/{num_questions}')
       logging.info(msg)
       logging.info('%s\tWith Error=%s', ' ' * 16, with_error)
 
@@ -296,39 +281,32 @@ def execute_predictions_from_file(
 if __name__ == '__main__':
   FLAGS = flags.FLAGS
   _GIN = flags.DEFINE_string('gin_file', None, 'Gin configuration file.')
-  _EXP_NAME = flags.DEFINE_string(
-      'experiment_name', None, 'Name of the experiment.'
-  )
+  _EXP_NAME = flags.DEFINE_string('experiment_name', None,
+                                  'Name of the experiment.')
   _OUTPUT_PATH = flags.DEFINE_string('output_path', None, 'Output path.')
   _PRED_PATH = flags.DEFINE_string('predictions', None, 'Prediction path.')
-  _TEST_CODE_PATH = flags.DEFINE_string(
-      'test_code', None, 'pathlib.Path to testing code'
-  )
-  _OVERWRITE = flags.DEFINE_bool(
-      'overwrite', False, 'Overwrite output file if it exists'
-  )
-  _LANGUAGES = flags.DEFINE_list(
-      'languages', None, 'Comma separated list of languages to run'
-  )
+  _TEST_CODE_PATH = flags.DEFINE_string('test_code', None,
+                                        'pathlib.Path to testing code')
+  _OVERWRITE = flags.DEFINE_bool('overwrite', False,
+                                 'Overwrite output file if it exists')
+  _LANGUAGES = flags.DEFINE_list('languages', None,
+                                 'Comma separated list of languages to run')
   _DEBUG = flags.DEFINE_bool('debug', False, 'Enable Debug mode')
-  _NUM_CORES = flags.DEFINE_integer(
-      'cpu_count', None, help='Number of CPUs to use.'
-  )
+  _NUM_CORES = flags.DEFINE_integer('cpu_count',
+                                    None,
+                                    help='Number of CPUs to use.')
   _DEBUG_NUM_PREDS = flags.DEFINE_integer(
-      'debug_num_preds', -1, help='Debugging number of predictions to use.'
-  )
+      'debug_num_preds', -1, help='Debugging number of predictions to use.')
   _PREDS_PER_QUESTION = flags.DEFINE_integer(
-      'samples', None, 'Number of predictions per question.'
-  )
+      'samples', None, 'Number of predictions per question.')
   _STEP = flags.DEFINE_integer('step', 0, 'Step to use for tensorboard.')
   _FORCE_QUESTION_ENTRY = flags.DEFINE_bool(
       'use_question_entry',
       False,
       'Force using the question entry points instead of the prediction ones.',
   )
-  _VALIDATION_MODE = flags.DEFINE_bool(
-      'validation', False, 'Enable validation printing.'
-  )
+  _VALIDATION_MODE = flags.DEFINE_bool('validation', False,
+                                       'Enable validation printing.')
 
   def eval_preds_main(_):
     """Main entry point to the launch."""
@@ -344,8 +322,7 @@ if __name__ == '__main__':
       bindings.append(f'general.debug_num_preds={_DEBUG_NUM_PREDS.value}')
     if _PREDS_PER_QUESTION.value is not None and _PREDS_PER_QUESTION.value > 0:
       bindings.append(
-          f'metrics.num_preds_per_question={_PREDS_PER_QUESTION.value}'
-      )
+          f'metrics.num_preds_per_question={_PREDS_PER_QUESTION.value}')
 
     print(f'gin_{bindings=}')
     gin_path = pathlib.Path(_GIN.value).resolve()

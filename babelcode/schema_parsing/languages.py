@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Implementations for each language's schema specification."""
 import dataclasses
 from typing import Callable, Dict, List
@@ -50,9 +49,9 @@ class LanguageSchemaSpecRegistry:
   _REGISTRY = {}
 
   @classmethod
-  def register_language(
-      cls, language_spec: LanguageSchemaSpec, allow_overwrite: bool = False
-  ):
+  def register_language(cls,
+                        language_spec: LanguageSchemaSpec,
+                        allow_overwrite: bool = False):
     """Registers a language specification.
 
     Args:
@@ -178,7 +177,7 @@ def make_julia_spec() -> LanguageSchemaSpec:
       format_list_type=lambda t: 'Vector{' + t + '}',
       format_map_type=lambda k, v: 'Dict{' + k + ', ' + v + '}',
       format_set_type=lambda t: 'Set{' + t + '}',
-)
+  )
 
 
 def make_kotlin_spec() -> LanguageSchemaSpec:

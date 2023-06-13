@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Makes error code from a evaluation result for debugging."""
 import argparse
 import collections
@@ -35,23 +34,22 @@ parser = argparse.ArgumentParser(
 parser.add_argument('dataset', help='Name of the dataset.')
 parser.add_argument('pred_results', type=Path, help='Prediction Results File.')
 parser.add_argument('output_path', type=Path, help='Path to save results.')
-parser.add_argument(
-    '--n_per_question',
-    '-n',
-    type=int,
-    default=1,
-    help='Number of predictions to generate per question.')
-parser.add_argument(
-    '--num_questions',
-    '-q',
-    type=int,
-    default=-1,
-    help='Max number of questions to print.')
+parser.add_argument('--n_per_question',
+                    '-n',
+                    type=int,
+                    default=1,
+                    help='Number of predictions to generate per question.')
+parser.add_argument('--num_questions',
+                    '-q',
+                    type=int,
+                    default=-1,
+                    help='Max number of questions to print.')
 parser.add_argument('--seed', type=int)
 parser.add_argument(
     '--include_failed',
     default='',
-    help='Comma Separated list of languages to include predictions who failed tests.'
+    help=
+    'Comma Separated list of languages to include predictions who failed tests.'
 )
 
 OUTCOME_TO_WRITE = ['Had Error', 'Had Runtime Error', 'Timed Out']
@@ -100,8 +98,9 @@ def main(dataset, pred_results, output_path: Path, num_to_save_per_question,
 
     qids_to_print = list(question_errors)
     if num_questions_to_print != -1:
-      qids_to_print = random.sample(
-          qids_to_print, k=min(len(qids_to_print), num_questions_to_print))
+      qids_to_print = random.sample(qids_to_print,
+                                    k=min(len(qids_to_print),
+                                          num_questions_to_print))
 
     for qid in qids_to_print:
       outcomes = question_errors[qid]
@@ -118,8 +117,8 @@ def main(dataset, pred_results, output_path: Path, num_to_save_per_question,
                                     test_code_data['entry_cls_name'])
 
       for outcome, q_list in outcomes.items():
-        to_save = random.sample(
-            q_list, k=min(num_to_save_per_question, len(q_list)))
+        to_save = random.sample(q_list,
+                                k=min(num_to_save_per_question, len(q_list)))
         for p in to_save:
           filename = f'{p["qid"]}_{p["id"]}_{p["outcome"].replace(" ","_")}'
           print(f'Saving {filename}')

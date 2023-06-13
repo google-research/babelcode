@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Golang Specific Classes and Functions."""
 
 import pathlib
@@ -119,11 +118,10 @@ class GoPromptTranslator(translation.PromptTranslator):
 
 
 language.LanguageRegistry.register_language(
-    language.Language(
-        name='Go',
-        file_ext='go',
-        literal_translator_cls=GoLiteralTranslator,
-        command_fn=make_commands,
-        primitive_conversion_mapping={},
-        prompt_translator_cls=GoPromptTranslator,
-        naming_convention=utils.NamingConvention.CAMEL_CASE))
+    language.Language(name='Go',
+                      file_ext='go',
+                      literal_translator_cls=GoLiteralTranslator,
+                      command_fn=make_commands,
+                      primitive_conversion_mapping={},
+                      prompt_translator_cls=GoPromptTranslator,
+                      naming_convention=utils.NamingConvention.CAMEL_CASE))

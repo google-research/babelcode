@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Functions for parsing assertion statements."""
 
 import ast
@@ -92,9 +91,8 @@ class LiteralParser(ast.NodeVisitor):
     logging.debug('depth=%d', self.depth)
     return LiteralParsingError(msg)
 
-  def set_attributes(
-      self, value: schema_parsing.SchemaValueType, schema_type: str, depth: int
-  ):
+  def set_attributes(self, value: schema_parsing.SchemaValueType,
+                     schema_type: str, depth: int):
     """Sets the class attributes for recursion.
 
     Args:
@@ -146,8 +144,7 @@ class LiteralParser(ast.NodeVisitor):
         consolidated_schema_types = [*to_keep, new_type]
 
       schema_types = list(
-          map(lambda t: t.to_generic(), consolidated_schema_types)
-      )
+          map(lambda t: t.to_generic(), consolidated_schema_types))
     unique_types = len(set(schema_types))
 
     # No types found, then it must be null.
@@ -176,8 +173,7 @@ class LiteralParser(ast.NodeVisitor):
       return
     if self.schema_type not in utils.PRIMITIVE_TYPES_TO_GENERIC:
       raise LiteralParsingError(
-          f'{self.schema_type} is a constant but not a primitive'
-      )
+          f'{self.schema_type} is a constant but not a primitive')
     self.schema_type = utils.PRIMITIVE_TYPES_TO_GENERIC[self.schema_type]
 
     # Check for doubles here.
@@ -194,9 +190,8 @@ class LiteralParser(ast.NodeVisitor):
       if len(self.value) == 1:
         self.schema_type = 'character'
 
-  def _get_children(
-      self, children_nodes: List[ast.AST], starting_depth: int
-  ) -> Tuple[List[str], List[str], int]:
+  def _get_children(self, children_nodes: List[ast.AST],
+                    starting_depth: int) -> Tuple[List[str], List[str], int]:
     """Gets the children types, values, and maximum depth of a given node.
 
     Args:
@@ -213,16 +208,13 @@ class LiteralParser(ast.NodeVisitor):
       self.depth = starting_depth
       self.visit(child)
       schema_type = schema_parsing.SchemaType.from_generic_type_string(
-          self.schema_type
-      )
+          self.schema_type)
       has_equal_type = False
       type_to_replace = None
 
       for i, (k, v) in enumerate(children_types):
-        if (
-            schema_parsing.is_generic_equal(schema_type, v)
-            and not schema_type.is_leaf()
-        ):
+        if (schema_parsing.is_generic_equal(schema_type, v)
+            and not schema_type.is_leaf()):
           null_in_either = 'null' in k and 'null' not in self.schema_type
           if null_in_either and 'tuple' not in self.schema_type:
             type_to_replace = i
@@ -249,8 +241,7 @@ class LiteralParser(ast.NodeVisitor):
     # those in one swoop.
     self.depth += 1
     children_values, children_types, max_depth = self._get_children(
-        node.elts, self.depth
-    )
+        node.elts, self.depth)
     type_found = self.validate_types(children_types)
 
     # Need to map the list of children values to floats to match the type.
@@ -300,18 +291,15 @@ class LiteralParser(ast.NodeVisitor):
         self.set_attributes(value={}, schema_type='set<null>', depth=depth)
         return
 
-      raise self._make_error(
-          node, f'Dictionary keys cannot be of type {key_type}'
-      )
+      raise self._make_error(node,
+                             f'Dictionary keys cannot be of type {key_type}')
 
     children_values, children_type, max_depth = self._get_children(
-        node.values, depth
-    )
+        node.values, depth)
     children_type = self.validate_types(children_type)
     if len(children_values) != len(key_values):
       raise LiteralParsingError(
-          'Dicts require the keys and children values have the same length.'
-      )
+          'Dicts require the keys and children values have the same length.')
 
     # Need to map the list of children values to floats to match the type.
     if children_type in ['float', 'double']:
@@ -319,7 +307,9 @@ class LiteralParser(ast.NodeVisitor):
 
     schema = f'map<{key_type};{children_type}>'
     self.set_attributes(
-        value={k: v for k, v in zip(key_values, children_values)},
+        value={
+            k: v for k, v in zip(key_values, children_values)
+        },
         schema_type=schema,
         depth=max_depth,
     )
@@ -336,8 +326,7 @@ class LiteralParser(ast.NodeVisitor):
     """
     depth = self.depth
     children_value, children_type, max_depth = self._get_children(
-        [node.operand], depth
-    )
+        [node.operand], depth)
 
     children_type = self.validate_types(children_type)
     if len(children_value) != 1:
@@ -353,9 +342,8 @@ class LiteralParser(ast.NodeVisitor):
       children_value = not children_value
       children_type = 'boolean'
     else:
-      raise self._make_error(
-          node, f'Unsupported unary op {type(node.op).__name__}'
-      )
+      raise self._make_error(node,
+                             f'Unsupported unary op {type(node.op).__name__}')
     self.set_attributes(children_value, children_type, max_depth)
 
   def visit_Tuple(self, node: ast.Tuple) -> None:
@@ -366,8 +354,7 @@ class LiteralParser(ast.NodeVisitor):
     """
     self.depth += 1
     children_values, children_types, max_depth = self._get_children(
-        node.elts, self.depth
-    )
+        node.elts, self.depth)
 
     if children_types:
       child_type_str = '|'.join(children_types)
@@ -436,13 +423,11 @@ class AssertionToSchemaVisitor(ast.NodeVisitor):
         raise self._make_error(test_node, 'Only == is supported for operators')
       if not isinstance(test_node.left, ast.Call):
         raise self._make_error(
-            test_node, 'Only calls on the left side are currently supported'
-        )
+            test_node, 'Only calls on the left side are currently supported')
       self.visit(test_node.left)
       if len(test_node.comparators) != 1:
-        raise self._make_error(
-            test_node, 'The right hand side must be a single value'
-        )
+        raise self._make_error(test_node,
+                               'The right hand side must be a single value')
 
       output, output_type, depth = self._parse_literal(test_node.comparators[0])
       output_schema = (output_type, depth)
@@ -450,15 +435,13 @@ class AssertionToSchemaVisitor(ast.NodeVisitor):
     # Handling the case of assert not f(arguments)
     elif isinstance(test_node, ast.UnaryOp):
       if not isinstance(test_node.op, ast.Not):
-        raise self._make_error(
-            test_node, 'Only "not" is supported for unary operators'
-        )
+        raise self._make_error(test_node,
+                               'Only "not" is supported for unary operators')
       output = False
       output_schema = ('boolean', 0)
       if not isinstance(test_node.operand, ast.Call):
-        raise self._make_error(
-            test_node, 'When using "not", the operand must be a call'
-        )
+        raise self._make_error(test_node,
+                               'When using "not", the operand must be a call')
       self.visit(test_node.operand)
 
     # Handling the case of assert f(Arguments)
@@ -480,7 +463,10 @@ class AssertionToSchemaVisitor(ast.NodeVisitor):
     self.test_cases[len(self.test_cases)] = {
         'inputs': self._input_arguments,
         'outputs': output,
-        'schema': {'params': self._input_schema, 'returns': output_schema},
+        'schema': {
+            'params': self._input_schema,
+            'returns': output_schema
+        },
     }
 
   def visit_Call(self, node: ast.Call) -> None:
@@ -494,8 +480,7 @@ class AssertionToSchemaVisitor(ast.NodeVisitor):
     """
     if not isinstance(node.func, ast.Name):
       raise self._make_error(
-          node, 'The calling function must be a name (i.e. not an attribute)'
-      )
+          node, 'The calling function must be a name (i.e. not an attribute)')
 
     if node.func.id != self.target_fn:
       for arg_node in node.args:
@@ -503,8 +488,7 @@ class AssertionToSchemaVisitor(ast.NodeVisitor):
 
     if self._input_arguments:
       raise self._make_error(
-          node, 'Multiple non-nested function calls are not yet supported'
-      )
+          node, 'Multiple non-nested function calls are not yet supported')
 
     for arg_node in node.args:
       arg_value, arg_type, arg_depth = self._parse_literal(arg_node)

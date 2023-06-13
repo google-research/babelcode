@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Driver functions for different modules.
 
 These functions are primarily here to avoid circular imports while also allowing
@@ -42,9 +41,8 @@ ObfuscationFnType = Callable[[data_types.Question], data_types.Question]
 Prediction = data_types.Prediction
 
 
-@gin.configurable(
-    'prompt_generation', allowlist=['force_type_annotations', 'obfuscation_fn']
-)
+@gin.configurable('prompt_generation',
+                  allowlist=['force_type_annotations', 'obfuscation_fn'])
 def generate_prompt_info(
     original_question: data_types.Question,
     language: languages.Language,
@@ -71,11 +69,9 @@ def generate_prompt_info(
   question = obfuscation_fn(original_question)
 
   language_schema_spec = (
-      schema_parsing.LanguageSchemaSpecRegistry.get_lang_spec(language.name)
-  )
+      schema_parsing.LanguageSchemaSpecRegistry.get_lang_spec(language.name))
   schema, input_order = schema_parsing.parse_schema_and_input_order(
-      language_spec=language_schema_spec, raw_schema=question.schema
-  )
+      language_spec=language_schema_spec, raw_schema=question.schema)
 
   signature = prompt_translator.translate_signature(
       question.entry_fn_name,
@@ -88,12 +84,10 @@ def generate_prompt_info(
   signature_with_docstring = description = None
   if original_question.text:
     # Replace the original fn name with the obfuscated one
-    text = original_question.text.replace(
-        original_question.entry_fn_name, question.entry_fn_name
-    )
-    text = text.replace(
-        original_question.entry_cls_name, question.entry_cls_name
-    )
+    text = original_question.text.replace(original_question.entry_fn_name,
+                                          question.entry_fn_name)
+    text = text.replace(original_question.entry_cls_name,
+                        question.entry_cls_name)
 
     signature_with_docstring = (
         prompt_translator.translate_signature_with_docstring(
@@ -105,17 +99,13 @@ def generate_prompt_info(
             input_order=input_order,
             use_type_annotation=question.use_type_annotation
             or force_type_annotations,
-        )
-    )
-    description = prompt_translator.translate_prompt(
-        'Python', text, question.entry_fn_name
-    )
+        ))
+    description = prompt_translator.translate_prompt('Python', text,
+                                                     question.entry_fn_name)
   entry_fn_name = prompt_translator.translate_entry_function_name(
-      question.entry_fn_name
-  )
+      question.entry_fn_name)
   entry_cls_name = prompt_translator.translate_entry_cls_name(
-      question.entry_cls_name
-  )
+      question.entry_cls_name)
 
   return {
       'qid': question.qid,
@@ -162,11 +152,9 @@ def _generate_question_code(
   )
 
   out_dict['entry_fn_name'] = prompt_translator.translate_entry_function_name(
-      question.entry_fn_name
-  )
+      question.entry_fn_name)
   out_dict['entry_cls_name'] = prompt_translator.translate_entry_cls_name(
-      question.entry_cls_name
-  )
+      question.entry_cls_name)
   return out_dict
 
 
@@ -179,9 +167,8 @@ ALLOWED_ERRORS = (
 
 
 # Helper function to generate the code in a given language
-def generate_code_for_questions(
-    questions: List[data_types.Question], lang: languages.Language
-):
+def generate_code_for_questions(questions: List[data_types.Question],
+                                lang: languages.Language):
   """Generate Code in a specified language.
 
   Args:
@@ -201,19 +188,16 @@ def generate_code_for_questions(
 
   logging.debug('Getting language schema specification.')
   language_schema_spec = (
-      schema_parsing.LanguageSchemaSpecRegistry.get_lang_spec(lang.name)
-  )
+      schema_parsing.LanguageSchemaSpecRegistry.get_lang_spec(lang.name))
 
   for question in tqdm(questions, desc='Generating Code'):
     logging.debug('Generating code for %s', question.qid)
     try:
       schema, input_order = schema_parsing.parse_schema_and_input_order(
-          language_spec=language_schema_spec, raw_schema=question.schema
-      )
+          language_spec=language_schema_spec, raw_schema=question.schema)
     except ALLOWED_ERRORS as e:
-      logging.debug(
-          '%s failed to parse schema because of %s', question.qid, str(e)
-      )
+      logging.debug('%s failed to parse schema because of %s', question.qid,
+                    str(e))
       failures.append((question, e))
       continue
 
@@ -234,9 +218,8 @@ def generate_code_for_questions(
       )
 
     except ALLOWED_ERRORS as e:
-      logging.debug(
-          '%s failed to parse schema because of %s', question.qid, str(e)
-      )
+      logging.debug('%s failed to parse schema because of %s', question.qid,
+                    str(e))
       failures.append((question, e))
       continue
 
@@ -283,7 +266,7 @@ def setup_language_code_dirs(
     except KeyError:
       logging.warning('Could not find %s', qid)
       continue
-    file_name = key.replace('/','_')
+    file_name = key.replace('/', '_')
     q_path = out_dir.joinpath(file_name)
     q_path.mkdir()
     code_path = q_path.joinpath(f'{file_name}.{lang.file_ext}')
@@ -291,13 +274,12 @@ def setup_language_code_dirs(
       pred_dict['entry_fn_name'] = question['entry_fn_name']
       if pred_dict.get('entry_cls_name', None) is not None:
         pred_dict['entry_cls_name'] = question['entry_cls_name']
-    prediction = Prediction.from_dict(
-        pred_dict, file_path=code_path, default_language=lang.name
-    )
+    prediction = Prediction.from_dict(pred_dict,
+                                      file_path=code_path,
+                                      default_language=lang.name)
     with code_path.open('w', encoding='utf-8') as f:
-      code = question['test_code'].replace(
-          'PLACEHOLDER_CODE_BODY', prediction.code
-      )
+      code = question['test_code'].replace('PLACEHOLDER_CODE_BODY',
+                                           prediction.code)
 
       entry_fn_name = prediction.entry_fn_name or question['entry_fn_name']
 
@@ -331,15 +313,18 @@ def write_metrics_to_tb(
 ):
   """Writes the metrics to a tensorboard."""
   utils.write_to_tb_writer(
-      {k: v for k, v in results.items() if k in overall_metrics},
+      {
+          k: v for k, v in results.items() if k in overall_metrics
+      },
       summary_writer,
       step,
       lang,
   )
   utils.write_to_tb_writer(
       {
-          q['qid']: {k: v for k, v in q.items() if k in question_metrics}
-          for q in question_results
+          q['qid']: {
+              k: v for k, v in q.items() if k in question_metrics
+          } for q in question_results
       },
       summary_writer,
       step,
@@ -363,13 +348,11 @@ def load_progress_from_dir(dir_path: pathlib.Path) -> Dict[str, Any]:
   for exec_file in dir_path.glob('*_execution_results.jsonl'):
     logging.info('Loading execution results from %s', exec_file)
     for lang, results in data_types.read_execution_results_from_file(
-        exec_file
-    ).items():
+        exec_file).items():
       out[lang].update(results)
       found_results += len(results)
-  logging.info(
-      'Found %d execution results across %d languages:', found_results, len(out)
-  )
+  logging.info('Found %d execution results across %d languages:', found_results,
+               len(out))
   for k, v in out.items():
     logging.info('\t%-10s: %s', k, len(v))
   return out
@@ -422,9 +405,10 @@ def _process_results(
         )
         meta.pop(k)
 
-    question_results[i].update(
-        {'title': question_mapping[qid]['title'], **meta}
-    )
+    question_results[i].update({
+        'title': question_mapping[qid]['title'],
+        **meta
+    })
 
   metrics = metrics_module.format_output_metrics(
       lang_metrics=metrics,
@@ -464,7 +448,7 @@ def run_execution_for_lang_predictions(
         removed += 1
       else:
         to_remove.append(k)
-    logging.debug('Removing %d keys that were not found...',len(to_remove))
+    logging.debug('Removing %d keys that were not found...', len(to_remove))
     for k in to_remove:
       executed_predictions.pop(k)
     logging.info(
@@ -483,8 +467,7 @@ def run_execution_for_lang_predictions(
 
       # Execute the predictions for the specific language.
       raw_results, total_runtime = execution.execute_predictions(
-          list(predictions.values()), lang, output_path
-      )
+          list(predictions.values()), lang, output_path)
 
       raw_results += list(executed_predictions.values())
     else:

@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Tests for parsing questions."""
 # Because of how pytest fixtures work, this error will be incorrectly triggered,
 # so disable it for the file here. Pytest Fixture docs:
@@ -35,8 +34,7 @@ SchemaType = schema_parsing.SchemaType
 ERROR_TESTS = {}
 VALID_TESTS = {}
 TEST_DATA_PATH = bc_utils.FIXTURES_PATH.joinpath(
-    'question_parsing_testdata.json'
-)
+    'question_parsing_testdata.json')
 for test_name, test_info in json.loads(TEST_DATA_PATH.read_text()).items():
   if test_info.get('expected_error', None):
     ERROR_TESTS[test_name] = [test_info['input'], test_info['expected_error']]
@@ -131,15 +129,12 @@ def test_convert_type_annotation_error(input_str):
 )
 def test_get_final_schema_type(input_str, expected):
   schema_types = [
-      question_parsing.PotentialType(
-          SchemaType.from_generic_type_string(s), s, 1, 1
-      )
-      for s in ['list<integer>']
+      question_parsing.PotentialType(SchemaType.from_generic_type_string(s), s,
+                                     1, 1) for s in ['list<integer>']
   ]
 
-  result = question_parsing._get_final_schema_type(
-      'test', 'test', schema_types, input_str
-  )
+  result = question_parsing._get_final_schema_type('test', 'test', schema_types,
+                                                   input_str)
   assert result == expected
 
 
@@ -194,8 +189,7 @@ def test_consolidate_schema_from_test_cases(arg_types, return_type):
       result_arg_types,
       result_return_type,
   ) = question_parsing.consolidate_schema_from_test_cases(
-      'test', test_cases, args, found_types, return_type
-  )
+      'test', test_cases, args, found_types, return_type)
   assert result_arg_types == {'a': 'list<integer>', 'b': 'string'}
   assert result_return_type == 'list<boolean>'
 
@@ -206,9 +200,7 @@ def test_consolidate_schema_float_and_double():
           'inputs': [[1]],
           'outputs': [],
           'schema': {
-              'params': [
-                  ('list<null>', 1),
-              ],
+              'params': [('list<null>', 1),],
               'returns': ('map<string;float>', 1),
           },
       },
@@ -216,9 +208,7 @@ def test_consolidate_schema_float_and_double():
           'inputs': [[]],
           'outputs': [True],
           'schema': {
-              'params': [
-                  ('list<double>', 1),
-              ],
+              'params': [('list<double>', 1),],
               'returns': ('map<string;double>', 1),
           },
       },
@@ -230,8 +220,7 @@ def test_consolidate_schema_float_and_double():
       result_arg_types,
       result_return_type,
   ) = question_parsing.consolidate_schema_from_test_cases(
-      'test', test_cases, args, found_types, None
-  )
+      'test', test_cases, args, found_types, None)
   assert result_arg_types == {'a': 'list<double>'}
   assert result_return_type == 'map<string;double>'
 
@@ -245,8 +234,7 @@ def test_get_arguments_default_fail(valid_errors):
 def test_get_arguments_invalid_annotation():
   solution = 'def get_positive(l: list):\n\tpass'
   args, arg_types, return_type = question_parsing.get_arguments_from_solution(
-      'Test', solution, 'get_positive'
-  )
+      'Test', solution, 'get_positive')
   assert args == ['l']
   assert arg_types == {'l': None}
   assert return_type is None

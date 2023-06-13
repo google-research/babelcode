@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Base class for language specific prompt+signature translation."""
 import re
 from typing import Dict, List, Optional, Tuple, Callable
@@ -207,8 +206,8 @@ class PromptTranslator:
     formatting_functions = [str.title, str.lower, str.upper]
     # First replace all of the source language occurrences in the prompt
     for format_fn in formatting_functions:
-      prompt = prompt.replace(
-          format_fn(source_language), format_fn(self.lang_name))
+      prompt = prompt.replace(format_fn(source_language),
+                              format_fn(self.lang_name))
 
     # Then go through the list of words to replace and replace them.
     replace_regex = r'( ?(?:a|an)?(?:^| )(?:__WORDS__)s?)(?=[ ,.])'
@@ -288,16 +287,15 @@ class PromptTranslator:
         schema, input_order, use_type_annotation)
     # Replace the docstring argument with an if statement to handle when there
     # is no docstring.
-    template = jinja2.Template(
-        self.signature_template, undefined=jinja2.StrictUndefined)
+    template = jinja2.Template(self.signature_template,
+                               undefined=jinja2.StrictUndefined)
 
-    return template.render(
-        entry_fn_name=entry_fn_name,
-        entry_cls_name=entry_cls_name,
-        signature=signature,
-        return_type=return_type,
-        params=arguments,
-        docstring=docstring)
+    return template.render(entry_fn_name=entry_fn_name,
+                           entry_cls_name=entry_cls_name,
+                           signature=signature,
+                           return_type=return_type,
+                           params=arguments,
+                           docstring=docstring)
 
   def translate_signature_with_docstring(self, source_language: str,
                                          docstring: str, entry_fn_name: str,
@@ -320,19 +318,17 @@ class PromptTranslator:
     Returns:
         The translated signature with docstring.
     """
-    docstring = self.translate_prompt(
-        source_language=source_language,
-        prompt=docstring,
-        entry_fn_name=entry_fn_name)
+    docstring = self.translate_prompt(source_language=source_language,
+                                      prompt=docstring,
+                                      entry_fn_name=entry_fn_name)
 
     docstring = docstring.replace('\\', '\\\\')
     docstring = self.escape_fn(docstring)
     docstring = self.format_docstring_for_lang(docstring)
 
-    return self.translate_signature(
-        entry_fn_name=entry_fn_name,
-        entry_cls_name=entry_cls_name,
-        schema=schema,
-        input_order=input_order,
-        use_type_annotation=use_type_annotation,
-        docstring=docstring)
+    return self.translate_signature(entry_fn_name=entry_fn_name,
+                                    entry_cls_name=entry_cls_name,
+                                    schema=schema,
+                                    input_order=input_order,
+                                    use_type_annotation=use_type_annotation,
+                                    docstring=docstring)
