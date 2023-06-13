@@ -15,11 +15,10 @@
 
 import functools
 import logging
+import re
 from typing import Callable, Dict, Optional
 
 from absl import logging
-
-import re
 
 from babelcode import data_types
 from babelcode import schema_parsing

@@ -16,15 +16,19 @@
 These functions are primarily here to avoid circular imports while also allowing
 them to be testable.
 """
-import json
 import collections
+import json
 import logging
 import pathlib
 import shutil
 import tempfile
 from typing import Any, Callable, Dict, List, Tuple
 
+import gin
 from absl import logging
+from jinja2 import Template
+from tqdm import tqdm
+
 from babelcode import code_generator
 from babelcode import data_types
 from babelcode import execution
@@ -33,9 +37,6 @@ from babelcode import metrics as metrics_module
 from babelcode import schema_parsing
 from babelcode import translation
 from babelcode import utils
-import gin
-from jinja2 import Template
-from tqdm import tqdm
 
 ObfuscationFnType = Callable[[data_types.Question], data_types.Question]
 Prediction = data_types.Prediction

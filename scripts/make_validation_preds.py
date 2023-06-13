@@ -25,10 +25,10 @@ PROJECT_ROOT = pathlib.Path().parent
 if str(pathlib.Path(__file__).parents[1]) not in sys.path:
   sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
+from babelcode import QUESTION_DATA_KEYS
+from babelcode import data_types
 from babelcode import languages
 from babelcode import schema_parsing
-from babelcode import data_types
-from babelcode import QUESTION_DATA_KEYS
 
 _NAME = flags.DEFINE_string('name',
                             None,

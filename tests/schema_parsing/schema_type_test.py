@@ -15,9 +15,10 @@
 import copy
 from typing import Any, Dict, Optional, Union
 
-from babelcode import schema_parsing
-from babelcode import data_types
 import pytest
+
+from babelcode import data_types
+from babelcode import schema_parsing
 
 SchemaType = schema_parsing.SchemaType
 

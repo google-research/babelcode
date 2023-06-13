@@ -15,9 +15,10 @@
 import ast
 import json
 
+import pytest
+
 from babelcode import utils
 from babelcode.dataset_conversion import assertion_parsing
-import pytest
 
 TEST_DATA = json.loads(
     utils.FIXTURES_PATH.joinpath('assertion_parsing_testdata.json').read_text())

@@ -15,12 +15,13 @@
 import pathlib
 from typing import Dict
 
+import pytest  # pylint: disable=unused-import
+import yaml
+
 from babelcode import code_generator
 from babelcode import languages
 from babelcode import schema_parsing
 from babelcode import utils
-import pytest  # pylint: disable=unused-import
-import yaml
 
 # Comment this out and replace with [LANG_NAME] to test a single language.
 LANGS_TO_TEST = schema_parsing.LanguageSchemaSpecRegistry.list_languages()

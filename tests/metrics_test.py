@@ -15,6 +15,8 @@
 import math
 import pathlib
 
+import pytest  # pylint: disable=unused-import
+
 from babelcode import metrics
 from babelcode.data_types import result_types
 from babelcode.data_types.command import Command
@@ -22,7 +24,6 @@ from babelcode.data_types.prediction import Prediction
 from babelcode.data_types.result_types import ExecutionResult
 from babelcode.data_types.result_types import PredictionOutcome
 from babelcode.data_types.result_types import QuestionResult
-import pytest  # pylint: disable=unused-import
 
 
 def test_calculate_metrics_from_raw_results():

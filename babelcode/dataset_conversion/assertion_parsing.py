@@ -14,11 +14,6 @@
 """Functions for parsing assertion statements."""
 
 import ast
-# Python AST library has a visitor class to recursively traverse the tree. To do
-# this you need to override the visit_NODE NAME functions. These cause a pylint
-# error but there is no way around it.
-# pylint: disable=invalid-name
-
 import re
 from typing import List, Tuple, Union
 
@@ -26,6 +21,14 @@ from absl import logging
 
 from babelcode import schema_parsing
 from babelcode.dataset_conversion import utils
+
+# Python AST library has a visitor class to recursively traverse the tree. To do
+# this you need to override the visit_NODE NAME functions. These cause a pylint
+# error but there is no way around it.
+# pylint: disable=invalid-name
+
+
+
 
 DOUBLE_REGEX = re.compile(r'.[0-9]{7,}')
 UNSUPPORTED_TYPES = (

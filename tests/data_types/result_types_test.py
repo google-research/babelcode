@@ -12,16 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Tests for result data types."""
+import dataclasses
+import json
 import math
 import pathlib
-import json
-import dataclasses
 
+import pytest
+
+from babelcode import data_types
 from babelcode.data_types import result_types
 from babelcode.data_types.command import Command
 from babelcode.data_types.prediction import Prediction
-from babelcode import data_types
-import pytest
 
 PredictionOutcome = result_types.PredictionOutcome
 ExecutionResult = result_types.ExecutionResult

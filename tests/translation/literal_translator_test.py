@@ -15,6 +15,7 @@
 from typing import Any, List
 
 import pytest
+
 from babelcode import data_types
 from babelcode import schema_parsing
 from babelcode import translation

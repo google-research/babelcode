@@ -19,30 +19,59 @@ import random
 import shutil
 from typing import Optional
 
+import gin
+import tensorflow as tf
 from absl import app
 from absl import flags
 from absl import logging
+
+from babelcode import QUESTION_DATA_KEYS
 from babelcode import load_progress_from_dir
 from babelcode import run_execution_for_lang_predictions
 from babelcode import utils
 from babelcode.languages import LanguageRegistry
-import gin
-import tensorflow as tf
-from babelcode import QUESTION_DATA_KEYS
+
+FLAGS = flags.FLAGS
+_GIN = flags.DEFINE_string('gin_file', None, 'Gin configuration file.')
+_EXP_NAME = flags.DEFINE_string('experiment_name', None,
+                                'Name of the experiment.')
+_OUTPUT_PATH = flags.DEFINE_string('output_path', None, 'Output path.')
+_PRED_PATH = flags.DEFINE_string('predictions', None, 'Prediction path.')
+_TEST_CODE_PATH = flags.DEFINE_string('test_code', None,
+                                      'pathlib.Path to testing code')
+_OVERWRITE = flags.DEFINE_bool('overwrite', False,
+                               'Overwrite output file if it exists')
+_LANGUAGES = flags.DEFINE_list('languages', None,
+                               'Comma separated list of languages to run')
+_DEBUG = flags.DEFINE_bool('debug', False, 'Enable Debug mode')
+_NUM_CORES = flags.DEFINE_integer('cpu_count',
+                                  None,
+                                  help='Number of CPUs to use.')
+_DEBUG_NUM_PREDS = flags.DEFINE_integer(
+    'debug_num_preds', -1, help='Debugging number of predictions to use.')
+_PREDS_PER_QUESTION = flags.DEFINE_integer(
+    'samples', None, 'Number of predictions per question.')
+_STEP = flags.DEFINE_integer('step', 0, 'Step to use for tensorboard.')
+_FORCE_QUESTION_ENTRY = flags.DEFINE_bool(
+    'use_question_entry',
+    False,
+    'Force using the question entry points instead of the prediction ones.',
+)
+_VALIDATION_MODE = flags.DEFINE_bool('validation', False,
+                                     'Enable validation printing.')
+
+_DEBUG_DIR_PATH = flags.DEFINE_string("debug_dir", None,
+                                      "Debugging dir to save code to.")
 
 
 @gin.configurable(
     'general',
     denylist=[
-        'experiment_name',
-        'prediction_path',
-        'output_path',
-        'test_code_path',
-        'overwrite',
-        'eval_languages',
+        'experiment_name', 'prediction_path', 'output_path', 'test_code_path',
+        'overwrite', 'eval_languages', 'debug_code_gen_dir'
     ],
 )
-def execute_predictions_from_file(
+def evaluate_predictions_from_file(
     experiment_name: str,
     prediction_path: pathlib.Path,
     output_path: pathlib.Path,
@@ -279,34 +308,6 @@ def execute_predictions_from_file(
 
 
 if __name__ == '__main__':
-  FLAGS = flags.FLAGS
-  _GIN = flags.DEFINE_string('gin_file', None, 'Gin configuration file.')
-  _EXP_NAME = flags.DEFINE_string('experiment_name', None,
-                                  'Name of the experiment.')
-  _OUTPUT_PATH = flags.DEFINE_string('output_path', None, 'Output path.')
-  _PRED_PATH = flags.DEFINE_string('predictions', None, 'Prediction path.')
-  _TEST_CODE_PATH = flags.DEFINE_string('test_code', None,
-                                        'pathlib.Path to testing code')
-  _OVERWRITE = flags.DEFINE_bool('overwrite', False,
-                                 'Overwrite output file if it exists')
-  _LANGUAGES = flags.DEFINE_list('languages', None,
-                                 'Comma separated list of languages to run')
-  _DEBUG = flags.DEFINE_bool('debug', False, 'Enable Debug mode')
-  _NUM_CORES = flags.DEFINE_integer('cpu_count',
-                                    None,
-                                    help='Number of CPUs to use.')
-  _DEBUG_NUM_PREDS = flags.DEFINE_integer(
-      'debug_num_preds', -1, help='Debugging number of predictions to use.')
-  _PREDS_PER_QUESTION = flags.DEFINE_integer(
-      'samples', None, 'Number of predictions per question.')
-  _STEP = flags.DEFINE_integer('step', 0, 'Step to use for tensorboard.')
-  _FORCE_QUESTION_ENTRY = flags.DEFINE_bool(
-      'use_question_entry',
-      False,
-      'Force using the question entry points instead of the prediction ones.',
-  )
-  _VALIDATION_MODE = flags.DEFINE_bool('validation', False,
-                                       'Enable validation printing.')
 
   def eval_preds_main(_):
     """Main entry point to the launch."""
@@ -333,7 +334,11 @@ if __name__ == '__main__':
     test_code_path = None
     if _TEST_CODE_PATH.value:
       test_code_path = pathlib.Path(_TEST_CODE_PATH.value).resolve()
-    execute_predictions_from_file(
+
+    debug_dir = _DEBUG_DIR_PATH.value
+    if debug_dir:
+      debug_dir = pathlib.Path(debug_dir)
+    evaluate_predictions_from_file(
         experiment_name=_EXP_NAME.value,
         prediction_path=pathlib.Path(_PRED_PATH.value).resolve(),
         output_path=pathlib.Path(_OUTPUT_PATH.value).resolve(),
@@ -341,7 +346,7 @@ if __name__ == '__main__':
         overwrite=_OVERWRITE.value,
         validation_mode=_VALIDATION_MODE.value,
         eval_languages=_LANGUAGES.value,
-    )
+        debug_code_gen_dir=debug_dir)
 
   flags.mark_flags_as_required([
       _GIN.name,

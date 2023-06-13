@@ -14,14 +14,15 @@
 """Testing each execution in each language."""
 import os
 
+import pytest
+
 from babelcode import code_generator
+from babelcode import data_types
 from babelcode.data_types.prediction import Prediction
 from babelcode.data_types.question import Question
-from babelcode import data_types
 from babelcode.execution import execute_code
 from babelcode.schema_parsing import parsing
 from tests import utils as testing_utils
-import pytest
 
 
 def setup_module(_):

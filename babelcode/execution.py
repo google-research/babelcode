@@ -25,15 +25,16 @@ import signal
 import subprocess
 from typing import List
 
+import gin
+import psutil
 from absl import logging
+
 from babelcode.data_types.command import Command
 from babelcode.data_types.prediction import Prediction
 from babelcode.data_types.result_types import ExecutionResult
 from babelcode.languages import Language
 from babelcode.utils import convert_timedelta_to_milliseconds
 from babelcode.utils import format_timedelta_str
-import gin
-import psutil
 
 
 class UnknownLangError(Exception):

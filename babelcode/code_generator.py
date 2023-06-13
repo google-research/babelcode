@@ -15,12 +15,13 @@
 import pathlib
 from typing import Dict, List, Union
 
-from absl import logging
 import gin
+import jinja2
+from absl import logging
+
 from babelcode import data_types
 from babelcode import schema_parsing
 from babelcode import translation
-import jinja2
 
 SchemaType = schema_parsing.SchemaType
 SchemaMapType = schema_parsing.SchemaMapType

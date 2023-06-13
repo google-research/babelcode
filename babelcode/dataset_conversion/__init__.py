@@ -13,8 +13,8 @@
 # limitations under the License.
 """Init for the dataset conversion module."""
 
-from babelcode.dataset_conversion.question_parsing import parse_question_dict
 from babelcode.dataset_conversion.question_parsing import POTENTIAL_ERROR_TYPES
+from babelcode.dataset_conversion.question_parsing import parse_question_dict
+from babelcode.dataset_conversion.utils import PRIMITIVE_TYPES_TO_GENERIC
 from babelcode.dataset_conversion.utils import AnnotationError
 from babelcode.dataset_conversion.utils import convert_to_source
-from babelcode.dataset_conversion.utils import PRIMITIVE_TYPES_TO_GENERIC

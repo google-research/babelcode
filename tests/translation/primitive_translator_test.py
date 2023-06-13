@@ -13,10 +13,11 @@
 # limitations under the License.
 """Tests for primitive_translator."""
 
+import pytest
+
 from babelcode import data_types
 from babelcode import schema_parsing
 from babelcode import translation
-import pytest
 
 SchemaType = schema_parsing.SchemaType
 

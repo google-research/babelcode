@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Tests for the driver functions."""
-from unittest import mock
-import pathlib
 import json
+import pathlib
+from unittest import mock
+
+import pytest  # pylint: disable=unused-import
 
 from babelcode import code_generator
 from babelcode import data_types
 from babelcode import drivers
 from babelcode import languages
-import pytest  # pylint: disable=unused-import
 
 
 def test_generate_code_for_questions(sample_question_info):

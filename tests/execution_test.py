@@ -15,11 +15,12 @@
 import json
 import os
 
+import pytest
+
 from babelcode import execution
 from babelcode import utils
 from babelcode.data_types.command import Command
 from babelcode.languages import LanguageRegistry
-import pytest
 
 
 def setup_module(_):

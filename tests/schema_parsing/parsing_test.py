@@ -20,9 +20,10 @@
 
 from typing import Any, Dict
 
+import pytest
+
 from babelcode import data_types
 from babelcode import schema_parsing
-import pytest
 
 PRIMITIVE_MAP = {
     'boolean': 'Bool',

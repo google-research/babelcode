@@ -13,13 +13,14 @@
 # limitations under the License.
 """Result Data Types."""
 import collections
-import pathlib
 import dataclasses
-from absl import logging
-import json
 import enum
+import json
+import pathlib
 import re
 from typing import Any, Dict, List, Optional, Union
+
+from absl import logging
 
 from babelcode.data_types.command import Command
 from babelcode.data_types.prediction import Prediction

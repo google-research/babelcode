@@ -22,11 +22,12 @@ import json
 import pathlib
 import shutil
 
-from babelcode.data_types.prediction import Prediction
+import pytest
+
 from babelcode import data_types
+from babelcode.data_types.prediction import Prediction
 from babelcode.schema_parsing.schema_type import SchemaType
 from babelcode.utils import FIXTURES_PATH
-import pytest
 
 
 @pytest.fixture()

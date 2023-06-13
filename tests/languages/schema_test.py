@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Testing each schema parser in each language."""
-from babelcode import schema_parsing
-from babelcode import data_types
-from tests import utils as testing_utils
 import pytest
+
+from babelcode import data_types
+from babelcode import schema_parsing
+from tests import utils as testing_utils
 
 SchemaType = schema_parsing.SchemaType
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 """Command data type."""
 import dataclasses
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
 @dataclasses.dataclass

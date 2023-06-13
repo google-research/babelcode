@@ -17,14 +17,15 @@ import pathlib
 import shutil
 from typing import Optional
 
+import gin
 from absl import app
 from absl import flags
 from absl import logging
+
 from babelcode import generate_code_for_questions
 from babelcode.data_types.question import read_input_questions
 from babelcode.languages import LanguageRegistry
 from babelcode.utils import setup_logging
-import gin
 
 
 def generate_problem_code_main(

@@ -13,7 +13,7 @@
 # limitations under the License.
 """Base class for language specific prompt+signature translation."""
 import re
-from typing import Dict, List, Optional, Tuple, Callable
+from typing import Callable, Dict, List, Optional, Tuple
 
 import jinja2
 

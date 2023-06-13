@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Tests for question data types."""
+import copy
 # Because of how pytest fixtures work, this error will be incorrectly triggered,
 # so disable it for the file here. Pytest Fixture docs:
 # https://docs.pytest.org/en/6.2.x/fixture.html
 # pylint:disable=redefined-outer-name
 import json
 import pathlib
-import copy
 from typing import Dict, Tuple
 
 import pytest

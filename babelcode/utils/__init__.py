@@ -14,14 +14,14 @@
 """Utilities Module."""
 from pathlib import Path
 
-from babelcode.utils.metric_utils import write_to_tb_writer
 from babelcode.utils.file_utils import *
-from babelcode.utils.naming_convention import format_str_with_convention
+from babelcode.utils.metric_utils import write_to_tb_writer
 from babelcode.utils.naming_convention import NamingConvention
+from babelcode.utils.naming_convention import format_str_with_convention
+from babelcode.utils.utilities import TestValueType
 from babelcode.utils.utilities import convert_timedelta_to_milliseconds
 from babelcode.utils.utilities import format_timedelta_str
 from babelcode.utils.utilities import set_seed
-from babelcode.utils.utilities import TestValueType
 
 PROJECT_ROOT = (Path(__file__) / ".." / ".." / "..").resolve()
 FIXTURES_PATH = PROJECT_ROOT / "test_fixtures"
