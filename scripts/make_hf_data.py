@@ -87,7 +87,7 @@ def main(args):
                     q_dict[k] = codes[q][k]
                 out.append(q_dict)
         print(f"Found {len(out)} questions")
-        with out_path.joinpath(ds_name).open('w') as f:
+        with out_path.joinpath(f'{ds_name}.jsonl').open('w') as f:
             for p in out:
                 f.write(json.dumps(p)+'\n')
         
