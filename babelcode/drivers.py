@@ -419,7 +419,7 @@ def _process_results(
   return metrics, pred_results
 
 
-def run_execution_for_lang_predictions(
+def execute_bc_predictions(
     lang: languages.Language,
     question_mapping: Dict[str, Dict[str, str]],
     raw_predictions: Dict[str, Any],

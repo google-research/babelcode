@@ -27,9 +27,6 @@ from babelcode.dataset_conversion import utils
 # error but there is no way around it.
 # pylint: disable=invalid-name
 
-
-
-
 DOUBLE_REGEX = re.compile(r'.[0-9]{7,}')
 UNSUPPORTED_TYPES = (
     ast.Assign,

@@ -18,10 +18,10 @@ from babelcode import languages
 from babelcode import schema_parsing
 from babelcode import translation
 from babelcode import utils
+from babelcode.drivers import execute_bc_predictions
 from babelcode.drivers import generate_code_for_questions
 from babelcode.drivers import generate_prompt_info
 from babelcode.drivers import load_progress_from_dir
-from babelcode.drivers import run_execution_for_lang_predictions
 
 QUESTION_DATA_KEYS = {
     "test_code", "entry_fn_name", "entry_cls_name", "qid", "language",

@@ -26,8 +26,8 @@ from absl import flags
 from absl import logging
 
 from babelcode import QUESTION_DATA_KEYS
+from babelcode import execute_bc_predictions
 from babelcode import load_progress_from_dir
-from babelcode import run_execution_for_lang_predictions
 from babelcode import utils
 from babelcode.languages import LanguageRegistry
 
@@ -224,7 +224,7 @@ def evaluate_predictions_from_file(
     else:
       preds_to_use = preds_by_lang[lang_name]
 
-    metrics, pred_results = run_execution_for_lang_predictions(
+    metrics, pred_results = execute_bc_predictions(
         lang=lang,
         question_mapping=question_mapping[lang_name],
         raw_predictions=preds_to_use,

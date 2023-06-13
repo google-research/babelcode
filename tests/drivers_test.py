@@ -311,7 +311,7 @@ def test_run_execution_for_lang(tmp_path, passing_prediction, with_progress):
       mock_execute.return_value = (list(preds.values()), '1:1:1')
       with mock.patch('babelcode.drivers._process_results') as mock_process:
         mock_process.return_value = ['A', 'B']
-        result = drivers.run_execution_for_lang_predictions(
+        result = drivers.execute_bc_predictions(
             lang=language,
             question_mapping=question_mapping,
             raw_predictions={
