@@ -41,9 +41,9 @@ PROMPT_KEYS_TO_KEEP = {
 CODE_KEYS_TO_KEEP = {
     "title",
     "test_code",
-    "test_list",
-    "test_case_ids",
 }
+
+RAW_QUESTION_DIR = Path("data/raw_datasets")
 
 def main(args):
     data_path = Path(args.data_path)
@@ -51,8 +51,7 @@ def main(args):
     shutil.rmtree(out_path,ignore_errors=True)
     out_path.mkdir()
     print(f"Creating HF Datasets from parsed datasets located at '{data_path}'")
-    
-    
+       
     for dir_found in data_path.glob("*"):
         
         code_map = collections.defaultdict(dict)
@@ -62,6 +61,15 @@ def main(args):
         if ds_name not in SUPPORTED_DS:
             print(f"{ds_name} is not supported...")
             continue
+        raw_question_dir = RAW_QUESTION_DIR.joinpath(f'{ds_name}_questions.jsonl')
+        question_solutions = {}
+        for l in map(json.loads, raw_question_dir.open()):
+            question_solutions[l['id']] = {'solution_python': l['solution']}
+            if 'other_lang_solutions' in l:
+                for lang,s in l['other_lang_solutions'].items():
+                    if lang == "C++":
+                        lang = 'cpp'
+                    question_solutions[l['id']][f'solution_{lang}'] = s
         
         for line in map(json.loads, dir_found.joinpath("testing_code.jsonl").open()):
             code_map[line['language']][line['qid']] = line
@@ -81,10 +89,13 @@ def main(args):
                     "qid":q,
                     "language": language
                 }
+                
                 for k in PROMPT_KEYS_TO_KEEP:
                     q_dict[k] = prompts[q][k]
                 for k in CODE_KEYS_TO_KEEP:
                     q_dict[k] = codes[q][k]
+                    
+                q_dict.update(question_solutions[q])
                 out.append(q_dict)
         print(f"Found {len(out)} questions")
         with out_path.joinpath(f'{ds_name}.jsonl').open('w') as f:
