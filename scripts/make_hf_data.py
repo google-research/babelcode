@@ -28,7 +28,7 @@ PROMPT_KEYS_TO_KEEP = {
     "signature", "signature_with_docstring", "text", "entry_fn_name",
     "entry_cls_name", "arguments"
 }
-CODE_KEYS_TO_KEEP = {"title", "test_code", "test_list","test_case_ids"}
+CODE_KEYS_TO_KEEP = {"title", "test_code", "test_list", "test_case_ids"}
 
 RAW_QUESTION_DIR = Path("data/raw_datasets")
 

@@ -25,5 +25,5 @@ from babelcode.drivers import load_progress_from_dir
 
 QUESTION_DATA_KEYS = {
     "test_code", "entry_fn_name", "entry_cls_name", "qid", "language",
-    "test_case_ids", "title"
+    "test_case_ids"
 }

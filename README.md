@@ -53,7 +53,7 @@ The outputs will be written to `eval_outputs/tutorial`. It contains:
 
 To make your predictions work with this framework, they must be in a jsonlines
 file where each line is its own prediction. Each prediction must have the
-follwing keys:
+following keys:
 
 1.  `qid`: A question ID the prediction is for.
 2.  `language`: The language the prediction is in.
@@ -64,6 +64,13 @@ Optional Keys are:
 1.  `entry_fn_name`: The name of the function to call when evaluating.
 2.  `entry_cls_name`: If the language requires classes, this is the name of the
     prediction class to call when evaluating.
+
+### Running Without Parsed Datasets
+
+If you are using a BabelCode dataset from HuggingFace and do not want to convert the datasets, you can include the testing keys necessary to evaluate the given predictions. These are included in all BabelCode datasets hosted on HuggingFace. Besides the keys mentioned in above, you will need to include:
+
+* `test_code`: The Testing Script created by the BabelCode framework
+* `test_case_ids`: The list of test case ids for the problem. These are used to determine if a prediction passes or not.
 
 # Overview of How the Framework Works
 ![sample](/img/sample_program.png)
