@@ -22,7 +22,7 @@ import logging
 import pathlib
 import shutil
 import tempfile
-from typing import Any, Callable, Dict, List, Tuple, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import gin
 from absl import logging

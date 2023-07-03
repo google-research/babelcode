@@ -14,6 +14,7 @@
 """Script to execute code for evaluation across multiple languages."""
 import collections
 import json
+import os
 import pathlib
 import random
 import shutil
@@ -62,6 +63,9 @@ _VALIDATION_MODE = flags.DEFINE_bool('validation', False,
 
 _DEBUG_DIR_PATH = flags.DEFINE_string("debug_dir", None,
                                       "Debugging dir to save code to.")
+
+_ALLOW_EXECUTION = flags.DEFINE_bool("allow_execution", False,
+                                     "Allow Execution")
 
 
 @gin.configurable(
@@ -334,6 +338,9 @@ if __name__ == '__main__':
     test_code_path = None
     if _TEST_CODE_PATH.value:
       test_code_path = pathlib.Path(_TEST_CODE_PATH.value).resolve()
+
+    if _ALLOW_EXECUTION.value:
+      os.environ['ALLOW_EXECUTION'] = 'true'
 
     debug_dir = _DEBUG_DIR_PATH.value
     if debug_dir:
