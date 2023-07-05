@@ -17,6 +17,13 @@ import collections
 import json
 import shutil
 from pathlib import Path
+import sys
+
+try:
+  from babelcode import languages
+except ImportError:
+  sys.path.append(Path(__name__).parent)
+  from babelcode import languages
 
 parser = argparse.ArgumentParser("Make HF Datasets")
 parser.add_argument("data_path", type=str, help="Path to the parsed datasets.")
@@ -74,7 +81,13 @@ def main(args):
       assert set(codes.keys()) == set(prompts.keys())
 
       for q in codes.keys():
-        q_dict = {"qid": q, "language": language}
+        
+        lang = languages.LanguageRegistry.get_language(language)
+        
+        command = lang.command_fn(Path("__FILENAME__"))
+        q_dict = {"qid": q, "language": language, "extension": lang.file_ext}
+        q_dict['commands'] = [[c.command, c.timeout] for c in command]
+        
 
         for k in PROMPT_KEYS_TO_KEEP:
           q_dict[k] = prompts[q][k]
