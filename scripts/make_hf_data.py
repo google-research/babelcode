@@ -86,7 +86,7 @@ def main(args):
         
         command = lang.command_fn(Path("__FILENAME__"))
         q_dict = {"qid": q, "language": language, "extension": lang.file_ext}
-        q_dict['commands'] = [[c.command, c.timeout] for c in command]
+        q_dict['commands'] = [{'command':c.command, 'timeout':c.timeout} for c in command]
         
 
         for k in PROMPT_KEYS_TO_KEEP:
