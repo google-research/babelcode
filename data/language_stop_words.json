@@ -8,5 +8,6 @@
   "Javascript": ["\nfunction ", "\n/*", "\n//"],
   "Lua": ["\nlocal", "\nfunction", "\n--", "\n\n"],
   "Python": ["\ndef", "\n#", "\nif", "\nclass"],
-  "Rust": ["\n}"]
+  "Rust": ["\n}"],
+  "Elixir": ["\ndefmodule", "\ndefp", "\ndef"]
 }

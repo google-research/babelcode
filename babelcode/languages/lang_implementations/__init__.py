@@ -28,3 +28,4 @@ from babelcode.languages.lang_implementations import r
 from babelcode.languages.lang_implementations import rust
 from babelcode.languages.lang_implementations import scala
 from babelcode.languages.lang_implementations import typescript
+from babelcode.languages.lang_implementations import elixir
