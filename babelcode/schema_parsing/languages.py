@@ -406,3 +406,22 @@ def make_dart_spec() -> LanguageSchemaSpec:
       format_map_type=lambda k, v: f'Map<{k}, {v}>',
       format_set_type=lambda v: f'Set<{v}>',
   )
+
+  def make_elixir_spec() -> LanguageSchemaSpec:
+    """Makes Elixir spec."""
+    primitive_map = {
+        'boolean': 'boolean',
+        'integer': 'integer',
+        'character': 'char',
+        'float': 'float',
+        'double': 'float',
+        'long': 'float',
+        'string': 'String.t()',
+    }
+    return LanguageSchemaSpec(
+        name='Elixir',
+        primitive_lang_map=primitive_map,
+        format_list_type=lambda t: f'[{t}]',
+        format_map_type=lambda k, v: '%{{k} => {v}}',
+        format_set_type=lambda t: 'MapSet.new({t})',
+    )
