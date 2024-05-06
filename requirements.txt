@@ -1,5 +1,5 @@
 pytest==7.1.2
-jinja2==3.1.2
+jinja2==3.1.4
 numpy==1.23.1
 pandas==1.4.3
 pyyaml==6.0
