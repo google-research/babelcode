@@ -306,7 +306,7 @@ class QuestionResult:
   results: Dict[str, List[int]] = dataclasses.field(
       default_factory=lambda: collections.defaultdict(list))
 
-  def __post__init__(self) -> None:
+  def __post_init__(self) -> None:
     """Remove reserved attrs from those tracked."""
     for k in RESERVED_ATTRIBUTES:
       if k in self.tracked_attributes:
