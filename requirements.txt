@@ -8,4 +8,4 @@ gin-config==0.5.0
 coverage==6.4.4
 psutil==5.9.2
 absl-py==1.2.0
-tensorflow==2.10.0
+tensorflow==2.12.1
